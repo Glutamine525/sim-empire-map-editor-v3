@@ -1,0 +1,28 @@
+.menu-icon {
+  width: 32px;
+  height: 32px;
+}
+
+.button-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  bottom: 20px;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  font-size: 14px;
+  color: var(--color-white);
+  cursor: pointer;
+  transition: all 0.1s;
+
+  &:nth-child(1) {
+    left: 20px;
+    background-color: rgb(var(--arcoblue-6));
+  }
+
+  &:nth-child(1).button-trigger-active {
+    background-color: var(--color-primary-light-4);
+  }
+}
