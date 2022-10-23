@@ -1,30 +1,21 @@
-import { CivilTypeLabel, MapType } from '@/map-core/const';
+import { CivilType, CivilTypeLabel, MapType } from '@/map-core/const';
 import { DisableScrollPlugin } from '@/pages/utils/disable-scroll-plugin';
+import { changeCivil, changeMapType, changeNoWood, changeRotated } from '@/store/reducers/map';
+import { mapSelector } from '@/store/selectors';
 import { Button, Dropdown, Menu, Switch, Typography } from '@arco-design/web-react';
+import { IconMenu, IconQuestionCircle } from '@arco-design/web-react/icon';
 import React, { useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Scrollbar from 'smooth-scrollbar';
 import styles from './index.module.less';
 
 const { Text } = Typography;
 
-const MapTypeList = (
-  <Menu>
-    {MapType.map((v) => (
-      <Menu.Item key={v.toString()}>{v}</Menu.Item>
-    ))}
-  </Menu>
-);
-
-const CivilTypeList = (
-  <Menu>
-    {Object.entries(CivilTypeLabel).map((v) => (
-      <Menu.Item key={v[0]}>{v[1]}</Menu.Item>
-    ))}
-  </Menu>
-);
-
 const TopMenu = () => {
   const menuRef = useRef<HTMLDivElement>(null);
+
+  const { mapType, civil, noWood, rotated } = useSelector(mapSelector);
+  const d = useDispatch();
 
   useEffect(() => {
     Scrollbar.use(DisableScrollPlugin);
@@ -38,20 +29,44 @@ const TopMenu = () => {
     });
   }, []);
 
+  const MapTypeList = (
+    <Menu>
+      {MapType.map((v) => (
+        <Menu.Item key={v.toString()} onClick={() => d(changeMapType(v))}>
+          {v}
+        </Menu.Item>
+      ))}
+    </Menu>
+  );
+
+  const CivilTypeList = (
+    <Menu>
+      {Object.entries(CivilTypeLabel).map((v) => {
+        const [civilType, civilLabel] = v;
+        if (civilType === CivilType.Custom) {
+          return null;
+        }
+        return (
+          <Menu.Item key={civilType} onClick={() => d(changeCivil(civilType as CivilType))}>
+            {civilLabel}
+          </Menu.Item>
+        );
+      })}
+    </Menu>
+  );
+
   return (
     <div ref={menuRef} className={styles.wrapper}>
       <div className={styles.container}>
         <div className={styles['map-controller']}>
           <div className={styles.panel}>
-            <Button type="text" shape="circle" style={{ fontWeight: 'bold' }}>
-              =
-            </Button>
+            <Button type="text" shape="circle" icon={<IconMenu />} />
           </div>
           <div>
             <Text type="secondary">地图: </Text>
             <Dropdown droplist={MapTypeList} position="bl">
-              <Button type="text" shape="round" style={{ fontWeight: 'bold' }}>
-                5
+              <Button type="text" shape="round" style={{ fontWeight: 'bold' }} iconOnly>
+                {mapType}
               </Button>
             </Dropdown>
           </div>
@@ -59,17 +74,17 @@ const TopMenu = () => {
             <Text type="secondary">文明: </Text>
             <Dropdown droplist={CivilTypeList} position="bl">
               <Button type="text" shape="round" style={{ fontWeight: 'bold' }}>
-                中国
+                {CivilTypeLabel[civil]}
               </Button>
             </Dropdown>
           </div>
           <div>
             <Text type="secondary">无木: </Text>
-            <Switch />
+            <Switch checked={noWood} onChange={(v) => d(changeNoWood(v))} />
           </div>
           <div>
             <Text type="secondary">旋转: </Text>
-            <Switch />
+            <Switch checked={rotated} onChange={(v) => d(changeRotated(v))} />
           </div>
           <div>
             <Text type="secondary">暗色: </Text>
@@ -139,7 +154,7 @@ const TopMenu = () => {
           </div>
         </div>
         <div className={styles.helper}>
-          <Text bold>?</Text>
+          <Button type="text" shape="circle" icon={<IconQuestionCircle />} />
         </div>
         <div className={styles.auth}>
           <div>

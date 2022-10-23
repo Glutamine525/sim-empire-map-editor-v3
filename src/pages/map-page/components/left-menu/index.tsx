@@ -1,5 +1,5 @@
 import { Button, Menu } from '@arco-design/web-react';
-import { IconLeft, IconPlus, IconRight } from '@arco-design/web-react/icon';
+import { IconLeft, IconRight } from '@arco-design/web-react/icon';
 import React, { useEffect, useRef, useState } from 'react';
 import styles from './index.module.less';
 import { getImgUrl } from '@/utils/url';
