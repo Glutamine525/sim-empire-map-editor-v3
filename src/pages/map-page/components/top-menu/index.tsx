@@ -1,6 +1,8 @@
 import { CivilTypeLabel, MapType } from '@/map-core/const';
+import { DisableScrollPlugin } from '@/pages/utils/disable-scroll-plugin';
 import { Button, Dropdown, Menu, Switch, Typography } from '@arco-design/web-react';
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+import Scrollbar from 'smooth-scrollbar';
 import styles from './index.module.less';
 
 const { Text } = Typography;
@@ -22,8 +24,22 @@ const CivilTypeList = (
 );
 
 const TopMenu = () => {
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    Scrollbar.use(DisableScrollPlugin);
+    Scrollbar.init(menuRef.current!, {
+      damping: 0.2,
+      plugins: {
+        disableScroll: {
+          direction: 'y',
+        },
+      },
+    });
+  }, []);
+
   return (
-    <div className={styles.wrapper}>
+    <div ref={menuRef} className={styles.wrapper}>
       <div className={styles.container}>
         <div className={styles['map-controller']}>
           <div className={styles.panel}>

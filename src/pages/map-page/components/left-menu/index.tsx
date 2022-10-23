@@ -1,10 +1,12 @@
-import { Menu, Trigger } from '@arco-design/web-react';
-import { IconCaretUp, IconClose } from '@arco-design/web-react/icon';
-import React, { useEffect, useState } from 'react';
+import { Button, Menu } from '@arco-design/web-react';
+import { IconLeft, IconPlus, IconRight } from '@arco-design/web-react/icon';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from './index.module.less';
 import { getImgUrl } from '@/utils/url';
+import Scrollbar from 'smooth-scrollbar';
 
 const MenuItem = Menu.Item;
+const SubMenu = Menu.SubMenu;
 
 const MenuList = [
   '道路',
@@ -41,32 +43,41 @@ const renderMenu = () => {
 };
 
 const LeftMenu = () => {
-  const [visible, setVisible] = useState(false);
+  const menuRef = useRef<HTMLDivElement>();
+
+  const [collapse, setCollapse] = useState(true);
 
   useEffect(() => {
-    setVisible(true);
+    Scrollbar.init(menuRef.current!, { damping: 0.2 });
   }, []);
 
   return (
     <div>
-      <Trigger
-        popup={renderMenu}
-        trigger={['click']}
-        position="bottom"
-        popupVisible={visible}
-        clickOutsideToClose={false}
-        onClick={(v) => {
-          setVisible(!v);
-        }}
-        onVisibleChange={(v) => {
-          if (v) {
-            setVisible(v);
-          }
-        }}>
-        <div className={`${styles['button-trigger']} ${visible ? styles['button-trigger-active'] : ''}`}>
-          {visible ? <IconClose /> : <IconCaretUp />}
-        </div>
-      </Trigger>
+      <div className={[styles.container, collapse ? styles['collapsed'] : ''].join(' ')}>
+        <Menu
+          ref={menuRef}
+          style={{ width: 140, height: '100%' }}
+          mode="pop"
+          selectable={false}
+          tooltipProps={{ disabled: true }}
+          collapse={collapse}>
+          {MenuList.map((v) => (
+            <MenuItem key={v}>
+              <img className={'arco-icon ' + styles['menu-icon']} src={getImgUrl(`${v}.png`)} />
+              {' ' + v}
+            </MenuItem>
+          ))}
+          <div className={styles['collapse-button-placeholder']} />
+        </Menu>
+        <Button
+          className={styles['collapse-button']}
+          size="mini"
+          shape="circle"
+          type="secondary"
+          icon={collapse ? <IconRight /> : <IconLeft />}
+          onClick={() => setCollapse((v) => !v)}
+        />
+      </div>
     </div>
   );
 };

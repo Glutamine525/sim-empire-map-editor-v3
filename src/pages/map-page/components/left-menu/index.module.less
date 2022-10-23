@@ -1,28 +1,57 @@
+:global {
+  .arco-menu {
+    border-right: 1px solid var(--color-border);
+    box-sizing: border-box;
+  }
+
+  .arco-menu-inner {
+    overflow-x: hidden;
+    padding-right: 0 !important;
+  }
+
+  .arco-menu-item {
+    padding: 0 4px !important;
+    height: 40px;
+    display: flex;
+    align-items: center;
+  }
+
+  .arco-menu .scroll-content {
+    padding-right: 8px;
+  }
+
+  .arco-menu.arco-menu-collapse .scroll-content {
+    padding-right: 4px;
+  }
+}
+
+.container {
+  box-sizing: border-box;
+  position: fixed;
+  top: 60px;
+  height: calc(100% - 60px);
+}
+
 .menu-icon {
   width: 32px;
   height: 32px;
 }
 
-.button-trigger {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.collapse-button-placeholder {
+  padding-bottom: 20px;
+}
+
+.collapse-button {
   position: fixed;
-  bottom: 20px;
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  font-size: 14px;
-  color: var(--color-white);
-  cursor: pointer;
-  transition: all 0.1s;
+  left: 128px;
+  bottom: 1px;
+  z-index: 100;
+  background: var(--color-bg-5) !important;
+  border: 1px solid var(--color-fill-3) !important;
+  color: var(--color-text-2);
+  box-sizing: border-box;
 
-  &:nth-child(1) {
-    left: 20px;
-    background-color: rgb(var(--arcoblue-6));
-  }
-
-  &:nth-child(1).button-trigger-active {
-    background-color: var(--color-primary-light-4);
+  .collapsed & {
+    left: 36px;
   }
 }
