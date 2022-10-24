@@ -1,5 +1,4 @@
-import { BuildingColor } from './color';
-import { CivilType } from '../const';
+import { CivilType } from '../type';
 import { BuildingAztec } from './aztec';
 import { BuildingChina } from './china';
 import { BuildingEgypt } from './egypt';
@@ -45,7 +44,7 @@ export enum CatalogType {
   Cancel = '取消操作',
   Select = '选中建筑',
   Delete = '删除建筑',
-  Watermark = '水印模式',
+  WatermarkMode = '水印模式',
   ImportExport = '导入导出',
 }
 
@@ -56,6 +55,7 @@ export enum BorderStyleType {
 }
 
 export interface SimpleBuilding {
+  // 建筑配置文件对应的简单建筑
   name: string;
   text?: string;
   catalog?: string;
@@ -80,35 +80,35 @@ export interface SimpleBuilding {
 }
 
 export interface Building {
-  Name: string;
-  Text: string;
-  Range: number;
-  Marker: number;
-  Catalog: CatalogType;
-  IsFixed: boolean;
-  IsBarrier: boolean;
-  IsRoad: boolean;
-  IsProtection: boolean;
-  IsWonder: boolean;
-  IsDecoration: boolean;
-  IsGeneral: boolean;
+  name: string;
+  text: string;
+  range: number;
+  marker: number;
+  catalog: CatalogType;
+  isFixed: boolean;
+  isBarrier: boolean;
+  isRoad: boolean;
+  isProtection: boolean;
+  isWonder: boolean;
+  isDecoration: boolean;
+  isGeneral: boolean;
   // css
-  Width: number;
-  Height: number;
-  Color: string;
-  Shadow: string;
-  FontSize: number;
-  Background: string;
-  BorderColor: string;
-  BorderWidth: number;
-  BorderTStyle: BorderStyleType;
-  BorderRStyle: BorderStyleType;
-  BorderBStyle: BorderStyleType;
-  BorderLStyle: BorderStyleType;
+  width: number;
+  height: number;
+  color: string;
+  shadow: string;
+  fontSize: number;
+  background: string;
+  borderColor: string;
+  borderWidth: number;
+  borderTStyle: BorderStyleType;
+  borderRStyle: BorderStyleType;
+  borderBStyle: BorderStyleType;
+  borderLStyle: BorderStyleType;
 }
 
 export enum MarkerColor {
   Normal = 'black',
-  Danger = 'var(--ant-error-color)',
-  Safe = 'var(--ant-success-color)',
+  Danger = 'rgb(var(--danger-6))',
+  Safe = 'rgb(var(--success-6))',
 }

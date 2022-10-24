@@ -1,82 +1,107 @@
-import { Button, Menu } from '@arco-design/web-react';
-import { IconLeft, IconRight } from '@arco-design/web-react/icon';
+import { Menu, Typography } from '@arco-design/web-react';
 import React, { useEffect, useRef, useState } from 'react';
 import styles from './index.module.less';
 import { getImgUrl } from '@/utils/url';
 import Scrollbar from 'smooth-scrollbar';
+import { BuildingType, CatalogType, CivilBuilding, SimpleBuilding } from '@/map-core/building';
+import { GeneralBuilding } from '@/map-core/building/general';
+import { useSelector } from 'react-redux';
+import { mapSelector } from '@/store/selectors';
 
+const { Text } = Typography;
 const MenuItem = Menu.Item;
 const SubMenu = Menu.SubMenu;
-
-const MenuList = [
-  '道路',
-  '住宅',
-  '农业',
-  '工业',
-  '商业',
-  '市政',
-  '文化',
-  '宗教',
-  '军事',
-  '美化',
-  '奇迹',
-  '通用',
-  '特殊建筑',
-  '取消操作',
-  '选中建筑',
-  '删除建筑',
-  '水印模式',
-  '导入导出',
-];
-
-const renderMenu = () => {
-  return (
-    <Menu style={{ marginBottom: -4 }} mode="popButton" tooltipProps={{ position: 'left' }}>
-      {MenuList.map((v) => (
-        <MenuItem key={v}>
-          <img className={styles['menu-icon']} src={getImgUrl(`${v}.png`)} />
-          {v}
-        </MenuItem>
-      ))}
-    </Menu>
-  );
-};
 
 const LeftMenu = () => {
   const menuRef = useRef<HTMLDivElement>();
 
-  const [collapse, setCollapse] = useState(true);
+  const { civil } = useSelector(mapSelector);
+
+  const [openKeys, setOpenKeys] = useState([CatalogType.Municipal]);
+  const [catalog, setCatalog] = useState<{ [key in CatalogType]: SimpleBuilding[] }>({
+    [CatalogType.Road]: [],
+    [CatalogType.Residence]: [],
+    [CatalogType.Agriculture]: [],
+    [CatalogType.Industry]: [],
+    [CatalogType.Commerce]: [],
+    [CatalogType.Municipal]: [],
+    [CatalogType.Culture]: [],
+    [CatalogType.Religion]: [],
+    [CatalogType.Military]: [],
+    [CatalogType.Decoration]: [],
+    [CatalogType.Wonder]: [],
+    [CatalogType.General]: GeneralBuilding,
+    [CatalogType.Special]: [],
+    [CatalogType.Cancel]: [],
+    [CatalogType.Select]: [],
+    [CatalogType.Delete]: [],
+    [CatalogType.WatermarkMode]: [],
+    [CatalogType.ImportExport]: [{ name: '导入新文明' }, { name: '导入地图' }, { name: '截图' }],
+  });
 
   useEffect(() => {
     Scrollbar.init(menuRef.current!, { damping: 0.2 });
   }, []);
 
+  useEffect(() => {
+    const newCatalog = {
+      [BuildingType.Residence]: CivilBuilding[civil][BuildingType.Residence],
+      [BuildingType.Agriculture]: CivilBuilding[civil][BuildingType.Agriculture],
+      [BuildingType.Industry]: CivilBuilding[civil][BuildingType.Industry],
+      [BuildingType.Commerce]: CivilBuilding[civil][BuildingType.Commerce],
+      [BuildingType.Municipal]: CivilBuilding[civil][BuildingType.Municipal],
+      [BuildingType.Culture]: CivilBuilding[civil][BuildingType.Culture],
+      [BuildingType.Religion]: CivilBuilding[civil][BuildingType.Religion],
+      [BuildingType.Military]: CivilBuilding[civil][BuildingType.Military],
+      [BuildingType.Decoration]: CivilBuilding[civil][BuildingType.Decoration],
+      [BuildingType.Wonder]: CivilBuilding[civil][BuildingType.Wonder],
+    };
+    setCatalog((catalog: any) => ({ ...catalog, ...newCatalog }));
+  }, [civil]);
+
   return (
     <div>
-      <div className={[styles.container, collapse ? styles['collapsed'] : ''].join(' ')}>
+      <div className={[styles.container].join(' ')}>
         <Menu
           ref={menuRef}
-          style={{ width: 140, height: '100%' }}
-          mode="pop"
+          style={{ height: '100%' }}
           selectable={false}
           tooltipProps={{ disabled: true }}
-          collapse={collapse}>
-          {MenuList.map((v) => (
-            <MenuItem key={v}>
-              <img className={'arco-icon ' + styles['menu-icon']} src={getImgUrl(`${v}.png`)} />
-              {' ' + v}
-            </MenuItem>
-          ))}
-          <div className={styles['collapse-button-placeholder']} />
+          accordion={true}
+          openKeys={openKeys}
+          onClickSubMenu={(v) => setOpenKeys([v as CatalogType])}
+          onClickMenuItem={(_, __, path) => {
+            if (path.length === 1) {
+              return;
+            }
+            console.log(path);
+          }}>
+          {Object.entries(catalog).map(([c, sub]) => {
+            return !sub.length ? (
+              <MenuItem key={c}>
+                <img className={styles['menu-icon']} src={getImgUrl(`${c}.png`)} />
+                <Text bold>{c}</Text>
+              </MenuItem>
+            ) : (
+              <SubMenu
+                key={c}
+                title={
+                  <>
+                    <img className={styles['menu-icon']} src={getImgUrl(`${c}.png`)} />
+                    <Text bold>{c}</Text>
+                  </>
+                }>
+                {sub.map((v, i) => (
+                  <MenuItem key={v.name}>
+                    <Text type="secondary">
+                      {i + 1}. {v.name}
+                    </Text>
+                  </MenuItem>
+                ))}
+              </SubMenu>
+            );
+          })}
         </Menu>
-        <Button
-          className={styles['collapse-button']}
-          size="mini"
-          shape="circle"
-          type="secondary"
-          icon={collapse ? <IconRight /> : <IconLeft />}
-          onClick={() => setCollapse((v) => !v)}
-        />
       </div>
     </div>
   );

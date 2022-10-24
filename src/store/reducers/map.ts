@@ -1,4 +1,4 @@
-import { CivilType } from '@/map-core/const';
+import { CivilType } from '@/map-core/type';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface MapState {

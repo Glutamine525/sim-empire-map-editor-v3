@@ -1,3 +1,5 @@
+export const UnitPx = 30;
+
 export const MapType = [5, 4, 3];
 
 export enum CivilType {
@@ -17,3 +19,11 @@ export const CivilTypeLabel = {
   [CivilType.Aztec]: '阿兹特克',
   [CivilType.Custom]: '自定义',
 };
+
+export enum OperationType {
+  Empty,
+  PlaceBuilding,
+  SelectBuilding,
+  DeleteBuilding,
+  WatermarkMode,
+}

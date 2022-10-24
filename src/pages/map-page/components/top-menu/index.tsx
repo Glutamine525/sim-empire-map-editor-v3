@@ -1,4 +1,4 @@
-import { CivilType, CivilTypeLabel, MapType } from '@/map-core/const';
+import { CivilType, CivilTypeLabel, MapType } from '@/map-core/type';
 import { DisableScrollPlugin } from '@/pages/utils/disable-scroll-plugin';
 import { changeCivil, changeMapType, changeNoWood, changeRotated } from '@/store/reducers/map';
 import { mapSelector } from '@/store/selectors';
