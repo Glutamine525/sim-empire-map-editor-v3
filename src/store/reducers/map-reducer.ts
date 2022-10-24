@@ -18,7 +18,7 @@ const initialState = {
 };
 
 const mapReducer = createSlice({
-  name: 'map',
+  name: 'mapReducer',
   initialState,
   reducers: {
     changeMapType(state, action: PayloadAction<number>) {

@@ -1,5 +1,5 @@
 import type { RootState } from '.';
-import { MapState } from './reducers/map';
+import { MapState } from './reducers/map-reducer';
 
 export const rootSelector = (state: RootState): RootState => state;
 

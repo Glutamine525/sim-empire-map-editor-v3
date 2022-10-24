@@ -7,7 +7,7 @@ import { BuildingType, CatalogType, CivilBuilding, SimpleBuilding } from '@/map-
 import { GeneralBuilding } from '@/map-core/building/general';
 import { useDispatch, useSelector } from 'react-redux';
 import { mapSelector } from '@/store/selectors';
-import { changeOperation } from '@/store/reducers/map';
+import { changeOperation } from '@/store/reducers/map-reducer';
 import { OperationType } from '@/map-core/type';
 
 const { Text } = Typography;

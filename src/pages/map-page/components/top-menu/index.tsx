@@ -1,5 +1,10 @@
 import { CivilType, CivilTypeLabel, MapType, OperationType } from '@/map-core/type';
-import { changeCivil, changeMapType, changeNoWood, changeRotated } from '@/store/reducers/map';
+import {
+  changeCivil,
+  changeMapType,
+  changeNoWood,
+  changeRotated,
+} from '@/store/reducers/map-reducer';
 import { mapSelector } from '@/store/selectors';
 import { Button, Dropdown, Menu, Switch, Typography } from '@arco-design/web-react';
 import { IconMenu, IconQuestionCircle } from '@arco-design/web-react/icon';

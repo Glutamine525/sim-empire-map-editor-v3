@@ -37,13 +37,13 @@ const Map = () => {
     <div ref={mapRef} className={styles.wrapper}>
       <Stage width={3480} height={3480}>
         <Layer>
-          {Array(115)
+          {/* {Array(115)
             .fill(0)
             .map((_, i) => {
               return Array(115)
                 .fill(0)
                 .map((_, j) => <Circle key={j} x={i * 30} y={j * 30} radius={15} fill="#313132" />);
-            })}
+            })} */}
         </Layer>
       </Stage>
     </div>

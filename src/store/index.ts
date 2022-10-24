@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { batchedSubscribe } from 'redux-batched-subscribe';
 import { debounce } from 'lodash';
-import mapReducer from './reducers/map';
-import { MapState } from './reducers/map';
+import mapReducer from './reducers/map-reducer';
+import { MapState } from './reducers/map-reducer';
 
 const debounceNotify = debounce((notify) => notify());
 
