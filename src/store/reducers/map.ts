@@ -1,4 +1,4 @@
-import { CivilType } from '@/map-core/type';
+import { CivilType, OperationType } from '@/map-core/type';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface MapState {
@@ -6,9 +6,16 @@ export interface MapState {
   civil: CivilType;
   noWood: boolean;
   rotated: boolean;
+  operation: OperationType;
 }
 
-const initialState = { mapType: 5, civil: CivilType.China, noWood: false, rotated: false };
+const initialState = {
+  mapType: 5,
+  civil: CivilType.China,
+  noWood: false,
+  rotated: false,
+  operation: OperationType.Empty,
+};
 
 const mapReducer = createSlice({
   name: 'map',
@@ -26,9 +33,13 @@ const mapReducer = createSlice({
     changeRotated(state, action: PayloadAction<boolean>) {
       state.rotated = action.payload;
     },
+    changeOperation(state, action: PayloadAction<OperationType>) {
+      state.operation = action.payload;
+    },
   },
 });
 
-export const { changeMapType, changeCivil, changeNoWood, changeRotated } = mapReducer.actions;
+export const { changeMapType, changeCivil, changeNoWood, changeRotated, changeOperation } =
+  mapReducer.actions;
 
 export default mapReducer.reducer;

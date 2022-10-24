@@ -5,8 +5,10 @@ import { getImgUrl } from '@/utils/url';
 import Scrollbar from 'smooth-scrollbar';
 import { BuildingType, CatalogType, CivilBuilding, SimpleBuilding } from '@/map-core/building';
 import { GeneralBuilding } from '@/map-core/building/general';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { mapSelector } from '@/store/selectors';
+import { changeOperation } from '@/store/reducers/map';
+import { OperationType } from '@/map-core/type';
 
 const { Text } = Typography;
 const MenuItem = Menu.Item;
@@ -16,6 +18,7 @@ const LeftMenu = () => {
   const leftMenuRef = useRef<HTMLDivElement>();
 
   const { civil } = useSelector(mapSelector);
+  const d = useDispatch();
 
   const [openKeys, setOpenKeys] = useState([CatalogType.Municipal]);
   const [catalog, setCatalog] = useState<{ [key in CatalogType]: SimpleBuilding[] }>({
@@ -75,10 +78,14 @@ const LeftMenu = () => {
           setOpenKeys([v as CatalogType]);
         }}
         onClickMenuItem={(_, __, path) => {
-          if (path.length === 1) {
-            return;
+          switch (path[0]) {
+            case CatalogType.Road:
+              d(changeOperation(OperationType.PlaceBuilding));
+              break;
+            default:
+              d(changeOperation(OperationType.Empty));
+              break;
           }
-          console.log(path);
         }}>
         {Object.entries(catalog).map(([c, sub]) => {
           return !sub.length ? (

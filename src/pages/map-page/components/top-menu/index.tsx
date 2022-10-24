@@ -1,4 +1,4 @@
-import { CivilType, CivilTypeLabel, MapType } from '@/map-core/type';
+import { CivilType, CivilTypeLabel, MapType, OperationType } from '@/map-core/type';
 import { changeCivil, changeMapType, changeNoWood, changeRotated } from '@/store/reducers/map';
 import { mapSelector } from '@/store/selectors';
 import { Button, Dropdown, Menu, Switch, Typography } from '@arco-design/web-react';
@@ -13,7 +13,7 @@ const { Text } = Typography;
 const TopMenu = () => {
   const topMenuRef = useRef<HTMLDivElement>(null);
 
-  const { mapType, civil, noWood, rotated } = useSelector(mapSelector);
+  const { mapType, civil, noWood, rotated, operation } = useSelector(mapSelector);
   const d = useDispatch();
 
   useEffect(() => {
@@ -107,7 +107,9 @@ const TopMenu = () => {
           </div>
           <div className={styles['current-operation']}>
             <Text type="secondary">当前操作: </Text>
-            <Text bold>空</Text>
+            <Text bold>
+              {operation} {operation === OperationType.PlaceBuilding ? '道路' : ''}
+            </Text>
           </div>
           <div className={styles['building-calculator']}>
             <div>
