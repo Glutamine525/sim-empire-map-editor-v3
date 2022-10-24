@@ -7,21 +7,27 @@ const Map = () => {
   const mapRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    Scrollbar.init(mapRef.current!, { damping: 0.2, alwaysShowTracks: true });
+    Scrollbar.init(mapRef.current!, {
+      damping: 0.2,
+      alwaysShowTracks: true,
+      plugins: {
+        draggable: { enabled: true },
+        initCenter: { enabled: true },
+      },
+    });
   }, []);
 
   return (
     <div ref={mapRef} className={styles.wrapper}>
       <Stage width={3480} height={3480}>
         <Layer>
-          {/* <Rect x={20} y={3000} width={50} height={50} fill="red" /> */}
-          {Array(115)
+          {/* {Array(115)
             .fill(0)
             .map((_, i) => {
               return Array(115)
                 .fill(0)
                 .map((_, j) => <Circle key={j} x={i * 30} y={j * 30} radius={15} fill="#313132" />);
-            })}
+            })} */}
         </Layer>
       </Stage>
     </div>

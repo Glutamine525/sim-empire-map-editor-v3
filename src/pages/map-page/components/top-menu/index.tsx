@@ -1,5 +1,4 @@
 import { CivilType, CivilTypeLabel, MapType } from '@/map-core/type';
-import { DisableScrollPlugin } from '@/pages/utils/disable-scroll-plugin';
 import { changeCivil, changeMapType, changeNoWood, changeRotated } from '@/store/reducers/map';
 import { mapSelector } from '@/store/selectors';
 import { Button, Dropdown, Menu, Switch, Typography } from '@arco-design/web-react';
@@ -18,7 +17,6 @@ const TopMenu = () => {
   const d = useDispatch();
 
   useEffect(() => {
-    Scrollbar.use(DisableScrollPlugin);
     Scrollbar.init(topMenuRef.current!, {
       damping: 0.2,
       alwaysShowTracks: true,
