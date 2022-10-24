@@ -24,9 +24,11 @@
   "dependencies": {
     "@arco-design/web-react": "^2.40.2",
     "@reduxjs/toolkit": "^1.8.6",
+    "konva": "^8.3.13",
     "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-konva": "^18.2.3",
     "react-redux": "^8.0.4",
     "react-router-dom": "^6.4.1",
     "redux": "^4.2.0",

@@ -13,7 +13,7 @@ const MenuItem = Menu.Item;
 const SubMenu = Menu.SubMenu;
 
 const LeftMenu = () => {
-  const menuRef = useRef<HTMLDivElement>();
+  const leftMenuRef = useRef<HTMLDivElement>();
 
   const { civil } = useSelector(mapSelector);
 
@@ -40,7 +40,7 @@ const LeftMenu = () => {
   });
 
   useEffect(() => {
-    Scrollbar.init(menuRef.current!, { damping: 0.2 });
+    Scrollbar.init(leftMenuRef.current!, { damping: 0.2 });
   }, []);
 
   useEffect(() => {
@@ -60,49 +60,52 @@ const LeftMenu = () => {
   }, [civil]);
 
   return (
-    <div>
-      <div className={[styles.container].join(' ')}>
-        <Menu
-          ref={menuRef}
-          style={{ height: '100%' }}
-          selectable={false}
-          tooltipProps={{ disabled: true }}
-          accordion={true}
-          openKeys={openKeys}
-          onClickSubMenu={(v) => setOpenKeys([v as CatalogType])}
-          onClickMenuItem={(_, __, path) => {
-            if (path.length === 1) {
-              return;
-            }
-            console.log(path);
-          }}>
-          {Object.entries(catalog).map(([c, sub]) => {
-            return !sub.length ? (
-              <MenuItem key={c}>
-                <img className={styles['menu-icon']} src={getImgUrl(`${c}.png`)} />
-                <Text bold>{c}</Text>
-              </MenuItem>
-            ) : (
-              <SubMenu
-                key={c}
-                title={
-                  <>
-                    <img className={styles['menu-icon']} src={getImgUrl(`${c}.png`)} />
-                    <Text bold>{c}</Text>
-                  </>
-                }>
-                {sub.map((v, i) => (
-                  <MenuItem key={v.name}>
-                    <Text type="secondary">
-                      {i + 1}. {v.name}
-                    </Text>
-                  </MenuItem>
-                ))}
-              </SubMenu>
-            );
-          })}
-        </Menu>
-      </div>
+    <div className={styles.container}>
+      <Menu
+        ref={leftMenuRef}
+        style={{ width: 180, height: '100%' }}
+        selectable={false}
+        accordion={true}
+        openKeys={openKeys}
+        onClickSubMenu={(v) => {
+          if (v === openKeys[0]) {
+            setOpenKeys([]);
+            return;
+          }
+          setOpenKeys([v as CatalogType]);
+        }}
+        onClickMenuItem={(_, __, path) => {
+          if (path.length === 1) {
+            return;
+          }
+          console.log(path);
+        }}>
+        {Object.entries(catalog).map(([c, sub]) => {
+          return !sub.length ? (
+            <MenuItem key={c}>
+              <img className={styles['menu-icon']} src={getImgUrl(`${c}.png`)} />
+              <Text bold>{c}</Text>
+            </MenuItem>
+          ) : (
+            <SubMenu
+              key={c}
+              title={
+                <>
+                  <img className={styles['menu-icon']} src={getImgUrl(`${c}.png`)} />
+                  <Text bold>{c}</Text>
+                </>
+              }>
+              {sub.map((v, i) => (
+                <MenuItem key={v.name}>
+                  <Text type="secondary">
+                    {i + 1}. {v.name}
+                  </Text>
+                </MenuItem>
+              ))}
+            </SubMenu>
+          );
+        })}
+      </Menu>
     </div>
   );
 };
