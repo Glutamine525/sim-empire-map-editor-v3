@@ -1,5 +1,7 @@
 export const UnitPx = 30;
 
+export const MapLength = 116;
+
 export const MapType = [5, 4, 3];
 
 export enum CivilType {

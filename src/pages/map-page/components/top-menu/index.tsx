@@ -5,7 +5,8 @@ import {
   changeNoWood,
   changeRotated,
 } from '@/store/reducers/map-reducer';
-import { mapSelector } from '@/store/selectors';
+import { changeTheme } from '@/store/reducers/setting-reducer';
+import { mapSelector, settingSelector } from '@/store/selectors';
 import { Button, Dropdown, Menu, Switch, Typography } from '@arco-design/web-react';
 import { IconMenu, IconQuestionCircle } from '@arco-design/web-react/icon';
 import React, { useEffect, useRef } from 'react';
@@ -19,6 +20,7 @@ const TopMenu = () => {
   const topMenuRef = useRef<HTMLDivElement>(null);
 
   const { mapType, civil, noWood, rotated, operation } = useSelector(mapSelector);
+  const { theme } = useSelector(settingSelector);
   const d = useDispatch();
 
   useEffect(() => {
@@ -31,12 +33,12 @@ const TopMenu = () => {
         },
       },
     });
-    const darkThemeMq = window.matchMedia('(prefers-color-scheme: dark)');
-    if (darkThemeMq.matches) {
-      document.body.setAttribute('arco-theme', 'dark');
-    } else {
-      document.body.removeAttribute('arco-theme');
-    }
+    // const darkThemeMq = window.matchMedia('(prefers-color-scheme: dark)');
+    // if (darkThemeMq.matches) {
+    //   document.body.setAttribute('arco-theme', 'dark');
+    // } else {
+    //   document.body.removeAttribute('arco-theme');
+    // }
   }, []);
 
   const MapTypeList = (
@@ -100,11 +102,14 @@ const TopMenu = () => {
             <div>
               <Text type="secondary">暗色: </Text>
               <Switch
+                checked={theme === 'dark'}
                 onChange={(on) => {
                   if (on) {
                     document.body.setAttribute('arco-theme', 'dark');
+                    d(changeTheme('dark'));
                   } else {
                     document.body.removeAttribute('arco-theme');
+                    d(changeTheme('light'));
                   }
                 }}
               />
