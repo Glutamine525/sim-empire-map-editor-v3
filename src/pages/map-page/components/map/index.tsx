@@ -1,3 +1,4 @@
+import { BorderStyleType } from '@/map-core/building';
 import { MapLength, OperationType, UnitPx } from '@/map-core/type';
 import { isInRange } from '@/map-core/util';
 import { mapSelector } from '@/store/selectors';
@@ -18,7 +19,19 @@ const PerformanceTestBuilding = Array(116)
         if (!isInRange(i + 1, j + 1)) {
           return null;
         }
-        return <Building key={`${i}-${j}`} li={i + 1} co={j + 1} w={1} h={1} />;
+        return (
+          <Building
+            key={`${i}-${j}`}
+            line={i + 1}
+            column={j + 1}
+            width={1}
+            height={1}
+            borderTStyle={BorderStyleType.Dashed}
+            borderRStyle={BorderStyleType.Dashed}
+            borderBStyle={BorderStyleType.Dashed}
+            borderLStyle={BorderStyleType.Dashed}
+          />
+        );
       });
   });
 
@@ -58,7 +71,40 @@ const Map = () => {
       <Stage width={MapLength * UnitPx} height={MapLength * UnitPx}>
         <MapLayerCells />
         <Layer name="buildings">
-          <Building li={60} co={60} w={1} h={1} />
+          {/* <Building
+            line={60}
+            column={60}
+            width={2}
+            height={2}
+            text="哈哈"
+            backgroundColor="red"
+            borderBStyle={BorderStyleType.Dashed}
+            borderRStyle={BorderStyleType.Dashed}
+          />
+          <Building
+            line={62}
+            column={60}
+            width={2}
+            height={2}
+            text="哈哈"
+            backgroundColor="red"
+            borderTStyle={BorderStyleType.Dashed}
+            borderRStyle={BorderStyleType.Dashed}
+          />
+          <Building
+            line={60}
+            column={62}
+            width={2}
+            height={2}
+            text="哈哈"
+            backgroundColor="red"
+            borderLStyle={BorderStyleType.Dashed}
+            borderBStyle={BorderStyleType.Dashed}
+          />
+          <Building line={62} column={62} width={2} height={2} text="哈哈" backgroundColor="red"
+            borderTStyle={BorderStyleType.Dashed}
+            borderLStyle={BorderStyleType.Dashed} /> */}
+          {/* {PerformanceTestBuilding} */}
         </Layer>
       </Stage>
     </div>

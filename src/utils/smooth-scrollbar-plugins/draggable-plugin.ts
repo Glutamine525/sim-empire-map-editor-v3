@@ -12,9 +12,6 @@ export default class DraggablePlugin extends ScrollbarPlugin {
   #originY = 0;
 
   #onMouseDown = (e: MouseEvent) => {
-    if (!this.options.enabled) {
-      return;
-    }
     this.#isDragging = true;
     const { clientX, clientY } = e;
     this.#originX = this.scrollbar.scrollLeft + clientX;
@@ -22,9 +19,6 @@ export default class DraggablePlugin extends ScrollbarPlugin {
   };
 
   #onMouseMove = (e: MouseEvent) => {
-    if (!this.options.enabled) {
-      return;
-    }
     if (!this.#isDragging) {
       return;
     }
@@ -34,23 +28,32 @@ export default class DraggablePlugin extends ScrollbarPlugin {
   };
 
   #onMouseUp = () => {
-    if (!this.options.enabled) {
-      return;
-    }
     this.#isDragging = false;
   };
 
+  #preventDefault = (e: Event) => e.preventDefault();
+
   public override onInit() {
+    if (!this.options.enabled) {
+      return;
+    }
     this.scrollbar.containerEl.addEventListener('mousedown', this.#onMouseDown);
     this.scrollbar.containerEl.addEventListener('mousemove', this.#onMouseMove);
     this.scrollbar.containerEl.addEventListener('mouseup', this.#onMouseUp);
     this.scrollbar.containerEl.addEventListener('mouseleave', this.#onMouseUp);
+    this.scrollbar.track.xAxis.element.addEventListener('mousedown', this.#preventDefault);
+    this.scrollbar.track.yAxis.element.addEventListener('mousedown', this.#preventDefault);
   }
 
   public override onDestroy() {
+    if (!this.options.enabled) {
+      return;
+    }
     this.scrollbar.containerEl.removeEventListener('mousedown', this.#onMouseDown);
     this.scrollbar.containerEl.removeEventListener('mousemove', this.#onMouseMove);
     this.scrollbar.containerEl.removeEventListener('mouseup', this.#onMouseUp);
     this.scrollbar.containerEl.removeEventListener('mouseleave', this.#onMouseUp);
+    this.scrollbar.track.xAxis.element.removeEventListener('mousedown', this.#preventDefault);
+    this.scrollbar.track.yAxis.element.removeEventListener('mousedown', this.#preventDefault);
   }
 }

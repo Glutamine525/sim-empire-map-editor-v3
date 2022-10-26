@@ -92,15 +92,12 @@ export interface Building {
   isWonder: boolean;
   isDecoration: boolean;
   isGeneral: boolean;
-  // css
   width: number;
   height: number;
   color: string;
-  shadow: string;
+  textShadowColor: string;
   fontSize: number;
-  background: string;
-  borderColor: string;
-  borderWidth: number;
+  backgroundColor: string;
   borderTStyle: BorderStyleType;
   borderRStyle: BorderStyleType;
   borderBStyle: BorderStyleType;

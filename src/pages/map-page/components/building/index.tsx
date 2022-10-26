@@ -1,18 +1,52 @@
+import { BorderStyleType, MarkerColor } from '@/map-core/building';
 import { UnitPx } from '@/map-core/type';
 import React, { FC, useState } from 'react';
-import { Group, Rect, Text } from 'react-konva';
+import { Group, Line, Rect, Text } from 'react-konva';
 
 interface BuildingProps {
-  li: number; // line unit
-  co: number; // column unit
-  w: number; // width unit
-  h: number; // height unit
+  line: number;
+  column: number;
+  width: number;
+  height: number;
+  text?: string;
+  textColor?: string;
+  fontSize?: number;
+  backgroundColor?: string;
+  isRoad?: boolean;
+  marker?: number;
+  showMarker?: boolean;
+  fullProtection?: boolean;
+  textShadowColor?: string;
+  borderTStyle?: BorderStyleType;
+  borderRStyle?: BorderStyleType;
+  borderBStyle?: BorderStyleType;
+  borderLStyle?: BorderStyleType;
+  draggable?: boolean;
 }
 
 const Building: FC<BuildingProps> = (props) => {
-  const { li, co, w, h } = props;
+  const {
+    line: li,
+    column: co,
+    width: w,
+    height: h,
+    text = '',
+    textColor = 'black',
+    fontSize = 16,
+    backgroundColor = 'white',
+    isRoad = false,
+    marker = 0,
+    showMarker = true,
+    fullProtection = false,
+    textShadowColor = 'white',
+    borderTStyle = BorderStyleType.Solid,
+    borderRStyle = BorderStyleType.Solid,
+    borderBStyle = BorderStyleType.Solid,
+    borderLStyle = BorderStyleType.Solid,
+    draggable = false,
+  } = props;
 
-  const bw = Math.min(w, h, 3); // borderWidth
+  const bw = 1; // borderWidth
 
   const [curCoord, setCurCoord] = useState({ x: (co - 1) * UnitPx, y: (li - 1) * UnitPx });
 
@@ -20,7 +54,7 @@ const Building: FC<BuildingProps> = (props) => {
     <Group
       x={curCoord.x}
       y={curCoord.y}
-      draggable={false}
+      draggable={draggable}
       onDragMove={({ target }) => {
         setCurCoord({
           x: target.x(),
@@ -37,20 +71,84 @@ const Building: FC<BuildingProps> = (props) => {
           y: (Math.floor(y / UnitPx) + offsetLi) * UnitPx,
         });
       }}>
-      <Rect width={w * UnitPx} height={h * UnitPx} fill="blue" />
-      <Rect x={bw} y={bw} width={w * UnitPx - bw * 2} height={h * UnitPx - bw * 2} fill="white" />
-      <Text x={bw + 2} y={bw + 2} fill="green" fontSize={10} text="2" />
+      {borderTStyle === BorderStyleType.Dashed && (
+        <Line
+          points={[bw, 0.5, w * UnitPx - bw, 0.5]}
+          dash={[4, 5]}
+          stroke={backgroundColor}
+          strokeWidth={1}
+        />
+      )}
+      {borderRStyle === BorderStyleType.Dashed && (
+        <Line
+          points={[w * UnitPx - 0.5, bw, w * UnitPx - 0.5, h * UnitPx - bw]}
+          dash={[4, 5]}
+          stroke={backgroundColor}
+          strokeWidth={1}
+        />
+      )}
+      {borderBStyle === BorderStyleType.Dashed && (
+        <Line
+          points={[bw, h * UnitPx - 0.5, w * UnitPx - bw, h * UnitPx - 0.5]}
+          dash={[4, 5]}
+          stroke={backgroundColor}
+          strokeWidth={1}
+        />
+      )}
+      {borderLStyle === BorderStyleType.Dashed && (
+        <Line
+          points={[0.5, bw, 0.5, h * UnitPx - bw]}
+          dash={[4, 5]}
+          stroke={backgroundColor}
+          strokeWidth={1}
+        />
+      )}
+      <Rect
+        x={borderLStyle === BorderStyleType.None ? 0 : bw}
+        y={borderTStyle === BorderStyleType.None ? 0 : bw}
+        width={
+          w * UnitPx -
+          bw *
+            (2 -
+              (borderLStyle === BorderStyleType.None ? 1 : 0) -
+              (borderRStyle === BorderStyleType.None ? 1 : 0))
+        }
+        height={
+          h * UnitPx -
+          bw *
+            (2 -
+              (borderTStyle === BorderStyleType.None ? 1 : 0) -
+              (borderBStyle === BorderStyleType.None ? 1 : 0))
+        }
+        fill={backgroundColor}
+      />
+      {showMarker && (
+        <Text
+          x={bw + 2}
+          y={bw + 2}
+          fill={
+            isRoad ? MarkerColor.Normal : fullProtection ? MarkerColor.Safe : MarkerColor.Danger
+          }
+          fontSize={9}
+          shadowColor="white"
+          shadowBlur={4}
+          text={marker.toString()}
+        />
+      )}
       <Text
         x={bw}
         y={bw}
         width={w * UnitPx - bw * 2}
         height={h * UnitPx - bw * 2}
-        fill="red"
-        fontSize={16}
+        offsetY={-1}
+        text={text}
+        fill={textColor}
+        fontSize={fontSize}
+        shadowColor={textShadowColor}
+        shadowBlur={5}
+        ellipsis={true}
         align="center"
         verticalAlign="middle"
-        ellipsis={true}
-        text="宅"
       />
     </Group>
   );

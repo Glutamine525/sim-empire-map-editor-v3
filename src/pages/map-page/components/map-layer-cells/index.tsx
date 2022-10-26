@@ -9,7 +9,10 @@ import { useSelector } from 'react-redux';
 const MapLayerCells = () => {
   const { theme } = useSelector(settingSelector);
 
-  const { backgroundOuterColor, backgroundInnerColor, borderColor } = useMemo(getColors, [theme]);
+  const { backgroundOuterColor, backgroundInnerColor, borderColor } = useMemo(
+    () => getColors(theme),
+    [theme],
+  );
 
   return (
     <Layer name="cells">
