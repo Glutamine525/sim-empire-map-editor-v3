@@ -29,3 +29,9 @@ export enum OperationType {
   DeleteBuilding = '删除建筑',
   WatermarkMode = '水印模式',
 }
+
+export interface Cell {
+  isInRange: boolean;
+  occupied: string;
+  protection: { [key: string]: string[] };
+}

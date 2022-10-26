@@ -1,3 +1,4 @@
 export function getImgUrl(name: string) {
-  return new URL(`/assets/img/${name}`, import.meta.url).href;
+  const url = `/assets/img/${name}`;
+  return process.env.NODE_ENV === 'production' ? url : new URL(url, import.meta.url).href;
 }

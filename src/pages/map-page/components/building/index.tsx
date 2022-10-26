@@ -1,5 +1,6 @@
-import { BorderStyleType, MarkerColor } from '@/map-core/building';
+import { BorderStyleType } from '@/map-core/building';
 import { UnitPx } from '@/map-core/type';
+import { getArcoColor } from '@/utils/color';
 import React, { FC, useState } from 'react';
 import { Group, Line, Rect, Text } from 'react-konva';
 
@@ -127,8 +128,13 @@ const Building: FC<BuildingProps> = (props) => {
           x={bw + 2}
           y={bw + 2}
           fill={
-            isRoad ? MarkerColor.Normal : fullProtection ? MarkerColor.Safe : MarkerColor.Danger
+            isRoad
+              ? 'black'
+              : fullProtection
+              ? getArcoColor('--success-6')
+              : getArcoColor('--danger-6')
           }
+          fontStyle="bold"
           fontSize={9}
           shadowColor="white"
           shadowBlur={4}
@@ -147,6 +153,7 @@ const Building: FC<BuildingProps> = (props) => {
         shadowColor={textShadowColor}
         shadowBlur={5}
         ellipsis={true}
+        fontStyle="bold"
         align="center"
         verticalAlign="middle"
       />

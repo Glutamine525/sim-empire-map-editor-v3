@@ -1,6 +1,6 @@
 import { BorderStyleType } from '@/map-core/building';
 import { MapLength, OperationType, UnitPx } from '@/map-core/type';
-import { isInRange } from '@/map-core/util';
+import { isInRange } from '@/utils/coord';
 import { mapSelector } from '@/store/selectors';
 import { useEffect, useRef } from 'react';
 import { Stage, Layer } from 'react-konva';
@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import Scrollbar from 'smooth-scrollbar';
 import Building from '../building';
 import MapLayerCells from '../map-layer-cells';
+import MapLayerFixedBuildings from '../map-layer-fixed-buildings';
 import styles from './index.module.less';
 
 const PerformanceTestBuilding = Array(116)
@@ -70,6 +71,7 @@ const Map = () => {
     <div ref={mapRef} className={styles.wrapper}>
       <Stage width={MapLength * UnitPx} height={MapLength * UnitPx}>
         <MapLayerCells />
+        <MapLayerFixedBuildings />
         <Layer name="buildings">
           {/* <Building
             line={60}

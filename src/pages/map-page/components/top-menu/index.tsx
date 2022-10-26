@@ -1,8 +1,9 @@
+import { MapCore } from '@/map-core';
 import { CivilType, CivilTypeLabel, MapType, OperationType } from '@/map-core/type';
 import {
   changeCivil,
   changeMapType,
-  changeNoWood,
+  changeNoTree,
   changeRotated,
 } from '@/store/reducers/map-reducer';
 import { changeTheme } from '@/store/reducers/setting-reducer';
@@ -19,7 +20,7 @@ const { Text } = Typography;
 const TopMenu = () => {
   const topMenuRef = useRef<HTMLDivElement>(null);
 
-  const { mapType, civil, noWood, rotated, operation } = useSelector(mapSelector);
+  const { mapType, civil, noTree, rotated, operation } = useSelector(mapSelector);
   const { theme } = useSelector(settingSelector);
   const d = useDispatch();
 
@@ -44,7 +45,14 @@ const TopMenu = () => {
   const MapTypeList = (
     <Menu>
       {MapType.map((v) => (
-        <Menu.Item key={v.toString()} onClick={() => d(changeMapType(v))}>
+        <Menu.Item
+          key={v.toString()}
+          onClick={() => {
+            const core = MapCore.getInstance();
+            core.mapType = v;
+            core.init(v, civil, noTree);
+            d(changeMapType(v));
+          }}>
           {v}
         </Menu.Item>
       ))}
@@ -93,7 +101,13 @@ const TopMenu = () => {
             </div>
             <div>
               <Text type="secondary">无木: </Text>
-              <Switch checked={noWood} onChange={(v) => d(changeNoWood(v))} />
+              <Switch
+                checked={noTree}
+                onChange={(v) => {
+                  MapCore.getInstance().toggleNoTree(v);
+                  d(changeNoTree(v));
+                }}
+              />
             </div>
             <div>
               <Text type="secondary">旋转: </Text>

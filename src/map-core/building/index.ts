@@ -80,32 +80,26 @@ export interface SimpleBuilding {
 }
 
 export interface Building {
-  name: string;
-  text: string;
-  range: number;
-  marker: number;
-  catalog: CatalogType;
-  isFixed: boolean;
-  isBarrier: boolean;
-  isRoad: boolean;
-  isProtection: boolean;
-  isWonder: boolean;
-  isDecoration: boolean;
-  isGeneral: boolean;
+  name?: string;
+  text?: string;
+  range?: number;
+  marker?: number;
+  catalog?: CatalogType;
+  isFixed?: boolean;
+  isBarrier?: boolean;
+  isRoad?: boolean;
+  isProtection?: boolean;
+  isWonder?: boolean;
+  isDecoration?: boolean;
+  isGeneral?: boolean;
   width: number;
   height: number;
-  color: string;
-  textShadowColor: string;
-  fontSize: number;
+  textColor?: string;
+  textShadowColor?: string;
+  fontSize?: number;
   backgroundColor: string;
-  borderTStyle: BorderStyleType;
-  borderRStyle: BorderStyleType;
-  borderBStyle: BorderStyleType;
-  borderLStyle: BorderStyleType;
-}
-
-export enum MarkerColor {
-  Normal = 'black',
-  Danger = 'rgb(var(--danger-6))',
-  Safe = 'rgb(var(--success-6))',
+  borderTStyle?: BorderStyleType;
+  borderRStyle?: BorderStyleType;
+  borderBStyle?: BorderStyleType;
+  borderLStyle?: BorderStyleType;
 }

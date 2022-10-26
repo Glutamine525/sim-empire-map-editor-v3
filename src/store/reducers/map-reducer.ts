@@ -4,7 +4,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 export interface MapState {
   mapType: number;
   civil: CivilType;
-  noWood: boolean;
+  noTree: boolean;
   rotated: boolean;
   operation: OperationType;
 }
@@ -12,7 +12,7 @@ export interface MapState {
 const initialState = {
   mapType: 5,
   civil: CivilType.China,
-  noWood: false,
+  noTree: false,
   rotated: false,
   operation: OperationType.Empty,
 };
@@ -27,8 +27,8 @@ const mapReducer = createSlice({
     changeCivil(state, action: PayloadAction<CivilType>) {
       state.civil = action.payload;
     },
-    changeNoWood(state, action: PayloadAction<boolean>) {
-      state.noWood = action.payload;
+    changeNoTree(state, action: PayloadAction<boolean>) {
+      state.noTree = action.payload;
     },
     changeRotated(state, action: PayloadAction<boolean>) {
       state.rotated = action.payload;
@@ -39,7 +39,7 @@ const mapReducer = createSlice({
   },
 });
 
-export const { changeMapType, changeCivil, changeNoWood, changeRotated, changeOperation } =
+export const { changeMapType, changeCivil, changeNoTree, changeRotated, changeOperation } =
   mapReducer.actions;
 
 export default mapReducer.reducer;
