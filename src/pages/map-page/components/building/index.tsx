@@ -1,27 +1,18 @@
-import { BorderStyleType } from '@/map-core/building';
+import { Building as _Building, BorderStyleType } from '@/map-core/building';
 import { UnitPx } from '@/map-core/type';
+import { changeHoveredCoord } from '@/store/reducers/map-reducer';
+import { RoadImg } from '@/utils/building';
 import { getArcoColor } from '@/utils/color';
-import React, { FC, useState } from 'react';
+import React, { FC, memo, useState } from 'react';
 import { Group, Line, Rect, Text } from 'react-konva';
+import { useDispatch } from 'react-redux';
 
-interface BuildingProps {
+interface BuildingProps extends _Building {
   line: number;
   column: number;
-  width: number;
-  height: number;
-  text?: string;
-  textColor?: string;
-  fontSize?: number;
-  backgroundColor?: string;
-  isRoad?: boolean;
-  marker?: number;
   showMarker?: boolean;
+  canHover?: boolean;
   fullProtection?: boolean;
-  textShadowColor?: string;
-  borderTStyle?: BorderStyleType;
-  borderRStyle?: BorderStyleType;
-  borderBStyle?: BorderStyleType;
-  borderLStyle?: BorderStyleType;
   draggable?: boolean;
 }
 
@@ -31,13 +22,14 @@ const Building: FC<BuildingProps> = (props) => {
     column: co,
     width: w,
     height: h,
+    backgroundColor,
     text = '',
     textColor = 'black',
     fontSize = 16,
-    backgroundColor = 'white',
     isRoad = false,
     marker = 0,
     showMarker = true,
+    canHover = true,
     fullProtection = false,
     textShadowColor = 'white',
     borderTStyle = BorderStyleType.Solid,
@@ -47,14 +39,20 @@ const Building: FC<BuildingProps> = (props) => {
     draggable = false,
   } = props;
 
+  const x = (co - 1) * UnitPx;
+  const y = (li - 1) * UnitPx;
   const bw = 1; // borderWidth
 
-  const [curCoord, setCurCoord] = useState({ x: (co - 1) * UnitPx, y: (li - 1) * UnitPx });
+  const [curCoord, setCurCoord] = useState({ x, y });
+
+  const d = useDispatch();
+
+  console.log('rendered <Building />');
 
   return (
     <Group
-      x={curCoord.x}
-      y={curCoord.y}
+      x={draggable ? curCoord.x : x}
+      y={draggable ? curCoord.y : y}
       draggable={draggable}
       onDragMove={({ target }) => {
         setCurCoord({
@@ -71,7 +69,8 @@ const Building: FC<BuildingProps> = (props) => {
           x: (Math.floor(x / UnitPx) + offsetCo) * UnitPx,
           y: (Math.floor(y / UnitPx) + offsetLi) * UnitPx,
         });
-      }}>
+      }}
+      onMouseOver={!canHover ? undefined : () => d(changeHoveredCoord({ line: li, column: co }))}>
       {borderTStyle === BorderStyleType.Dashed && (
         <Line
           points={[bw, 0.5, w * UnitPx - bw, 0.5]}
@@ -121,7 +120,8 @@ const Building: FC<BuildingProps> = (props) => {
               (borderTStyle === BorderStyleType.None ? 1 : 0) -
               (borderBStyle === BorderStyleType.None ? 1 : 0))
         }
-        fill={backgroundColor}
+        fillPatternImage={isRoad ? RoadImg : undefined}
+        fill={isRoad ? undefined : backgroundColor}
       />
       {showMarker && (
         <Text
@@ -161,4 +161,4 @@ const Building: FC<BuildingProps> = (props) => {
   );
 };
 
-export default Building;
+export default memo(Building);

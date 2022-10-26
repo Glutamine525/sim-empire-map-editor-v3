@@ -1,6 +1,6 @@
 import { MapCore } from '@/map-core';
 import { mapSelector } from '@/store/selectors';
-import { showMarker } from '@/utils/building';
+import { canHover, showMarker } from '@/utils/building';
 import { parseBuildingKey } from '@/utils/coord';
 import React, { useMemo } from 'react';
 import { Layer } from 'react-konva';
@@ -19,7 +19,16 @@ const MapLayerFixedBuildings = () => {
     <Layer name="fix-buildings">
       {fixedBuildings.map(([key, b]) => {
         const [line, column] = parseBuildingKey(key);
-        return <Building key={key} line={line} column={column} {...b} showMarker={showMarker(b)} />;
+        return (
+          <Building
+            key={key}
+            line={line}
+            column={column}
+            {...b}
+            showMarker={showMarker(b)}
+            canHover={canHover(b)}
+          />
+        );
       })}
     </Layer>
   );

@@ -12,6 +12,11 @@ export default class DraggablePlugin extends ScrollbarPlugin {
   #originY = 0;
 
   #onMouseDown = (e: MouseEvent) => {
+    if (e.button !== 0) {
+      // 非左键点击，禁止拖拽
+      return;
+    }
+
     this.#isDragging = true;
     const { clientX, clientY } = e;
     this.#originX = this.scrollbar.scrollLeft + clientX;

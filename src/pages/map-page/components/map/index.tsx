@@ -10,6 +10,7 @@ import Building from '../building';
 import MapLayerCells from '../map-layer-cells';
 import MapLayerFixedBuildings from '../map-layer-fixed-buildings';
 import styles from './index.module.less';
+import MapLayerFunctionality from '../map-layer-functionality';
 
 const PerformanceTestBuilding = Array(116)
   .fill(0)
@@ -27,6 +28,7 @@ const PerformanceTestBuilding = Array(116)
             column={j + 1}
             width={1}
             height={1}
+            backgroundColor="white"
             borderTStyle={BorderStyleType.Dashed}
             borderRStyle={BorderStyleType.Dashed}
             borderBStyle={BorderStyleType.Dashed}
@@ -72,42 +74,7 @@ const Map = () => {
       <Stage width={MapLength * UnitPx} height={MapLength * UnitPx}>
         <MapLayerCells />
         <MapLayerFixedBuildings />
-        <Layer name="buildings">
-          {/* <Building
-            line={60}
-            column={60}
-            width={2}
-            height={2}
-            text="哈哈"
-            backgroundColor="red"
-            borderBStyle={BorderStyleType.Dashed}
-            borderRStyle={BorderStyleType.Dashed}
-          />
-          <Building
-            line={62}
-            column={60}
-            width={2}
-            height={2}
-            text="哈哈"
-            backgroundColor="red"
-            borderTStyle={BorderStyleType.Dashed}
-            borderRStyle={BorderStyleType.Dashed}
-          />
-          <Building
-            line={60}
-            column={62}
-            width={2}
-            height={2}
-            text="哈哈"
-            backgroundColor="red"
-            borderLStyle={BorderStyleType.Dashed}
-            borderBStyle={BorderStyleType.Dashed}
-          />
-          <Building line={62} column={62} width={2} height={2} text="哈哈" backgroundColor="red"
-            borderTStyle={BorderStyleType.Dashed}
-            borderLStyle={BorderStyleType.Dashed} /> */}
-          {/* {PerformanceTestBuilding} */}
-        </Layer>
+        <MapLayerFunctionality />
       </Stage>
     </div>
   );

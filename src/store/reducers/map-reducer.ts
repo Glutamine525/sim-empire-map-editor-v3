@@ -7,6 +7,7 @@ export interface MapState {
   noTree: boolean;
   rotated: boolean;
   operation: OperationType;
+  hoveredCoord: { line: number; column: number };
 }
 
 const initialState = {
@@ -15,6 +16,7 @@ const initialState = {
   noTree: false,
   rotated: false,
   operation: OperationType.Empty,
+  hoveredCoord: { line: 0, column: 0 },
 };
 
 const mapReducer = createSlice({
@@ -36,10 +38,19 @@ const mapReducer = createSlice({
     changeOperation(state, action: PayloadAction<OperationType>) {
       state.operation = action.payload;
     },
+    changeHoveredCoord(state, action: PayloadAction<{ line: number; column: number }>) {
+      state.hoveredCoord = action.payload;
+    },
   },
 });
 
-export const { changeMapType, changeCivil, changeNoTree, changeRotated, changeOperation } =
-  mapReducer.actions;
+export const {
+  changeMapType,
+  changeCivil,
+  changeNoTree,
+  changeRotated,
+  changeOperation,
+  changeHoveredCoord,
+} = mapReducer.actions;
 
 export default mapReducer.reducer;
