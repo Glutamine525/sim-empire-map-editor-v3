@@ -2,7 +2,7 @@ import { MapLength, UnitPx } from '@/map-core/type';
 import { isInRange } from '@/utils/coord';
 import { settingSelector } from '@/store/selectors';
 import { getColors } from '@/utils/color';
-import React, { useMemo } from 'react';
+import React, { memo, useMemo } from 'react';
 import { Layer, Rect, Shape } from 'react-konva';
 import { useSelector } from 'react-redux';
 
@@ -67,4 +67,4 @@ const MapLayerCells = () => {
   );
 };
 
-export default MapLayerCells;
+export default memo(MapLayerCells);

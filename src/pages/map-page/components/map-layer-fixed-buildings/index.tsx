@@ -2,7 +2,7 @@ import { MapCore } from '@/map-core';
 import { mapSelector } from '@/store/selectors';
 import { canHover, showMarker } from '@/utils/building';
 import { parseBuildingKey } from '@/utils/coord';
-import React, { useMemo } from 'react';
+import React, { memo, useMemo } from 'react';
 import { Layer } from 'react-konva';
 import { useSelector } from 'react-redux';
 import Building from '../building';
@@ -34,4 +34,4 @@ const MapLayerFixedBuildings = () => {
   );
 };
 
-export default MapLayerFixedBuildings;
+export default memo(MapLayerFixedBuildings);

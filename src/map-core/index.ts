@@ -108,6 +108,13 @@ export class MapCore {
     for (let key of keys) {
       const [line, column] = parseBuildingKey(key);
       this.cells[line][column].occupied = key;
+      if (FixedBuildingSize[type] > 1) {
+        for (let i = line; i < line + FixedBuildingSize[type]; i++) {
+          for (let j = column; j < column + FixedBuildingSize[type]; j++) {
+            this.cells[i][j].occupied = key;
+          }
+        }
+      }
       this.buildings[key] = {
         name: type === FixedBuildingType.Road ? '道路' : FixedBuildingText[type],
         text: FixedBuildingText[type],

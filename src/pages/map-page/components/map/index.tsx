@@ -2,8 +2,8 @@ import { BorderStyleType } from '@/map-core/building';
 import { MapLength, OperationType, UnitPx } from '@/map-core/type';
 import { isInRange } from '@/utils/coord';
 import { mapSelector } from '@/store/selectors';
-import { useEffect, useRef } from 'react';
-import { Stage, Layer } from 'react-konva';
+import { useEffect, useRef, useState } from 'react';
+import { Stage } from 'react-konva';
 import { useSelector } from 'react-redux';
 import Scrollbar from 'smooth-scrollbar';
 import Building from '../building';
@@ -44,6 +44,8 @@ const Map = () => {
 
   const { operation } = useSelector(mapSelector);
 
+  const [curCoord, setCurCoord] = useState({ line: 0, column: 0 });
+
   useEffect(() => {
     console.log(performance.now());
   }, []);
@@ -71,10 +73,20 @@ const Map = () => {
 
   return (
     <div ref={mapRef} className={styles.wrapper}>
-      <Stage width={MapLength * UnitPx} height={MapLength * UnitPx}>
+      <Stage
+        width={MapLength * UnitPx}
+        height={MapLength * UnitPx}
+        onMouseMove={(e) => {
+          const {
+            evt: { offsetX: x, offsetY: y },
+          } = e;
+          const column = Math.ceil(x / UnitPx);
+          const line = Math.ceil(y / UnitPx);
+          setCurCoord({ line, column });
+        }}>
         <MapLayerCells />
         <MapLayerFixedBuildings />
-        <MapLayerFunctionality />
+        <MapLayerFunctionality curCoord={curCoord} />
       </Stage>
     </div>
   );

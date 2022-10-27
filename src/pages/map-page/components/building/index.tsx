@@ -1,6 +1,5 @@
 import { Building as _Building, BorderStyleType } from '@/map-core/building';
 import { UnitPx } from '@/map-core/type';
-import { changeHoveredCoord } from '@/store/reducers/map-reducer';
 import { RoadImg } from '@/utils/building';
 import { getArcoColor } from '@/utils/color';
 import React, { FC, memo, useState } from 'react';
@@ -11,7 +10,7 @@ interface BuildingProps extends _Building {
   line: number;
   column: number;
   showMarker?: boolean;
-  canHover?: boolean;
+  isHovered?: boolean;
   fullProtection?: boolean;
   draggable?: boolean;
 }
@@ -29,7 +28,7 @@ const Building: FC<BuildingProps> = (props) => {
     isRoad = false,
     marker = 0,
     showMarker = true,
-    canHover = true,
+    isHovered = false,
     fullProtection = false,
     textShadowColor = 'white',
     borderTStyle = BorderStyleType.Solid,
@@ -39,8 +38,8 @@ const Building: FC<BuildingProps> = (props) => {
     draggable = false,
   } = props;
 
-  const x = (co - 1) * UnitPx;
-  const y = (li - 1) * UnitPx;
+  const x = !isHovered ? (co - 1) * UnitPx : (co - 1 + w / 2) * UnitPx;
+  const y = !isHovered ? (li - 1) * UnitPx : (li - 1 + h / 2) * UnitPx;
   const bw = 1; // borderWidth
 
   const [curCoord, setCurCoord] = useState({ x, y });
@@ -53,6 +52,8 @@ const Building: FC<BuildingProps> = (props) => {
     <Group
       x={draggable ? curCoord.x : x}
       y={draggable ? curCoord.y : y}
+      scale={!isHovered ? undefined : { x: 1.01, y: 1.01 }}
+      offset={!isHovered ? undefined : { x: (w * UnitPx) / 2, y: (h * UnitPx) / 2 }}
       draggable={draggable}
       onDragMove={({ target }) => {
         setCurCoord({
@@ -69,8 +70,7 @@ const Building: FC<BuildingProps> = (props) => {
           x: (Math.floor(x / UnitPx) + offsetCo) * UnitPx,
           y: (Math.floor(y / UnitPx) + offsetLi) * UnitPx,
         });
-      }}
-      onMouseOver={!canHover ? undefined : () => d(changeHoveredCoord({ line: li, column: co }))}>
+      }}>
       {borderTStyle === BorderStyleType.Dashed && (
         <Line
           points={[bw, 0.5, w * UnitPx - bw, 0.5]}
@@ -122,6 +122,8 @@ const Building: FC<BuildingProps> = (props) => {
         }
         fillPatternImage={isRoad ? RoadImg : undefined}
         fill={isRoad ? undefined : backgroundColor}
+        shadowColor={!isHovered ? undefined : getArcoColor('--gray-5')}
+        shadowBlur={!isHovered ? undefined : 10}
       />
       {showMarker && (
         <Text

@@ -1,37 +1,41 @@
-import React, { useEffect, useMemo } from 'react';
-import { Group, Layer, Transformer } from 'react-konva';
+import React, { FC, useMemo } from 'react';
+import { Layer } from 'react-konva';
 import { Building as _Building } from '@/map-core/building';
 import Building from '../building';
-import { useSelector } from 'react-redux';
-import { mapSelector } from '@/store/selectors';
 import { MapCore } from '@/map-core';
-import { getBuildingKey } from '@/utils/coord';
-import { showMarker } from '@/utils/building';
+import { parseBuildingKey } from '@/utils/coord';
+import { canHover, showMarker } from '@/utils/building';
 
-const MapLayerFunctionality = () => {
-  const { hoveredCoord } = useSelector(mapSelector);
+interface MapLayerFunctionalityProps {
+  curCoord: { line: number; column: number };
+}
+
+const MapLayerFunctionality: FC<MapLayerFunctionalityProps> = (props) => {
+  const {
+    curCoord: { line, column },
+  } = props;
 
   const hoveredBuilding = useMemo(() => {
-    const { line, column } = hoveredCoord;
     if (!line || !column) {
       return null;
     }
-    return MapCore.getInstance().buildings[getBuildingKey(line, column)];
-  }, [hoveredCoord]);
+    const core = MapCore.getInstance();
+    const { occupied } = core.cells[line][column];
+    if (!occupied) {
+      return null;
+    }
+    const b = core.buildings[occupied];
+    if (!canHover(b)) {
+      return null;
+    }
+    const [realLi, realCo] = parseBuildingKey(occupied);
+    return { ...b, line: realLi, column: realCo };
+  }, [line, column]);
 
   return (
     <Layer name="functionality">
       {hoveredBuilding && (
-        <Group>
-          <Building
-            key="hoveredBuilding"
-            line={hoveredCoord.line}
-            column={hoveredCoord.column}
-            {...hoveredBuilding}
-            showMarker={showMarker(hoveredBuilding)}
-            canHover={false}
-          />
-        </Group>
+        <Building {...hoveredBuilding} showMarker={showMarker(hoveredBuilding)} isHovered={true} />
       )}
     </Layer>
   );
