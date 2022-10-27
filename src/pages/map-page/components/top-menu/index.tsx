@@ -20,7 +20,7 @@ const { Text } = Typography;
 const TopMenu = () => {
   const topMenuRef = useRef<HTMLDivElement>(null);
 
-  const { mapType, civil, noTree, rotated, operation } = useSelector(mapSelector);
+  const { mapType, civil, noTree, rotated, operation, brush } = useSelector(mapSelector);
   const { theme } = useSelector(settingSelector);
   const d = useDispatch();
 
@@ -43,34 +43,28 @@ const TopMenu = () => {
   }, []);
 
   const MapTypeList = (
-    <Menu>
+    <Menu
+      onClickMenuItem={(_key) => {
+        const key = Number(_key);
+        const core = MapCore.getInstance();
+        core.mapType = key;
+        core.init(key, civil, noTree);
+        d(changeMapType(key));
+      }}>
       {MapType.map((v) => (
-        <Menu.Item
-          key={v.toString()}
-          onClick={() => {
-            const core = MapCore.getInstance();
-            core.mapType = v;
-            core.init(v, civil, noTree);
-            d(changeMapType(v));
-          }}>
-          {v}
-        </Menu.Item>
+        <Menu.Item key={v.toString()}>{v}</Menu.Item>
       ))}
     </Menu>
   );
 
   const CivilTypeList = (
-    <Menu>
+    <Menu onClickMenuItem={(key) => d(changeCivil(key as CivilType))}>
       {Object.entries(CivilTypeLabel).map((v) => {
         const [civilType, civilLabel] = v;
         if (civilType === CivilType.Custom) {
           return null;
         }
-        return (
-          <Menu.Item key={civilType} onClick={() => d(changeCivil(civilType as CivilType))}>
-            {civilLabel}
-          </Menu.Item>
-        );
+        return <Menu.Item key={civilType}>{civilLabel}</Menu.Item>;
       })}
     </Menu>
   );
@@ -132,7 +126,10 @@ const TopMenu = () => {
           <div className={styles['current-operation']}>
             <Text type="secondary">当前操作: </Text>
             <Text bold>
-              {operation} {operation === OperationType.PlaceBuilding ? '道路' : ''}
+              {operation}{' '}
+              {operation === OperationType.PlaceBuilding
+                ? Array.from(new Set([brush.catalog, brush.name])).join('-')
+                : ''}
             </Text>
           </div>
           <div className={styles['building-calculator']}>

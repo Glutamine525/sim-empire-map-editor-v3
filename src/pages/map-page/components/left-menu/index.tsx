@@ -7,7 +7,7 @@ import { BuildingType, CatalogType, CivilBuilding, SimpleBuilding } from '@/map-
 import { GeneralBuilding } from '@/map-core/building/general';
 import { useDispatch, useSelector } from 'react-redux';
 import { mapSelector } from '@/store/selectors';
-import { changeOperation } from '@/store/reducers/map-reducer';
+import { changeBrush, changeOperation } from '@/store/reducers/map-reducer';
 import { OperationType } from '@/map-core/type';
 
 const { Text } = Typography;
@@ -21,7 +21,7 @@ const LeftMenu = () => {
   const d = useDispatch();
 
   const [openKeys, setOpenKeys] = useState([CatalogType.Municipal]);
-  const [catalog, setCatalog] = useState<{ [key in CatalogType]: SimpleBuilding[] }>({
+  const [catalog, setCatalog] = useState<{ [key in CatalogType]: { name: string }[] }>({
     [CatalogType.Road]: [],
     [CatalogType.Residence]: [],
     [CatalogType.Agriculture]: [],
@@ -78,9 +78,49 @@ const LeftMenu = () => {
           setOpenKeys([v as CatalogType]);
         }}
         onClickMenuItem={(_, __, path) => {
+          console.log(path);
+          if (
+            path.length === 2 &&
+            Object.entries(BuildingType)
+              .map(([_, v]) => v as string)
+              .includes(path[1])
+          ) {
+            const type = path[1] as BuildingType;
+            const record: SimpleBuilding = CivilBuilding[civil][type].find(
+              (v) => v.name === path[0],
+            )!;
+            console.log(record);
+            d(changeOperation(OperationType.PlaceBuilding));
+            d(
+              changeBrush({
+                width: record.size,
+                height: record.size,
+                range: record.range,
+                backgroundColor: record.background,
+                name: record.name,
+                text: record.text,
+                catalog: path[1] as CatalogType,
+                isProtection:
+                  type === BuildingType.Municipal &&
+                  CivilBuilding[civil]['防护'].includes(record.name),
+                isWonder: type === BuildingType.Wonder || record.isPalace,
+                isDecoration: type === BuildingType.Decoration,
+              }),
+            );
+            return;
+          }
           switch (path[0]) {
             case CatalogType.Road:
               d(changeOperation(OperationType.PlaceBuilding));
+              d(
+                changeBrush({
+                  width: 1,
+                  height: 1,
+                  name: CatalogType.Road,
+                  catalog: CatalogType.Road,
+                  isRoad: true,
+                }),
+              );
               break;
             default:
               d(changeOperation(OperationType.Empty));

@@ -55,28 +55,13 @@ export enum BorderStyleType {
 }
 
 export interface SimpleBuilding {
-  // 建筑配置文件对应的简单建筑
+  // 建筑配置文件对应的简单建筑{
   name: string;
-  text?: string;
-  catalog?: string;
-  catagory?: string;
-  size?: number;
-  width?: number;
-  height?: number;
-  range?: number;
-  color?: string;
-  shadow?: string;
-  background?: string;
-  fontSize?: number;
-  isRoad?: boolean;
-  isWonder?: boolean;
-  isMiracle?: boolean;
-  isDecoration?: boolean;
+  text: string;
+  size: number;
+  range: number;
+  background: string;
   isPalace?: boolean;
-  isGeneral?: boolean;
-  isProtection?: boolean;
-  isBarrier?: boolean;
-  isFixed?: boolean;
 }
 
 export interface Building {
@@ -97,7 +82,7 @@ export interface Building {
   textColor?: string;
   textShadowColor?: string;
   fontSize?: number;
-  backgroundColor: string;
+  backgroundColor?: string;
   borderTStyle?: BorderStyleType;
   borderRStyle?: BorderStyleType;
   borderBStyle?: BorderStyleType;

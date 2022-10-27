@@ -44,7 +44,7 @@ const Map = () => {
 
   const { operation } = useSelector(mapSelector);
 
-  const [curCoord, setCurCoord] = useState({ line: 0, column: 0 });
+  const [curCoord, setCurCoord] = useState({ curLi: 0, curCo: 0 });
 
   useEffect(() => {
     console.log(performance.now());
@@ -82,11 +82,11 @@ const Map = () => {
           } = e;
           const column = Math.ceil(x / UnitPx);
           const line = Math.ceil(y / UnitPx);
-          setCurCoord({ line, column });
+          setCurCoord({ curLi: line, curCo: column });
         }}>
         <MapLayerCells />
         <MapLayerFixedBuildings />
-        <MapLayerFunctionality curCoord={curCoord} />
+        <MapLayerFunctionality {...curCoord} />
       </Stage>
     </div>
   );

@@ -20,5 +20,5 @@ module.exports = {
       flowVersion: '0.53',
     },
   },
-  rules: { complexity: ['off'] },
+  rules: { complexity: ['off'], 'max-params': ['off'] },
 };

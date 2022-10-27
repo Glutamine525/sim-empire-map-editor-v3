@@ -1,26 +1,34 @@
-import React, { FC, useMemo } from 'react';
+import React, { FC, memo, useMemo, useState } from 'react';
 import { Layer } from 'react-konva';
 import { Building as _Building } from '@/map-core/building';
 import Building from '../building';
 import { MapCore } from '@/map-core';
-import { parseBuildingKey } from '@/utils/coord';
+import { isAllInRange, parseBuildingKey } from '@/utils/coord';
 import { canHover, showMarker } from '@/utils/building';
+import { useSelector } from 'react-redux';
+import { mapSelector } from '@/store/selectors';
+import { OperationType } from '@/map-core/type';
 
 interface MapLayerFunctionalityProps {
-  curCoord: { line: number; column: number };
+  curLi: number;
+  curCo: number;
 }
 
 const MapLayerFunctionality: FC<MapLayerFunctionalityProps> = (props) => {
-  const {
-    curCoord: { line, column },
-  } = props;
+  const { curLi, curCo } = props;
+
+  console.log('<MapLayerFunctionality /> rendered');
+
+  const { operation, brush } = useSelector(mapSelector);
+
+  const [previewConfig, setPreviewConfig] = useState({ offLi: 0, offCo: 0 });
 
   const hoveredBuilding = useMemo(() => {
-    if (!line || !column) {
+    if (operation !== OperationType.Empty || !curLi || !curCo) {
       return null;
     }
     const core = MapCore.getInstance();
-    const { occupied } = core.cells[line][column];
+    const { occupied } = core.cells[curLi][curCo];
     if (!occupied) {
       return null;
     }
@@ -28,17 +36,35 @@ const MapLayerFunctionality: FC<MapLayerFunctionalityProps> = (props) => {
     if (!canHover(b)) {
       return null;
     }
-    const [realLi, realCo] = parseBuildingKey(occupied);
-    return { ...b, line: realLi, column: realCo };
-  }, [line, column]);
+    const [line, column] = parseBuildingKey(occupied);
+    return { ...b, line, column };
+  }, [operation, curLi, curCo]);
+
+  const previewBuilding = useMemo(() => {
+    if (operation !== OperationType.PlaceBuilding || !curLi || !curCo) {
+      return null;
+    }
+    const { width, height } = brush;
+    const [offLi, offCo] = [Math.floor((height - 1) / 2), Math.floor((width - 1) / 2)];
+    if (!isAllInRange(curLi - offLi, curCo - offCo, width - 1, height - 1)) {
+      return null;
+    }
+    setPreviewConfig({ offLi, offCo });
+    return brush;
+  }, [operation, curLi, curCo, brush]);
 
   return (
     <Layer name="functionality">
-      {hoveredBuilding && (
-        <Building {...hoveredBuilding} showMarker={showMarker(hoveredBuilding)} isHovered={true} />
+      {hoveredBuilding && <Building {...hoveredBuilding} isHovered={true} />}
+      {previewBuilding && (
+        <Building
+          line={curLi - previewConfig.offLi}
+          column={curCo - previewConfig.offCo}
+          {...previewBuilding}
+        />
       )}
     </Layer>
   );
 };
 
-export default MapLayerFunctionality;
+export default memo(MapLayerFunctionality);

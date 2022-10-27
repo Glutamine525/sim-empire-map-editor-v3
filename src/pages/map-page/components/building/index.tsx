@@ -1,15 +1,13 @@
 import { Building as _Building, BorderStyleType } from '@/map-core/building';
 import { UnitPx } from '@/map-core/type';
-import { RoadImg } from '@/utils/building';
+import { RoadImg, showMarker as _showMarker } from '@/utils/building';
 import { getArcoColor } from '@/utils/color';
 import React, { FC, memo, useState } from 'react';
 import { Group, Line, Rect, Text } from 'react-konva';
-import { useDispatch } from 'react-redux';
 
 interface BuildingProps extends _Building {
   line: number;
   column: number;
-  showMarker?: boolean;
   isHovered?: boolean;
   fullProtection?: boolean;
   draggable?: boolean;
@@ -21,13 +19,12 @@ const Building: FC<BuildingProps> = (props) => {
     column: co,
     width: w,
     height: h,
-    backgroundColor,
+    backgroundColor = 'white',
     text = '',
     textColor = 'black',
     fontSize = 16,
     isRoad = false,
     marker = 0,
-    showMarker = true,
     isHovered = false,
     fullProtection = false,
     textShadowColor = 'white',
@@ -41,12 +38,11 @@ const Building: FC<BuildingProps> = (props) => {
   const x = !isHovered ? (co - 1) * UnitPx : (co - 1 + w / 2) * UnitPx;
   const y = !isHovered ? (li - 1) * UnitPx : (li - 1 + h / 2) * UnitPx;
   const bw = 1; // borderWidth
+  const showMarker = _showMarker(props);
 
   const [curCoord, setCurCoord] = useState({ x, y });
 
-  const d = useDispatch();
-
-  console.log('rendered <Building />');
+  console.log('<Building /> rendered');
 
   return (
     <Group

@@ -19,16 +19,7 @@ const MapLayerFixedBuildings = () => {
     <Layer name="fix-buildings">
       {fixedBuildings.map(([key, b]) => {
         const [line, column] = parseBuildingKey(key);
-        return (
-          <Building
-            key={key}
-            line={line}
-            column={column}
-            {...b}
-            showMarker={showMarker(b)}
-            canHover={canHover(b)}
-          />
-        );
+        return <Building key={key} line={line} column={column} {...b} />;
       })}
     </Layer>
   );
