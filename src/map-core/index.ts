@@ -1,6 +1,6 @@
-import { BorderStyleType, Building } from './building';
+import { BorderStyleType, Building, CatalogType } from './building';
 import { Cell, CivilType, MapLength } from './type';
-import { getBuildingKey, isInRange, parseBuildingKey } from '../utils/coord';
+import { getBuildingKey, isInRange as _isInRange, parseBuildingKey } from '../utils/coord';
 import {
   BarrierColor,
   BarrierType,
@@ -33,6 +33,8 @@ export class MapCore {
 
   public buildings!: { [key: string]: Building };
 
+  public emptyCells!: number;
+
   public constructor() {
     this.init(5, CivilType.China, false);
   }
@@ -40,11 +42,16 @@ export class MapCore {
   public init(mapType: number, civil: CivilType, noTree: boolean) {
     this.mapType = mapType;
     this.civil = civil;
+    this.emptyCells = 0;
     this.noTree = noTree;
     this.cells = Array.from(Array(MapLength + 1), (_, i) =>
       Array.from(Array(MapLength + 1), (_, j) => {
+        const isInRange = _isInRange(i + 1, j + 1);
+        if (isInRange) {
+          this.emptyCells++;
+        }
         return {
-          isInRange: isInRange(i + 1, j + 1),
+          isInRange,
           occupied: '',
           protection: {},
         };
@@ -76,6 +83,7 @@ export class MapCore {
         borderBStyle: keys.includes(bKey) ? BorderStyleType.None : BorderStyleType.Solid,
         borderLStyle: keys.includes(lKey) ? BorderStyleType.None : BorderStyleType.Solid,
       };
+      this.emptyCells--;
     }
   }
 
@@ -90,6 +98,7 @@ export class MapCore {
       const [line, column] = parseBuildingKey(key);
       this.cells[line][column].occupied = '';
       delete this.buildings[key];
+      this.emptyCells++;
     }
   }
 
@@ -107,16 +116,19 @@ export class MapCore {
     const keys = BuildingFixed[type][this.mapType - 3];
     for (let key of keys) {
       const [line, column] = parseBuildingKey(key);
-      this.cells[line][column].occupied = key;
       if (FixedBuildingSize[type] > 1) {
         for (let i = line; i < line + FixedBuildingSize[type]; i++) {
           for (let j = column; j < column + FixedBuildingSize[type]; j++) {
             this.cells[i][j].occupied = key;
+            this.emptyCells--;
           }
         }
+      } else {
+        this.cells[line][column].occupied = key;
+        this.emptyCells--;
       }
       this.buildings[key] = {
-        name: type === FixedBuildingType.Road ? '道路' : FixedBuildingText[type],
+        name: type === FixedBuildingType.Road ? CatalogType.Road : FixedBuildingText[type],
         text: FixedBuildingText[type],
         width: FixedBuildingSize[type],
         height: FixedBuildingSize[type],

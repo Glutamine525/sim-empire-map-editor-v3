@@ -1,9 +1,9 @@
-import React, { FC, memo, useMemo, useState } from 'react';
+import React, { FC, memo, useEffect, useMemo, useState } from 'react';
 import { Layer } from 'react-konva';
 import { Building as _Building } from '@/map-core/building';
 import Building from '../building';
 import { MapCore } from '@/map-core';
-import { isAllInRange, parseBuildingKey } from '@/utils/coord';
+import { isAllInRange, isInRange, parseBuildingKey } from '@/utils/coord';
 import { canHover } from '@/utils/building';
 import { useDispatch, useSelector } from 'react-redux';
 import { mapSelector } from '@/store/selectors';
@@ -21,7 +21,7 @@ const MapLayerFunctionality: FC<MapLayerFunctionalityProps> = (props) => {
 
   // console.log('<MapLayerFunctionality /> rendered');
 
-  const { operation, brush } = useSelector(mapSelector);
+  const { operation, brush, mapUpdater } = useSelector(mapSelector);
   const d = useDispatch();
 
   const [previewConfig, setPreviewConfig] = useState({ li: 0, co: 0, canPlace: true });
@@ -70,7 +70,25 @@ const MapLayerFunctionality: FC<MapLayerFunctionalityProps> = (props) => {
     }
     setPreviewConfig({ li, co, canPlace });
     return brush;
-  }, [operation, curLi, curCo, brush, isDragging]);
+  }, [operation, curLi, curCo, brush, mapUpdater]);
+
+  // performance test
+  // useEffect(() => {
+  //   if (brush.name !== '普通住宅') {
+  //     return;
+  //   }
+  //   let count = 0;
+  //   for (let li = 1; li < 116; li++) {
+  //     for (let co = 1; co < 116; co++) {
+  //       if (!isInRange(li, co)) continue;
+  //       const core = MapCore.getInstance();
+  //       if (core.cells[li][co].occupied) continue;
+  //       MapCore.getInstance().placeBuilding(brush, li, co);
+  //       count++;
+  //     }
+  //   }
+  //   d(triggerMapUpdater({ diff: count, building: { ...brush } }));
+  // }, [brush]);
 
   return (
     <Layer
@@ -83,7 +101,7 @@ const MapLayerFunctionality: FC<MapLayerFunctionalityProps> = (props) => {
           previewBuilding
         ) {
           MapCore.getInstance().placeBuilding(brush, li, co);
-          d(triggerMapUpdater());
+          d(triggerMapUpdater({ diff: 1, building: brush }));
         }
       }}
       onMouseMove={() => {
@@ -97,8 +115,11 @@ const MapLayerFunctionality: FC<MapLayerFunctionalityProps> = (props) => {
           previewBuilding
         ) {
           MapCore.getInstance().placeBuilding(brush, li, co);
-          d(triggerMapUpdater());
+          d(triggerMapUpdater({ diff: 1, building: brush }));
         }
+      }}
+      onDblClick={() => {
+        console.log('delete');
       }}>
       {hoveredBuilding && <Building {...hoveredBuilding} isHovered />}
       {previewBuilding && (

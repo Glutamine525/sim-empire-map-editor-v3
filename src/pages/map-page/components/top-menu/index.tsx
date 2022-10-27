@@ -1,4 +1,5 @@
 import { MapCore } from '@/map-core';
+import { CatalogType } from '@/map-core/building';
 import { CivilType, CivilTypeLabel, MapType, OperationType } from '@/map-core/type';
 import {
   changeCivil,
@@ -10,7 +11,7 @@ import { changeTheme } from '@/store/reducers/setting-reducer';
 import { mapSelector, settingSelector } from '@/store/selectors';
 import { Button, Dropdown, Menu, Switch, Typography } from '@arco-design/web-react';
 import { IconMenu, IconQuestionCircle } from '@arco-design/web-react/icon';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Scrollbar from 'smooth-scrollbar';
 import styles from './index.module.less';
@@ -20,9 +21,23 @@ const { Text } = Typography;
 const TopMenu = () => {
   const topMenuRef = useRef<HTMLDivElement>(null);
 
-  const { mapType, civil, noTree, rotated, operation, brush } = useSelector(mapSelector);
+  const { mapType, civil, noTree, rotated, operation, brush, mapUpdater } =
+    useSelector(mapSelector);
   const { theme } = useSelector(settingSelector);
   const d = useDispatch();
+
+  const [couter, setCouter] = useState({
+    house: 0,
+    villa: 0,
+    granary: 0,
+    warehouse: 0,
+    agriculture: 0,
+    industry: 0,
+    general: 0,
+    coverage: 0,
+  });
+
+  const emptyCells = useMemo(() => MapCore.getInstance().emptyCells, [mapType, noTree]);
 
   useEffect(() => {
     Scrollbar.init(topMenuRef.current!, {
@@ -41,6 +56,64 @@ const TopMenu = () => {
     //   document.body.removeAttribute('arco-theme');
     // }
   }, []);
+
+  useEffect(() => {
+    const { diff, building } = mapUpdater;
+    if (!building) {
+      return;
+    }
+    console.log(123);
+
+    const { name, catalog, width, height } = building;
+    if (name === '普通住宅') {
+      setCouter((state) => ({
+        ...state,
+        house: state.house + diff,
+        coverage: state.coverage + diff * width * height,
+      }));
+    } else if (name === '高级住宅') {
+      setCouter((state) => ({
+        ...state,
+        villa: state.villa + diff,
+        coverage: state.coverage + diff * width * height,
+      }));
+    } else if (name === '粮仓') {
+      setCouter((state) => ({
+        ...state,
+        granary: state.granary + diff,
+        coverage: state.coverage + diff * width * height,
+      }));
+    } else if (name === '货栈') {
+      setCouter((state) => ({
+        ...state,
+        warehouse: state.warehouse + diff,
+        coverage: state.coverage + diff * width * height,
+      }));
+    } else if (catalog === CatalogType.Agriculture) {
+      setCouter((state) => ({
+        ...state,
+        agriculture: state.agriculture + diff,
+        coverage: state.coverage + diff * width * height,
+      }));
+    } else if (catalog === CatalogType.Industry) {
+      setCouter((state) => ({
+        ...state,
+        industry: state.industry + diff,
+        coverage: state.coverage + diff * width * height,
+      }));
+    } else if (catalog === CatalogType.General) {
+      setCouter((state) => ({
+        ...state,
+        general: state.general + diff,
+        coverage: state.coverage + diff * width * height,
+      }));
+    } else {
+      setCouter((state) => ({
+        ...state,
+        coverage: state.coverage + diff * width * height,
+      }));
+    }
+  }, [mapUpdater]);
 
   const MapTypeList = (
     <Menu
@@ -136,48 +209,51 @@ const TopMenu = () => {
             <div>
               <div>
                 <Text type="secondary">普通住宅: </Text>
-                <Text bold>0</Text>
+                <Text bold>{couter.house}</Text>
                 <Text type="secondary">个</Text>
               </div>
               <div>
                 <Text type="secondary">高级住宅: </Text>
-                <Text bold>0</Text>
+                <Text bold>{couter.villa}</Text>
                 <Text type="secondary">个</Text>
               </div>
             </div>
             <div>
               <div>
                 <Text type="secondary">粮仓: </Text>
-                <Text bold>0</Text>
+                <Text bold>{couter.granary}</Text>
                 <Text type="secondary">个</Text>
               </div>
               <div>
                 <Text type="secondary">货栈: </Text>
-                <Text bold>0</Text>
+                <Text bold>{couter.warehouse}</Text>
                 <Text type="secondary">个</Text>
               </div>
             </div>
             <div>
               <div>
                 <Text type="secondary">农业: </Text>
-                <Text bold>0</Text>
+                <Text bold>{couter.agriculture}</Text>
                 <Text type="secondary"> /100个</Text>
               </div>
               <div>
                 <Text type="secondary">工业: </Text>
-                <Text bold>0</Text>
+                <Text bold>{couter.industry}</Text>
                 <Text type="secondary"> /150个</Text>
               </div>
             </div>
             <div>
               <div>
                 <Text type="secondary">通用: </Text>
-                <Text bold>0</Text>
+                <Text bold>{couter.general}</Text>
                 <Text type="secondary">个</Text>
               </div>
               <div>
                 <Text type="secondary">覆盖: </Text>
-                <Text bold>0</Text>
+                {/* <Text bold>
+                  {couter.coverage}/{emptyCells}
+                </Text> */}
+                <Text bold>{Math.ceil((couter.coverage / emptyCells) * 100)}</Text>
                 <Text type="secondary">%</Text>
               </div>
             </div>
