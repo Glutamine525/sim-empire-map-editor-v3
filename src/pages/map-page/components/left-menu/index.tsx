@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { mapSelector } from '@/store/selectors';
 import { changeBrush, changeOperation } from '@/store/reducers/map-reducer';
 import { OperationType } from '@/map-core/type';
+import { getRoadBuilding, getSelectedBuilding } from '@/utils/building';
 
 const { Text } = Typography;
 const MenuItem = Menu.Item;
@@ -90,36 +91,13 @@ const LeftMenu = () => {
               (v) => v.name === path[0],
             )!;
             d(changeOperation(OperationType.PlaceBuilding));
-            d(
-              changeBrush({
-                width: record.size,
-                height: record.size,
-                range: record.range,
-                backgroundColor: record.background,
-                name: record.name,
-                text: record.text,
-                catalog: path[1] as CatalogType,
-                isProtection:
-                  type === BuildingType.Municipal &&
-                  CivilBuilding[civil]['防护'].includes(record.name),
-                isWonder: type === BuildingType.Wonder || record.isPalace,
-                isDecoration: type === BuildingType.Decoration,
-              }),
-            );
+            d(changeBrush(getSelectedBuilding(civil, type, record)));
             return;
           }
           switch (path[0]) {
             case CatalogType.Road:
               d(changeOperation(OperationType.PlaceBuilding));
-              d(
-                changeBrush({
-                  width: 1,
-                  height: 1,
-                  name: CatalogType.Road,
-                  catalog: CatalogType.Road,
-                  isRoad: true,
-                }),
-              );
+              d(changeBrush(getRoadBuilding()));
               break;
             default:
               d(changeOperation(OperationType.Empty));

@@ -1,4 +1,11 @@
-import { Building } from '@/map-core/building';
+import {
+  Building,
+  BuildingType,
+  CatalogType,
+  CivilBuilding,
+  SimpleBuilding,
+} from '@/map-core/building';
+import { CivilType } from '@/map-core/type';
 
 export const RoadImg = new Image();
 RoadImg.src =
@@ -13,4 +20,34 @@ export function showMarker(b: Building) {
 
 export function canHover(b: Building) {
   return !b?.isBarrier && !b?.isRoad;
+}
+
+export function getRoadBuilding() {
+  return {
+    width: 1,
+    height: 1,
+    name: CatalogType.Road,
+    catalog: CatalogType.Road,
+    isRoad: true,
+  };
+}
+
+export function getSelectedBuilding(
+  civil: CivilType,
+  catalog: BuildingType,
+  record: SimpleBuilding,
+): Building {
+  return {
+    width: record.size,
+    height: record.size,
+    range: record.range,
+    backgroundColor: record.background,
+    name: record.name,
+    text: record.text,
+    catalog: catalog as any,
+    isProtection:
+      catalog === BuildingType.Municipal && CivilBuilding[civil]['防护'].includes(record.name),
+    isWonder: catalog === BuildingType.Wonder || record.isPalace,
+    isDecoration: catalog === BuildingType.Decoration,
+  };
 }

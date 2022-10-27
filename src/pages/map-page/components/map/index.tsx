@@ -12,6 +12,7 @@ import MapLayerFixedBuildings from '../map-layer-fixed-buildings';
 import styles from './index.module.less';
 import MapLayerFunctionality from '../map-layer-functionality';
 import MapLayerBuildings from '../map-layer-buildings';
+import KeyboardListener from '../keyboard-listener';
 
 const PerformanceTestBuilding = Array(116)
   .fill(0)
@@ -75,6 +76,7 @@ const Map = () => {
 
   return (
     <div ref={mapRef} className={styles.wrapper}>
+      <KeyboardListener />
       <Stage
         width={MapLength * UnitPx}
         height={MapLength * UnitPx}
