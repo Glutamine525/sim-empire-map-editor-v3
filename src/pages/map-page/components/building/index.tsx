@@ -9,6 +9,8 @@ interface BuildingProps extends _Building {
   line: number;
   column: number;
   isHovered?: boolean;
+  isPreview?: boolean;
+  canPlace?: boolean;
   fullProtection?: boolean;
   draggable?: boolean;
 }
@@ -26,6 +28,8 @@ const Building: FC<BuildingProps> = (props) => {
     isRoad = false,
     marker = 0,
     isHovered = false,
+    isPreview = false,
+    canPlace = true,
     fullProtection = false,
     textShadowColor = 'white',
     borderTStyle = BorderStyleType.Solid,
@@ -42,7 +46,7 @@ const Building: FC<BuildingProps> = (props) => {
 
   const [curCoord, setCurCoord] = useState({ x, y });
 
-  console.log('<Building /> rendered');
+  // console.log('<Building /> rendered');
 
   return (
     <Group
@@ -50,6 +54,7 @@ const Building: FC<BuildingProps> = (props) => {
       y={draggable ? curCoord.y : y}
       scale={!isHovered ? undefined : { x: 1.01, y: 1.01 }}
       offset={!isHovered ? undefined : { x: (w * UnitPx) / 2, y: (h * UnitPx) / 2 }}
+      opacity={isPreview ? 0.6 : 1}
       draggable={draggable}
       onDragMove={({ target }) => {
         setCurCoord({
@@ -155,6 +160,20 @@ const Building: FC<BuildingProps> = (props) => {
         align="center"
         verticalAlign="middle"
       />
+      {isPreview && !canPlace && (
+        <>
+          <Line
+            points={[bw, bw, w * UnitPx - bw * 2, h * UnitPx - bw * 2]}
+            stroke={getArcoColor('--danger-6')}
+            strokeWidth={2}
+          />
+          <Line
+            points={[w * UnitPx - bw * 2, bw, bw, h * UnitPx - bw * 2]}
+            stroke={getArcoColor('--danger-6')}
+            strokeWidth={2}
+          />
+        </>
+      )}
     </Group>
   );
 };

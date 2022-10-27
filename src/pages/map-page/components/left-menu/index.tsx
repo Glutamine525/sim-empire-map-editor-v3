@@ -89,7 +89,6 @@ const LeftMenu = () => {
             const record: SimpleBuilding = CivilBuilding[civil][type].find(
               (v) => v.name === path[0],
             )!;
-            console.log(record);
             d(changeOperation(OperationType.PlaceBuilding));
             d(
               changeBrush({

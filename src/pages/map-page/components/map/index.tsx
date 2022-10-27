@@ -11,6 +11,7 @@ import MapLayerCells from '../map-layer-cells';
 import MapLayerFixedBuildings from '../map-layer-fixed-buildings';
 import styles from './index.module.less';
 import MapLayerFunctionality from '../map-layer-functionality';
+import MapLayerBuildings from '../map-layer-buildings';
 
 const PerformanceTestBuilding = Array(116)
   .fill(0)
@@ -45,6 +46,7 @@ const Map = () => {
   const { operation } = useSelector(mapSelector);
 
   const [curCoord, setCurCoord] = useState({ curLi: 0, curCo: 0 });
+  const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => {
     console.log(performance.now());
@@ -76,6 +78,9 @@ const Map = () => {
       <Stage
         width={MapLength * UnitPx}
         height={MapLength * UnitPx}
+        onMouseDown={() => {
+          setIsDragging(true);
+        }}
         onMouseMove={(e) => {
           const {
             evt: { offsetX: x, offsetY: y },
@@ -83,10 +88,17 @@ const Map = () => {
           const column = Math.ceil(x / UnitPx);
           const line = Math.ceil(y / UnitPx);
           setCurCoord({ curLi: line, curCo: column });
+        }}
+        onMouseUp={() => {
+          setIsDragging(false);
+        }}
+        onMouseLeave={() => {
+          setIsDragging(false);
         }}>
         <MapLayerCells />
         <MapLayerFixedBuildings />
-        <MapLayerFunctionality {...curCoord} />
+        <MapLayerBuildings />
+        <MapLayerFunctionality {...curCoord} isDragging={isDragging} />
       </Stage>
     </div>
   );

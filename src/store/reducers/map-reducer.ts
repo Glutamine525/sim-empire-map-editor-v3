@@ -9,6 +9,7 @@ export interface MapState {
   rotated: boolean;
   operation: OperationType;
   brush: Building;
+  mapUpdater: Object;
 }
 
 const initialState = {
@@ -18,6 +19,7 @@ const initialState = {
   rotated: false,
   operation: OperationType.Empty,
   brush: {},
+  mapUpdater: Object.create(null),
 };
 
 const mapReducer = createSlice({
@@ -42,6 +44,9 @@ const mapReducer = createSlice({
     changeBrush(state, action: PayloadAction<Building>) {
       state.brush = action.payload;
     },
+    triggerMapUpdater(state) {
+      state.mapUpdater = Object.create(null);
+    },
   },
 });
 
@@ -52,6 +57,7 @@ export const {
   changeRotated,
   changeOperation,
   changeBrush,
+  triggerMapUpdater,
 } = mapReducer.actions;
 
 export default mapReducer.reducer;

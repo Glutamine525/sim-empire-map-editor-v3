@@ -1,6 +1,6 @@
 import { BorderStyleType, Building } from './building';
 import { Cell, CivilType, MapLength } from './type';
-import { isInRange, parseBuildingKey } from '../utils/coord';
+import { getBuildingKey, isInRange, parseBuildingKey } from '../utils/coord';
 import {
   BarrierColor,
   BarrierType,
@@ -134,5 +134,19 @@ export class MapCore {
       const type = v.toLowerCase() as FixedBuildingType;
       this.placeFixedBuilding(type);
     });
+  }
+
+  public placeBuilding(b: Building, line: number, column: number) {
+    const key = getBuildingKey(line, column);
+    const { width: w, height: h } = b;
+    this.cells[line][column].occupied = key;
+    if (w > 1 || h > 1) {
+      for (let i = line; i < line + h; i++) {
+        for (let j = column; j < column + w; j++) {
+          this.cells[i][j].occupied = key;
+        }
+      }
+    }
+    this.buildings[key] = { ...b };
   }
 }
