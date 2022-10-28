@@ -84,6 +84,7 @@ const Map = () => {
         width={MapLength * UnitPx}
         height={MapLength * UnitPx}
         onMouseDown={() => {
+          console.log(curCoord);
           setIsDragging(true);
         }}
         onMouseMove={(e) => {
@@ -101,6 +102,9 @@ const Map = () => {
           setIsDragging(false);
         }}
         onDblClick={() => {
+          if (operation !== OperationType.Empty) {
+            return;
+          }
           const { curLi, curCo } = curCoord;
           const building = MapCore.getInstance().deleteBuilding(curLi, curCo);
           if (!building) {

@@ -1,6 +1,11 @@
-import { BorderStyleType, Building, CatalogType } from './building';
+import { BorderStyleType, Building, CatalogType, CivilBuilding } from './building';
 import { Cell, CivilType, MapCounter, MapLength } from './type';
-import { getBuildingKey, isInRange as _isInRange, parseBuildingKey } from '../utils/coord';
+import {
+  getBuildingKey,
+  isInBuildingRange,
+  isInRange as _isInRange,
+  parseBuildingKey,
+} from '../utils/coord';
 import {
   BarrierColor,
   BarrierType,
@@ -11,6 +16,7 @@ import {
   FixedBuildingText,
   FixedBuildingType,
 } from './building/fixed';
+import { showMarker } from '@/utils/building';
 
 export class MapCore {
   public static instance: MapCore;
@@ -29,6 +35,8 @@ export class MapCore {
 
   public noTree!: boolean;
 
+  public protection!: string[];
+
   public cells!: Cell[][];
 
   public buildings!: { [key: string]: Building };
@@ -46,6 +54,7 @@ export class MapCore {
     this.civil = civil;
     this.emptyCells = 0;
     this.noTree = noTree;
+    this.protection = CivilBuilding[civil]['防护'];
     this.cells = Array.from(Array(MapLength + 1), (_, i) =>
       Array.from(Array(MapLength + 1), (_, j) => {
         const isInRange = _isInRange(i + 1, j + 1);
@@ -165,14 +174,38 @@ export class MapCore {
     if (this.buildings[key]) {
       return;
     }
-    const { width: w, height: h } = b;
+    const { width: w, height: h, name = '', isProtection, range = 0 } = b;
+    let marker = 0;
     for (let i = line; i < line + h; i++) {
       for (let j = column; j < column + w; j++) {
         this.cells[i][j].occupied = key;
+        marker = Math.max(marker, this.getProtectionNum(i, j));
       }
     }
-    this.buildings[key] = { ...b };
+    this.buildings[key] = { ...b, marker };
     this.updateCounter(b, 1);
+    if (!isProtection) {
+      return;
+    }
+    const records = new Set<string>();
+    for (let i = line - range; i < line + h + range; i++) {
+      for (let j = column - range; j < column + w + range; j++) {
+        if (!isInBuildingRange(i, j, line, column, w, h, range)) continue;
+        if (i < 1 || j < 1) continue;
+        if (i > MapLength || j > MapLength) continue;
+        const cell = this.cells[i][j];
+        if (cell.protection[name]) {
+          cell.protection[name].push(key);
+        } else {
+          cell.protection[name] = [key];
+        }
+        const target = this.getBuilding(i, j);
+        if (!target) continue;
+        if (!showMarker(target)) continue;
+        records.add(this.cells[i][j].occupied);
+      }
+    }
+    this.updateBuildingsMarker([...records]);
   }
 
   public deleteBuilding(line: number, column: number, config?: { force?: boolean }) {
@@ -197,6 +230,20 @@ export class MapCore {
     return b;
   }
 
+  public updateBuildingsMarker(buildings: string[]) {
+    for (let key of buildings) {
+      const [li, co] = parseBuildingKey(key);
+      const target = this.getBuilding(key)!;
+      let marker = 0;
+      for (let i = li; i < li + target.height; i++) {
+        for (let j = co; j < co + target.width; j++) {
+          marker = Math.max(marker, this.getProtectionNum(i, j));
+        }
+      }
+      this.buildings[key].marker = marker;
+    }
+  }
+
   public updateCounter(b: Building, diff: number) {
     const { name, catalog, width, height } = b;
     if (name === '普通住宅') {
@@ -215,5 +262,26 @@ export class MapCore {
       this.counter.general += diff;
     }
     this.counter.coverage += diff * width * height;
+  }
+
+  public getBuilding(keyOrLine: string | number, column?: number) {
+    let [li, co] = [0, 0];
+    if (typeof keyOrLine === 'string') {
+      [li, co] = parseBuildingKey(keyOrLine);
+    } else {
+      li = keyOrLine;
+      co = column || 0;
+    }
+    const { occupied } = this.cells[li][co];
+    if (!occupied) {
+      return null;
+    }
+    return this.buildings[occupied];
+  }
+
+  public getProtectionNum(line: number, column: number) {
+    return Object.entries(this.cells[line][column].protection)
+      .map(([_, v]) => v)
+      .filter((v) => v.length).length;
   }
 }

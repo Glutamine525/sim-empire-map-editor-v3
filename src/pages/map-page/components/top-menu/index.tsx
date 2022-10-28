@@ -26,10 +26,7 @@ const TopMenu = () => {
   const { theme } = useSelector(settingSelector);
   const d = useDispatch();
 
-  const { emptyCells, counter } = useMemo(() => {
-    const core = MapCore.getInstance();
-    return { emptyCells: core.emptyCells, counter: core.counter };
-  }, [mapType, noTree]);
+  const { emptyCells, counter } = useMemo(() => MapCore.getInstance(), [mapType, noTree]);
 
   useEffect(() => {
     Scrollbar.init(topMenuRef.current!, {

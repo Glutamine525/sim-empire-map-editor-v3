@@ -29,3 +29,23 @@ export function isAllInRange(line: number, column: number, width: number, height
     isInRange(line + height, column + width)
   );
 }
+
+// 检测[li, co]是否在建筑范围内
+export function isInBuildingRange(
+  li: number,
+  co: number,
+  originLi: number,
+  originCo: number,
+  width: number,
+  height: number,
+  range: number,
+) {
+  let diff = range - 4;
+  const relativeLi = li - originLi;
+  const relativeCo = co - originCo;
+  if (relativeLi + relativeCo + range + diff < 0) return false;
+  if (relativeLi + relativeCo > range + diff + width + height - 2) return false;
+  if (relativeLi < relativeCo - (range + diff + width - 1)) return false;
+  if (relativeLi > relativeCo + (range + diff + height - 1)) return false;
+  return true;
+}

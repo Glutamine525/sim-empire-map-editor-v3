@@ -1,9 +1,10 @@
-import React, { FC, memo, useEffect, useMemo, useState } from 'react';
+import React, { FC, memo, useMemo, useState } from 'react';
 import { Layer } from 'react-konva';
 import { Building as _Building } from '@/map-core/building';
 import Building from '../building';
+import Range from '../range';
 import { MapCore } from '@/map-core';
-import { isAllInRange, isInRange, parseBuildingKey } from '@/utils/coord';
+import { isAllInRange, parseBuildingKey } from '@/utils/coord';
 import { canHover } from '@/utils/building';
 import { useDispatch, useSelector } from 'react-redux';
 import { mapSelector } from '@/store/selectors';
@@ -118,15 +119,41 @@ const MapLayerFunctionality: FC<MapLayerFunctionalityProps> = (props) => {
           d(triggerMapUpdater({ diff: 1, building: brush }));
         }
       }}>
-      {hoveredBuilding && <Building {...hoveredBuilding} isHovered />}
+      {hoveredBuilding && (
+        <>
+          <Building {...hoveredBuilding} isHovered />
+          {Boolean(hoveredBuilding.range) && (
+            <Range
+              line={hoveredBuilding.line}
+              column={hoveredBuilding.column}
+              width={hoveredBuilding.width}
+              height={hoveredBuilding.height}
+              size={hoveredBuilding.range!}
+              color={hoveredBuilding.backgroundColor!}
+            />
+          )}
+        </>
+      )}
       {previewBuilding && (
-        <Building
-          line={previewConfig.li}
-          column={previewConfig.co}
-          {...previewBuilding}
-          isPreview
-          canPlace={previewConfig.canPlace}
-        />
+        <>
+          <Building
+            line={previewConfig.li}
+            column={previewConfig.co}
+            {...previewBuilding}
+            isPreview
+            canPlace={previewConfig.canPlace}
+          />
+          {Boolean(previewBuilding.range) && (
+            <Range
+              line={previewConfig.li}
+              column={previewConfig.co}
+              width={previewBuilding.width}
+              height={previewBuilding.height}
+              size={previewBuilding.range!}
+              color={previewBuilding.backgroundColor!}
+            />
+          )}
+        </>
       )}
     </Layer>
   );

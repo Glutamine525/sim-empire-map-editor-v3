@@ -1,9 +1,11 @@
+import { MapCore } from '@/map-core';
 import { Building as _Building, BorderStyleType } from '@/map-core/building';
 import { UnitPx } from '@/map-core/type';
 import { RoadImg, showMarker as _showMarker } from '@/utils/building';
 import { getArcoColor } from '@/utils/color';
 import React, { FC, memo, useState } from 'react';
 import { Group, Line, Rect, Text } from 'react-konva';
+import BorderBlock from '../border-block';
 
 interface BuildingProps extends _Building {
   line: number;
@@ -11,7 +13,6 @@ interface BuildingProps extends _Building {
   isHovered?: boolean;
   isPreview?: boolean;
   canPlace?: boolean;
-  fullProtection?: boolean;
   draggable?: boolean;
 }
 
@@ -30,7 +31,6 @@ const Building: FC<BuildingProps> = (props) => {
     isHovered = false,
     isPreview = false,
     canPlace = true,
-    fullProtection = false,
     textShadowColor = 'white',
     borderTStyle = BorderStyleType.Solid,
     borderRStyle = BorderStyleType.Solid,
@@ -72,59 +72,19 @@ const Building: FC<BuildingProps> = (props) => {
           y: (Math.floor(y / UnitPx) + offsetLi) * UnitPx,
         });
       }}>
-      {borderTStyle === BorderStyleType.Dashed && (
-        <Line
-          points={[bw, 0.5, w * UnitPx - bw, 0.5]}
-          dash={[4, 5]}
-          stroke={backgroundColor}
-          strokeWidth={1}
-        />
-      )}
-      {borderRStyle === BorderStyleType.Dashed && (
-        <Line
-          points={[w * UnitPx - 0.5, bw, w * UnitPx - 0.5, h * UnitPx - bw]}
-          dash={[4, 5]}
-          stroke={backgroundColor}
-          strokeWidth={1}
-        />
-      )}
-      {borderBStyle === BorderStyleType.Dashed && (
-        <Line
-          points={[bw, h * UnitPx - 0.5, w * UnitPx - bw, h * UnitPx - 0.5]}
-          dash={[4, 5]}
-          stroke={backgroundColor}
-          strokeWidth={1}
-        />
-      )}
-      {borderLStyle === BorderStyleType.Dashed && (
-        <Line
-          points={[0.5, bw, 0.5, h * UnitPx - bw]}
-          dash={[4, 5]}
-          stroke={backgroundColor}
-          strokeWidth={1}
-        />
-      )}
-      <Rect
-        x={borderLStyle === BorderStyleType.None ? 0 : bw}
-        y={borderTStyle === BorderStyleType.None ? 0 : bw}
-        width={
-          w * UnitPx -
-          bw *
-            (2 -
-              (borderLStyle === BorderStyleType.None ? 1 : 0) -
-              (borderRStyle === BorderStyleType.None ? 1 : 0))
-        }
-        height={
-          h * UnitPx -
-          bw *
-            (2 -
-              (borderTStyle === BorderStyleType.None ? 1 : 0) -
-              (borderBStyle === BorderStyleType.None ? 1 : 0))
-        }
+      <BorderBlock
+        position="relative"
+        width={w}
+        height={h}
+        borderColor="rgba(0,0,0,0)"
+        backgroundColor={isRoad ? undefined : backgroundColor}
         fillPatternImage={isRoad ? RoadImg : undefined}
-        fill={isRoad ? undefined : backgroundColor}
         shadowColor={!isHovered ? undefined : getArcoColor('--gray-5')}
         shadowBlur={!isHovered ? undefined : 10}
+        borderTStyle={borderTStyle}
+        borderRStyle={borderRStyle}
+        borderBStyle={borderBStyle}
+        borderLStyle={borderLStyle}
       />
       {showMarker && (
         <Text
@@ -133,7 +93,7 @@ const Building: FC<BuildingProps> = (props) => {
           fill={
             isRoad
               ? 'black'
-              : fullProtection
+              : marker === MapCore.getInstance().protection.length
               ? getArcoColor('--success-6')
               : getArcoColor('--danger-6')
           }
