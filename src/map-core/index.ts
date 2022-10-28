@@ -46,6 +46,7 @@ export class MapCore {
   public counter!: MapCounter;
 
   public constructor() {
+    this.getProtectionNum = this.getProtectionNum.bind(this);
     this.init(5, CivilType.China, false);
   }
 
@@ -215,9 +216,28 @@ export class MapCore {
     }
     const [li, co] = parseBuildingKey(occupied);
     const key = getBuildingKey(li, co);
-    const { width: w, height: h, isFixed } = this.buildings[key];
+    const { width: w, height: h, name = 0, range = 0, isFixed, isProtection } = this.buildings[key];
     if (isFixed && !config?.force) {
       return;
+    }
+    if (isProtection) {
+      const record = new Set<string>();
+      for (let i = li - range; i < li + h + range; i++) {
+        for (let j = co - range; j < co + w + range; j++) {
+          if (!isInBuildingRange(i, j, li, co, w, h, range)) {
+            continue;
+          }
+          if (i < 1 || j < 1) continue;
+          if (i > MapLength || j > MapLength) continue;
+          const { protection: p, occupied: o } = this.cells[i][j];
+          p[name].splice(p[name].indexOf(occupied), 1);
+          if (!o) continue;
+          const b = this.getBuilding(o)!;
+          if (!showMarker(b)) continue;
+          record.add(o);
+        }
+      }
+      this.updateBuildingsMarker([...record]);
     }
     for (let i = li; i < li + h; i++) {
       for (let j = co; j < co + w; j++) {

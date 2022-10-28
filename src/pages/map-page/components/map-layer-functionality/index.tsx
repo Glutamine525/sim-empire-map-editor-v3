@@ -25,7 +25,7 @@ const MapLayerFunctionality: FC<MapLayerFunctionalityProps> = (props) => {
   const { operation, brush, mapUpdater } = useSelector(mapSelector);
   const d = useDispatch();
 
-  const [previewConfig, setPreviewConfig] = useState({ li: 0, co: 0, canPlace: true });
+  const [previewConfig, setPreviewConfig] = useState({ li: 0, co: 0, canPlace: true, marker: 0 });
 
   const hoveredBuilding = useMemo(() => {
     if (operation !== OperationType.Empty || !curLi || !curCo) {
@@ -42,7 +42,7 @@ const MapLayerFunctionality: FC<MapLayerFunctionalityProps> = (props) => {
     }
     const [line, column] = parseBuildingKey(occupied);
     return { ...b, line, column };
-  }, [operation, curLi, curCo]);
+  }, [operation, curLi, curCo, mapUpdater]);
 
   const previewBuilding = useMemo(() => {
     if (operation !== OperationType.PlaceBuilding || !curLi || !curCo) {
@@ -57,19 +57,21 @@ const MapLayerFunctionality: FC<MapLayerFunctionalityProps> = (props) => {
     const [li, co] = [curLi - offLi, curCo - offCo];
     // 检测是否可以放置
     let canPlace = true;
-    const { cells } = MapCore.getInstance();
+    let marker = 0;
+    const { cells, getProtectionNum } = MapCore.getInstance();
     for (let i = li; i < li + height; i++) {
       for (let j = co; j < co + width; j++) {
         if (cells[i][j].occupied) {
           canPlace = false;
           break;
         }
+        marker = Math.max(marker, getProtectionNum(i, j));
       }
       if (!canPlace) {
         break;
       }
     }
-    setPreviewConfig({ li, co, canPlace });
+    setPreviewConfig({ li, co, canPlace, marker });
     return brush;
   }, [operation, curLi, curCo, brush, mapUpdater]);
 
@@ -140,6 +142,7 @@ const MapLayerFunctionality: FC<MapLayerFunctionalityProps> = (props) => {
             line={previewConfig.li}
             column={previewConfig.co}
             {...previewBuilding}
+            marker={previewConfig.marker}
             isPreview
             canPlace={previewConfig.canPlace}
           />
