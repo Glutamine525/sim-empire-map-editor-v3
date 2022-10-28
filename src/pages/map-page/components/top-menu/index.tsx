@@ -5,13 +5,14 @@ import {
   changeCivil,
   changeMapType,
   changeNoTree,
+  changeOperation,
   changeRotated,
 } from '@/store/reducers/map-reducer';
 import { changeTheme } from '@/store/reducers/setting-reducer';
 import { mapSelector, settingSelector } from '@/store/selectors';
 import { Button, Dropdown, Menu, Switch, Typography } from '@arco-design/web-react';
 import { IconMenu, IconQuestionCircle } from '@arco-design/web-react/icon';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Scrollbar from 'smooth-scrollbar';
 import styles from './index.module.less';
@@ -50,10 +51,9 @@ const TopMenu = () => {
     <Menu
       onClickMenuItem={(_key) => {
         const key = Number(_key);
-        const core = MapCore.getInstance();
-        core.mapType = key;
-        core.init(key, civil, noTree);
+        MapCore.getInstance().init(key, civil, noTree);
         d(changeMapType(key));
+        d(changeOperation(OperationType.Empty));
       }}>
       {MapType.map((v) => (
         <Menu.Item key={v.toString()}>{v}</Menu.Item>
@@ -62,7 +62,13 @@ const TopMenu = () => {
   );
 
   const CivilTypeList = (
-    <Menu onClickMenuItem={(key) => d(changeCivil(key as CivilType))}>
+    <Menu
+      onClickMenuItem={(_key) => {
+        const key = _key as CivilType;
+        MapCore.getInstance().init(mapType, key, noTree);
+        d(changeCivil(key as CivilType));
+        d(changeOperation(OperationType.Empty));
+      }}>
       {Object.entries(CivilTypeLabel).map((v) => {
         const [civilType, civilLabel] = v;
         if (civilType === CivilType.Custom) {

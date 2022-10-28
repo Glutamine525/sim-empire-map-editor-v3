@@ -99,6 +99,7 @@ const Map = () => {
           setIsDragging(false);
         }}
         onMouseLeave={() => {
+          setCurCoord({ curLi: 0, curCo: 0 });
           setIsDragging(false);
         }}
         onDblClick={() => {
