@@ -49,7 +49,7 @@ const MapLayerFunctionality: FC<MapLayerFunctionalityProps> = (props) => {
     }
     const { width, height } = brush;
     const [offLi, offCo] = [Math.floor((height - 1) / 2), Math.floor((width - 1) / 2)];
-    // 检测是否在地图外面
+    // 检测是否在地图范围内
     if (!isAllInRange(curLi - offLi, curCo - offCo, width - 1, height - 1)) {
       return null;
     }
@@ -87,7 +87,7 @@ const MapLayerFunctionality: FC<MapLayerFunctionalityProps> = (props) => {
   //       count++;
   //     }
   //   }
-  //   d(triggerMapUpdater({ diff: count, building: { ...brush } }));
+  //   d(triggerMapUpdater({ diff: count, building: brush }));
   // }, [brush]);
 
   return (
@@ -117,9 +117,6 @@ const MapLayerFunctionality: FC<MapLayerFunctionalityProps> = (props) => {
           MapCore.getInstance().placeBuilding(brush, li, co);
           d(triggerMapUpdater({ diff: 1, building: brush }));
         }
-      }}
-      onDblClick={() => {
-        console.log('delete');
       }}>
       {hoveredBuilding && <Building {...hoveredBuilding} isHovered />}
       {previewBuilding && (

@@ -1,5 +1,5 @@
 import { BorderStyleType, Building, CatalogType } from './building';
-import { Cell, CivilType, MapLength } from './type';
+import { Cell, CivilType, MapCounter, MapLength } from './type';
 import { getBuildingKey, isInRange as _isInRange, parseBuildingKey } from '../utils/coord';
 import {
   BarrierColor,
@@ -35,6 +35,8 @@ export class MapCore {
 
   public emptyCells!: number;
 
+  public counter!: MapCounter;
+
   public constructor() {
     this.init(5, CivilType.China, false);
   }
@@ -60,6 +62,16 @@ export class MapCore {
     this.buildings = {};
     this.placeBarriers();
     this.placeFixedBuildings();
+    this.counter = {
+      house: 0,
+      villa: 0,
+      granary: 0,
+      warehouse: 0,
+      agriculture: 0,
+      industry: 0,
+      general: 0,
+      coverage: 0,
+    };
   }
 
   public placeBarrier(type: BarrierType) {
@@ -150,15 +162,58 @@ export class MapCore {
 
   public placeBuilding(b: Building, line: number, column: number) {
     const key = getBuildingKey(line, column);
+    if (this.buildings[key]) {
+      return;
+    }
     const { width: w, height: h } = b;
-    this.cells[line][column].occupied = key;
-    if (w > 1 || h > 1) {
-      for (let i = line; i < line + h; i++) {
-        for (let j = column; j < column + w; j++) {
-          this.cells[i][j].occupied = key;
-        }
+    for (let i = line; i < line + h; i++) {
+      for (let j = column; j < column + w; j++) {
+        this.cells[i][j].occupied = key;
       }
     }
     this.buildings[key] = { ...b };
+    this.updateCounter(b, 1);
+  }
+
+  public deleteBuilding(line: number, column: number, config?: { force?: boolean }) {
+    const { occupied } = this.cells[line][column];
+    if (!occupied) {
+      return;
+    }
+    const [li, co] = parseBuildingKey(occupied);
+    const key = getBuildingKey(li, co);
+    const { width: w, height: h, isFixed } = this.buildings[key];
+    if (isFixed && !config?.force) {
+      return;
+    }
+    for (let i = li; i < li + h; i++) {
+      for (let j = co; j < co + w; j++) {
+        this.cells[i][j].occupied = '';
+      }
+    }
+    const b = { ...this.buildings[key] };
+    this.updateCounter(b, -1);
+    delete this.buildings[key];
+    return b;
+  }
+
+  public updateCounter(b: Building, diff: number) {
+    const { name, catalog, width, height } = b;
+    if (name === '普通住宅') {
+      this.counter.house += diff;
+    } else if (name === '高级住宅') {
+      this.counter.villa += diff;
+    } else if (name === '粮仓') {
+      this.counter.granary += diff;
+    } else if (name === '货栈') {
+      this.counter.warehouse += diff;
+    } else if (catalog === CatalogType.Agriculture) {
+      this.counter.agriculture += diff;
+    } else if (catalog === CatalogType.Industry) {
+      this.counter.industry += diff;
+    } else if (catalog === CatalogType.General) {
+      this.counter.general += diff;
+    }
+    this.counter.coverage += diff * width * height;
   }
 }

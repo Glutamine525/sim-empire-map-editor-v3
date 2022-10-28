@@ -35,3 +35,14 @@ export interface Cell {
   occupied: string;
   protection: { [key: string]: string[] };
 }
+
+export interface MapCounter {
+  house: number;
+  villa: number;
+  granary: number;
+  warehouse: number;
+  agriculture: number;
+  industry: number;
+  general: number;
+  coverage: number;
+}

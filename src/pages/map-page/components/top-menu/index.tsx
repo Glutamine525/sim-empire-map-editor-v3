@@ -26,18 +26,10 @@ const TopMenu = () => {
   const { theme } = useSelector(settingSelector);
   const d = useDispatch();
 
-  const [couter, setCouter] = useState({
-    house: 0,
-    villa: 0,
-    granary: 0,
-    warehouse: 0,
-    agriculture: 0,
-    industry: 0,
-    general: 0,
-    coverage: 0,
-  });
-
-  const emptyCells = useMemo(() => MapCore.getInstance().emptyCells, [mapType, noTree]);
+  const { emptyCells, counter } = useMemo(() => {
+    const core = MapCore.getInstance();
+    return { emptyCells: core.emptyCells, counter: core.counter };
+  }, [mapType, noTree]);
 
   useEffect(() => {
     Scrollbar.init(topMenuRef.current!, {
@@ -56,64 +48,6 @@ const TopMenu = () => {
     //   document.body.removeAttribute('arco-theme');
     // }
   }, []);
-
-  useEffect(() => {
-    const { diff, building } = mapUpdater;
-    if (!building) {
-      return;
-    }
-    console.log(123);
-
-    const { name, catalog, width, height } = building;
-    if (name === '普通住宅') {
-      setCouter((state) => ({
-        ...state,
-        house: state.house + diff,
-        coverage: state.coverage + diff * width * height,
-      }));
-    } else if (name === '高级住宅') {
-      setCouter((state) => ({
-        ...state,
-        villa: state.villa + diff,
-        coverage: state.coverage + diff * width * height,
-      }));
-    } else if (name === '粮仓') {
-      setCouter((state) => ({
-        ...state,
-        granary: state.granary + diff,
-        coverage: state.coverage + diff * width * height,
-      }));
-    } else if (name === '货栈') {
-      setCouter((state) => ({
-        ...state,
-        warehouse: state.warehouse + diff,
-        coverage: state.coverage + diff * width * height,
-      }));
-    } else if (catalog === CatalogType.Agriculture) {
-      setCouter((state) => ({
-        ...state,
-        agriculture: state.agriculture + diff,
-        coverage: state.coverage + diff * width * height,
-      }));
-    } else if (catalog === CatalogType.Industry) {
-      setCouter((state) => ({
-        ...state,
-        industry: state.industry + diff,
-        coverage: state.coverage + diff * width * height,
-      }));
-    } else if (catalog === CatalogType.General) {
-      setCouter((state) => ({
-        ...state,
-        general: state.general + diff,
-        coverage: state.coverage + diff * width * height,
-      }));
-    } else {
-      setCouter((state) => ({
-        ...state,
-        coverage: state.coverage + diff * width * height,
-      }));
-    }
-  }, [mapUpdater]);
 
   const MapTypeList = (
     <Menu
@@ -209,51 +143,51 @@ const TopMenu = () => {
             <div>
               <div>
                 <Text type="secondary">普通住宅: </Text>
-                <Text bold>{couter.house}</Text>
+                <Text bold>{counter.house}</Text>
                 <Text type="secondary">个</Text>
               </div>
               <div>
                 <Text type="secondary">高级住宅: </Text>
-                <Text bold>{couter.villa}</Text>
+                <Text bold>{counter.villa}</Text>
                 <Text type="secondary">个</Text>
               </div>
             </div>
             <div>
               <div>
                 <Text type="secondary">粮仓: </Text>
-                <Text bold>{couter.granary}</Text>
+                <Text bold>{counter.granary}</Text>
                 <Text type="secondary">个</Text>
               </div>
               <div>
                 <Text type="secondary">货栈: </Text>
-                <Text bold>{couter.warehouse}</Text>
+                <Text bold>{counter.warehouse}</Text>
                 <Text type="secondary">个</Text>
               </div>
             </div>
             <div>
               <div>
                 <Text type="secondary">农业: </Text>
-                <Text bold>{couter.agriculture}</Text>
+                <Text bold>{counter.agriculture}</Text>
                 <Text type="secondary"> /100个</Text>
               </div>
               <div>
                 <Text type="secondary">工业: </Text>
-                <Text bold>{couter.industry}</Text>
+                <Text bold>{counter.industry}</Text>
                 <Text type="secondary"> /150个</Text>
               </div>
             </div>
             <div>
               <div>
                 <Text type="secondary">通用: </Text>
-                <Text bold>{couter.general}</Text>
+                <Text bold>{counter.general}</Text>
                 <Text type="secondary">个</Text>
               </div>
               <div>
                 <Text type="secondary">覆盖: </Text>
                 {/* <Text bold>
-                  {couter.coverage}/{emptyCells}
+                  {counter.coverage}/{emptyCells}
                 </Text> */}
-                <Text bold>{Math.ceil((couter.coverage / emptyCells) * 100)}</Text>
+                <Text bold>{Math.ceil((counter.coverage / emptyCells) * 100)}</Text>
                 <Text type="secondary">%</Text>
               </div>
             </div>

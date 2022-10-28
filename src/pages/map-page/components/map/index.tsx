@@ -4,7 +4,7 @@ import { isInRange } from '@/utils/coord';
 import { mapSelector } from '@/store/selectors';
 import { useEffect, useRef, useState } from 'react';
 import { Stage } from 'react-konva';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Scrollbar from 'smooth-scrollbar';
 import Building from '../building';
 import MapLayerCells from '../map-layer-cells';
@@ -13,6 +13,8 @@ import styles from './index.module.less';
 import MapLayerFunctionality from '../map-layer-functionality';
 import MapLayerBuildings from '../map-layer-buildings';
 import KeyboardListener from '../keyboard-listener';
+import { MapCore } from '@/map-core';
+import { triggerMapUpdater } from '@/store/reducers/map-reducer';
 
 const PerformanceTestBuilding = Array(116)
   .fill(0)
@@ -45,6 +47,7 @@ const Map = () => {
   const scrollOffsetRef = useRef({ x: -1, y: -1 });
 
   const { operation } = useSelector(mapSelector);
+  const d = useDispatch();
 
   const [curCoord, setCurCoord] = useState({ curLi: 0, curCo: 0 });
   const [isDragging, setIsDragging] = useState(false);
@@ -96,6 +99,14 @@ const Map = () => {
         }}
         onMouseLeave={() => {
           setIsDragging(false);
+        }}
+        onDblClick={() => {
+          const { curLi, curCo } = curCoord;
+          const building = MapCore.getInstance().deleteBuilding(curLi, curCo);
+          if (!building) {
+            return;
+          }
+          d(triggerMapUpdater({ diff: -1, building }));
         }}>
         <MapLayerCells />
         <MapLayerFixedBuildings />
