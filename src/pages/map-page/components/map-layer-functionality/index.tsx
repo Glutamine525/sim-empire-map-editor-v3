@@ -142,11 +142,11 @@ const MapLayerFunctionality: FC<MapLayerFunctionalityProps> = (props) => {
             line={previewConfig.li}
             column={previewConfig.co}
             {...previewBuilding}
-            marker={previewConfig.marker}
+            marker={previewBuilding.isRoad ? 0 : previewConfig.marker}
             isPreview
             canPlace={previewConfig.canPlace}
           />
-          {Boolean(previewBuilding.range) && (
+          {previewConfig.canPlace && Boolean(previewBuilding.range) && (
             <Range
               line={previewConfig.li}
               column={previewConfig.co}

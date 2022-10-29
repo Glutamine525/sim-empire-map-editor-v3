@@ -175,7 +175,7 @@ export class MapCore {
     if (this.buildings[key]) {
       return;
     }
-    const { width: w, height: h, name = '', isProtection, range = 0 } = b;
+    const { width: w, height: h, name = '', isProtection, range = 0, isRoad } = b;
     let marker = 0;
     for (let i = line; i < line + h; i++) {
       for (let j = column; j < column + w; j++) {
@@ -183,7 +183,7 @@ export class MapCore {
         marker = Math.max(marker, this.getProtectionNum(i, j));
       }
     }
-    this.buildings[key] = { ...b, marker };
+    this.buildings[key] = { ...b, marker: isRoad ? 0 : marker };
     this.updateCounter(b, 1);
     if (!isProtection) {
       return;
@@ -202,7 +202,7 @@ export class MapCore {
         }
         const target = this.getBuilding(i, j);
         if (!target) continue;
-        if (!showMarker(target)) continue;
+        if (!showMarker(target) || target.isRoad) continue;
         records.add(this.cells[i][j].occupied);
       }
     }
@@ -233,7 +233,7 @@ export class MapCore {
           p[name].splice(p[name].indexOf(occupied), 1);
           if (!o) continue;
           const b = this.getBuilding(o)!;
-          if (!showMarker(b)) continue;
+          if (!showMarker(b) || b.isRoad) continue;
           record.add(o);
         }
       }

@@ -65,12 +65,16 @@ const Map = () => {
           setIsDragging(true);
         }}
         onMouseMove={(e) => {
+          if (operation === OperationType.Empty && isDragging) {
+            // 拖拽时禁止设置当前坐标，防止卡顿
+            return;
+          }
           const {
             evt: { offsetX: x, offsetY: y },
           } = e;
           const column = Math.ceil(x / UnitPx);
           const line = Math.ceil(y / UnitPx);
-          !isDragging && setCurCoord({ curLi: line, curCo: column }); // 拖拽时禁止设置当前坐标，防止卡顿
+          setCurCoord({ curLi: line, curCo: column });
         }}
         onMouseUp={() => {
           setIsDragging(false);
