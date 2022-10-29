@@ -1,5 +1,5 @@
 import { BorderStyleType } from '@/map-core/building';
-import { isInBuildingRange } from '@/utils/coord';
+import { isInBuildingRange } from '@/utils/coordinate';
 import React, { FC, useMemo } from 'react';
 import { Group } from 'react-konva';
 import BorderBlock from '../border-block';

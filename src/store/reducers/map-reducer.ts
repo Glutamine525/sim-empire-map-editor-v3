@@ -9,7 +9,7 @@ export interface MapState {
   rotated: boolean;
   operation: OperationType;
   brush: Building;
-  mapUpdater: { diff: number; building: Building };
+  mapUpdater: Object;
 }
 
 const initialState = {
@@ -44,8 +44,8 @@ const mapReducer = createSlice({
     changeBrush(state, action: PayloadAction<Building>) {
       state.brush = action.payload;
     },
-    triggerMapUpdater(state, action: PayloadAction<{ diff: number; building: Building }>) {
-      state.mapUpdater = action.payload;
+    triggerMapUpdater(state) {
+      state.mapUpdater = Object.create(null);
     },
   },
 });

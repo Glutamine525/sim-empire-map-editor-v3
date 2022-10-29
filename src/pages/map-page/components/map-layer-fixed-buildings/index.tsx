@@ -1,6 +1,6 @@
 import { MapCore } from '@/map-core';
 import { mapSelector } from '@/store/selectors';
-import { parseBuildingKey } from '@/utils/coord';
+import { parseBuildingKey } from '@/utils/coordinate';
 import React, { memo, useMemo } from 'react';
 import { Layer } from 'react-konva';
 import { useSelector } from 'react-redux';

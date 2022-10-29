@@ -10,6 +10,9 @@ import { mapSelector } from '@/store/selectors';
 import { changeBrush, changeOperation } from '@/store/reducers/map-reducer';
 import { OperationType } from '@/map-core/type';
 import { getRoadBuilding, getSelectedBuilding } from '@/utils/building';
+import { mapRef } from '../map';
+import downloader from 'js-file-download';
+import { getMapImageName } from '@/utils/file';
 
 const { Text } = Typography;
 const MenuItem = Menu.Item;
@@ -98,6 +101,19 @@ const LeftMenu = () => {
             case CatalogType.Road:
               d(changeOperation(OperationType.PlaceBuilding));
               d(changeBrush(getRoadBuilding()));
+              break;
+            case '截图':
+              (async () => {
+                downloader(
+                  (await mapRef.current?.toBlob({
+                    mimeType: 'image/jpeg',
+                    quality: 1,
+                    pixelRatio: 1.5,
+                  })) as Blob,
+                  getMapImageName(),
+                  'image/jpeg',
+                );
+              })();
               break;
             default:
               d(changeOperation(OperationType.Empty));

@@ -1,6 +1,6 @@
 import { MapCore } from '@/map-core';
 import { mapSelector } from '@/store/selectors';
-import { parseBuildingKey } from '@/utils/coord';
+import { parseBuildingKey } from '@/utils/coordinate';
 import React, { memo, useEffect, useMemo, useRef } from 'react';
 import { Layer } from 'react-konva';
 import Konva from 'konva';
@@ -21,7 +21,7 @@ const MapLayerBuildings = () => {
 
   useEffect(() => {
     layerRef.current?.on('draw', () => {
-      console.log('draw finished');
+      console.log('BuildingLayer draw finished');
     });
   }, []);
 

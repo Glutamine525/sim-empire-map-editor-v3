@@ -1,3 +1,4 @@
+import { AUTHOR, MAJOR_VERSION, MINOR_VERSION } from '@/config';
 import { MapCore } from '@/map-core';
 import { CatalogType } from '@/map-core/building';
 import { CivilType, CivilTypeLabel, MapType, OperationType } from '@/map-core/type';
@@ -136,9 +137,9 @@ const TopMenu = () => {
           <div className={styles['current-operation']}>
             <Text type="secondary">当前操作: </Text>
             <Text bold>
-              {operation}{' '}
+              {operation}
               {operation === OperationType.PlaceBuilding
-                ? Array.from(new Set([brush.catalog, brush.name])).join('-')
+                ? ' ' + Array.from(new Set([brush.catalog, brush.name])).join('-')
                 : ''}
             </Text>
           </div>
@@ -187,9 +188,6 @@ const TopMenu = () => {
               </div>
               <div>
                 <Text type="secondary">覆盖: </Text>
-                {/* <Text bold>
-                  {counter.coverage}/{emptyCells}
-                </Text> */}
                 <Text bold>{Math.ceil((counter.coverage / emptyCells) * 100)}</Text>
                 <Text type="secondary">%</Text>
               </div>
@@ -201,11 +199,13 @@ const TopMenu = () => {
           <div className={styles.auth}>
             <div>
               <Text type="secondary">模拟帝国地图编辑器 </Text>
-              <Text bold>V3.0</Text>
+              <Text bold>
+                V{MAJOR_VERSION}.{MINOR_VERSION}
+              </Text>
             </div>
             <div>
               <Text type="secondary">作者: </Text>
-              <Text bold>咕噜他命</Text>
+              <Text bold>{AUTHOR}</Text>
             </div>
           </div>
         </div>

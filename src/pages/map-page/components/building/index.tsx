@@ -98,7 +98,7 @@ const Building: FC<BuildingProps> = (props) => {
               : getArcoColor('--danger-6')
           }
           fontStyle="bold"
-          fontSize={9}
+          fontSize={10}
           shadowColor="white"
           shadowBlur={4}
           text={marker.toString()}

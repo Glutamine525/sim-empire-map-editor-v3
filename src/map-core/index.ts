@@ -5,7 +5,7 @@ import {
   isInBuildingRange,
   isInRange as _isInRange,
   parseBuildingKey,
-} from '../utils/coord';
+} from '../utils/coordinate';
 import {
   BarrierColor,
   BarrierType,

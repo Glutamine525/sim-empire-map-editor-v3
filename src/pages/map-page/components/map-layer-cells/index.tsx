@@ -1,5 +1,5 @@
 import { MapLength, UnitPx } from '@/map-core/type';
-import { isInRange } from '@/utils/coord';
+import { isInRange } from '@/utils/coordinate';
 import { settingSelector } from '@/store/selectors';
 import { getColors } from '@/utils/color';
 import React, { memo, useMemo } from 'react';
