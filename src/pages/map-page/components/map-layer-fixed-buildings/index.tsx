@@ -15,7 +15,7 @@ const MapLayerFixedBuildings = () => {
   );
 
   return (
-    <Layer name="fix-buildings">
+    <Layer name="fix-buildings" listening={false}>
       {fixedBuildings.map(([key, b]) => {
         const [line, column] = parseBuildingKey(key);
         return <Building key={key} line={line} column={column} {...b} />;

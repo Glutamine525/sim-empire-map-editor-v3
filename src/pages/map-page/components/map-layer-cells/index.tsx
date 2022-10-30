@@ -15,50 +15,32 @@ const MapLayerCells = () => {
   );
 
   return (
-    <Layer name="cells">
+    <Layer name="cells" listening={false}>
       <Rect fill={backgroundOuterColor} width={MapLength * UnitPx} height={MapLength * UnitPx} />
       <Shape
-        fill="black"
-        sceneFunc={(context, shape) => {
-          context.beginPath();
-          context.moveTo(1755, 5);
-          context.lineTo(5, 1755);
-          context.lineTo(1725, 3475);
-          context.lineTo(3475, 1725);
-          context.closePath();
-          context.fillStrokeShape(shape);
-        }}
-      />
-      <Shape
-        fill={borderColor}
-        sceneFunc={(context, shape) => {
+        sceneFunc={(context) => {
+          context._context.fillStyle = 'black';
+          context._context.beginPath();
+          context._context.moveTo(1755, 5);
+          context._context.lineTo(5, 1755);
+          context._context.lineTo(1725, 3475);
+          context._context.lineTo(3475, 1725);
+          context._context.closePath();
+          context._context.fill();
           for (let li = 1; li <= 116; li++) {
             for (let co = 1; co <= 116; co++) {
-              if (isInRange(li, co)) {
-                context.beginPath();
-                const x = (co - 1) * UnitPx;
-                const y = (li - 1) * UnitPx;
-                context.rect(x, y, UnitPx, UnitPx);
-                context.closePath();
-                context.fillStrokeShape(shape);
+              if (!isInRange(li, co)) {
+                continue;
               }
-            }
-          }
-        }}
-      />
-      <Shape
-        fill={backgroundInnerColor}
-        sceneFunc={(context, shape) => {
-          for (let li = 1; li <= 116; li++) {
-            for (let co = 1; co <= 116; co++) {
-              if (isInRange(li, co)) {
-                context.beginPath();
-                const x = (co - 1) * UnitPx + 1;
-                const y = (li - 1) * UnitPx + 1;
-                context.rect(x, y, UnitPx - 2, UnitPx - 2);
-                context.closePath();
-                context.fillStrokeShape(shape);
-              }
+              context._context.fillStyle = borderColor;
+              context._context.fillRect((co - 1) * UnitPx, (li - 1) * UnitPx, UnitPx, UnitPx);
+              context._context.fillStyle = backgroundInnerColor;
+              context._context.fillRect(
+                (co - 1) * UnitPx + 1,
+                (li - 1) * UnitPx + 1,
+                UnitPx - 2,
+                UnitPx - 2,
+              );
             }
           }
         }}

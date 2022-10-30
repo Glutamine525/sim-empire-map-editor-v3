@@ -1,6 +1,4 @@
-import { BorderStyleType } from '@/map-core/building';
 import { MapLength, OperationType, UnitPx } from '@/map-core/type';
-import { isInRange } from '@/utils/coordinate';
 import { mapSelector } from '@/store/selectors';
 import { createRef, useEffect, useRef, useState } from 'react';
 import { Stage } from 'react-konva';
