@@ -6,17 +6,17 @@ import { Layer } from 'react-konva';
 import { useSelector } from 'react-redux';
 import Building from '../building';
 
-const MapLayerFixedBuildings = () => {
+const MapLayerBarrier = () => {
   const { mapType, noTree } = useSelector(mapSelector);
 
-  const fixedBuildings = useMemo(
-    () => Object.entries(MapCore.getInstance().buildings).filter(([_, v]) => v.isFixed),
+  const barriers = useMemo(
+    () => Object.entries(MapCore.getInstance().buildings).filter(([_, v]) => v.isBarrier),
     [mapType, noTree],
   );
 
   return (
     <Layer name="fix-buildings" listening={false}>
-      {fixedBuildings.map(([key, b]) => {
+      {barriers.map(([key, b]) => {
         const [line, column] = parseBuildingKey(key);
         return <Building key={key} line={line} column={column} {...b} />;
       })}
@@ -24,4 +24,4 @@ const MapLayerFixedBuildings = () => {
   );
 };
 
-export default memo(MapLayerFixedBuildings);
+export default memo(MapLayerBarrier);

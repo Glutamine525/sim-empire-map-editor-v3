@@ -1,5 +1,6 @@
 import { MapCore } from '@/map-core';
 import { CivilTypeLabel } from '@/map-core/type';
+import Konva from 'konva';
 
 export function getFilePostfixName() {
   const now = new Date();
@@ -16,4 +17,10 @@ export function getMapImageName() {
   return `模拟帝国-${CivilTypeLabel[civil]}-${mapType}木-${
     noTree ? '无木' : '有木'
   }-${getFilePostfixName()}.jpg`;
+}
+
+export function getImageFromKonvaNode(node: Konva.Node) {
+  return new Promise<HTMLImageElement>((resolve) => {
+    node.toImage({ pixelRatio: 2, callback: (img) => resolve(img) });
+  });
 }

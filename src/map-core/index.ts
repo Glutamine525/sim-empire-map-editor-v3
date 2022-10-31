@@ -41,6 +41,8 @@ export class MapCore {
 
   public buildings!: { [key: string]: Building };
 
+  public buildingCache!: Set<string>;
+
   public emptyCells!: number;
 
   public counter!: MapCounter;
@@ -70,6 +72,7 @@ export class MapCore {
       }),
     );
     this.buildings = {};
+    this.buildingCache = new Set<string>();
     this.placeBarriers();
     this.placeFixedBuildings();
     this.counter = {
@@ -160,6 +163,7 @@ export class MapCore {
         isRoad: type === FixedBuildingType.Road,
         catalog: FixedBuildingCatalog[type],
       };
+      this.buildingCache.add(key);
     }
   }
 
@@ -184,6 +188,7 @@ export class MapCore {
       }
     }
     this.buildings[key] = { ...b, marker: isRoad ? 0 : marker };
+    this.buildingCache.add(key);
     this.updateCounter(b, 1);
     if (!isProtection) {
       return;
@@ -204,6 +209,7 @@ export class MapCore {
         if (!target) continue;
         if (!showMarker(target) || target.isRoad) continue;
         records.add(this.cells[i][j].occupied);
+        this.buildingCache.add(this.cells[i][j].occupied);
       }
     }
     this.updateBuildingsMarker([...records]);
@@ -235,6 +241,7 @@ export class MapCore {
           const b = this.getBuilding(o)!;
           if (!showMarker(b) || b.isRoad) continue;
           record.add(o);
+          this.buildingCache.add(o);
         }
       }
       this.updateBuildingsMarker([...record]);
@@ -282,6 +289,10 @@ export class MapCore {
       this.counter.general += diff;
     }
     this.counter.coverage += diff * width * height;
+  }
+
+  public clearBuildingCache() {
+    this.buildingCache.clear();
   }
 
   public getBuilding(keyOrLine: string | number, column?: number) {

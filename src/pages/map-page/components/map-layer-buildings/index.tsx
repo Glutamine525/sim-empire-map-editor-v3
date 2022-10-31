@@ -1,38 +1,17 @@
-import { MapCore } from '@/map-core';
-import { mapSelector } from '@/store/selectors';
-import { parseBuildingKey } from '@/utils/coordinate';
-import React, { memo, useEffect, useMemo, useRef } from 'react';
+import React, { createRef, memo, useEffect } from 'react';
 import { Layer } from 'react-konva';
 import Konva from 'konva';
-import { useSelector } from 'react-redux';
-import Building from '../building';
+
+export const layerRef = createRef<Konva.Layer>();
 
 const MapLayerBuildings = () => {
-  const { mapType, noTree, mapUpdater } = useSelector(mapSelector);
-
-  // console.log('<MapLayerBuildings /> rendered');
-
-  const layerRef = useRef<Konva.Layer>(null);
-
-  const buildings = useMemo(
-    () => Object.entries(MapCore.getInstance().buildings).filter(([_, v]) => !v.isFixed),
-    [mapType, noTree, mapUpdater],
-  );
-
   useEffect(() => {
     layerRef.current?.on('draw', () => {
       console.log('BuildingLayer draw finished');
     });
   }, []);
 
-  return (
-    <Layer name="buildings" ref={layerRef}>
-      {buildings.map(([key, b]) => {
-        const [line, column] = parseBuildingKey(key);
-        return <Building key={key} line={line} column={column} {...b} />;
-      })}
-    </Layer>
-  );
+  return <Layer name="buildings" ref={layerRef} />;
 };
 
 export default memo(MapLayerBuildings);

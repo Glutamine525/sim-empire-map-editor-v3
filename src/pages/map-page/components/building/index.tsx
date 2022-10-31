@@ -3,8 +3,8 @@ import { Building as _Building, BorderStyleType } from '@/map-core/building';
 import { UnitPx } from '@/map-core/type';
 import { RoadImg, showMarker as _showMarker } from '@/utils/building';
 import { getArcoColor } from '@/utils/color';
-import React, { FC, memo, useState } from 'react';
-import { Group, Line, Rect, Text } from 'react-konva';
+import React, { FC, useState } from 'react';
+import { Group, Line, Text } from 'react-konva';
 import BorderBlock from '../border-block';
 
 interface BuildingProps extends _Building {
@@ -14,14 +14,15 @@ interface BuildingProps extends _Building {
   isPreview?: boolean;
   canPlace?: boolean;
   draggable?: boolean;
+  hidden?: boolean;
 }
 
 const Building: FC<BuildingProps> = (props) => {
   const {
-    line: li,
-    column: co,
-    width: w,
-    height: h,
+    line: li = 0,
+    column: co = 0,
+    width: w = 0,
+    height: h = 0,
     backgroundColor = 'white',
     text = '',
     textColor = 'black',
@@ -37,6 +38,7 @@ const Building: FC<BuildingProps> = (props) => {
     borderBStyle = BorderStyleType.Solid,
     borderLStyle = BorderStyleType.Solid,
     draggable = false,
+    hidden = false,
   } = props;
 
   const x = !isHovered ? (co - 1) * UnitPx : (co - 1 + w / 2) * UnitPx;
@@ -46,8 +48,6 @@ const Building: FC<BuildingProps> = (props) => {
 
   const [curCoord, setCurCoord] = useState({ x, y });
 
-  // console.log('<Building /> rendered');
-
   return (
     <Group
       x={draggable ? curCoord.x : x}
@@ -55,7 +55,9 @@ const Building: FC<BuildingProps> = (props) => {
       scale={!isHovered ? undefined : { x: 1.01, y: 1.01 }}
       offset={!isHovered ? undefined : { x: (w * UnitPx) / 2, y: (h * UnitPx) / 2 }}
       opacity={isPreview ? 0.6 : 1}
+      listening={draggable || isHovered || isPreview}
       draggable={draggable}
+      visible={!hidden}
       onDragMove={({ target }) => {
         setCurCoord({
           x: target.x(),
@@ -99,8 +101,8 @@ const Building: FC<BuildingProps> = (props) => {
           }
           fontStyle="bold"
           fontSize={10}
-          shadowColor="white"
-          shadowBlur={4}
+          // shadowColor="white"
+          // shadowBlur={4}
           text={marker.toString()}
         />
       )}
@@ -113,8 +115,8 @@ const Building: FC<BuildingProps> = (props) => {
         text={text}
         fill={textColor}
         fontSize={fontSize}
-        shadowColor={textShadowColor}
-        shadowBlur={5}
+        // shadowColor={textShadowColor}
+        // shadowBlur={5}
         ellipsis={true}
         fontStyle="bold"
         align="center"
@@ -138,4 +140,4 @@ const Building: FC<BuildingProps> = (props) => {
   );
 };
 
-export default memo(Building);
+export default Building;

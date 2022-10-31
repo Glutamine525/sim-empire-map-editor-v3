@@ -5,16 +5,25 @@ import { Group } from 'react-konva';
 import BorderBlock from '../border-block';
 
 interface RangeProps {
-  line: number;
-  column: number;
-  size: number;
-  width: number;
-  height: number;
-  color: string;
+  line?: number;
+  column?: number;
+  size?: number;
+  width?: number;
+  height?: number;
+  color?: string;
+  hidden?: boolean;
 }
 
 const Range: FC<RangeProps> = (props) => {
-  const { line: li, column: co, size: _s, width: w, height: h, color } = props;
+  const {
+    line: li = 0,
+    column: co = 0,
+    size: _s = 0,
+    width: w = 0,
+    height: h = 0,
+    color = '#00000',
+    hidden = false,
+  } = props;
   const s = Math.max(_s, 4); // size必须>=4
 
   const cells = useMemo(() => {
@@ -39,7 +48,7 @@ const Range: FC<RangeProps> = (props) => {
   }, [s, w, h]);
 
   return (
-    <>
+    <Group visible={!hidden}>
       {cells.map((row, i) =>
         row.map((cell, j) => {
           const { show, t, r, b, l } = cell;
@@ -60,7 +69,7 @@ const Range: FC<RangeProps> = (props) => {
           );
         }),
       )}
-    </>
+    </Group>
   );
 };
 
