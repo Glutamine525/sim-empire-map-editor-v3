@@ -13,6 +13,7 @@ import useForceUpdate from '@/hooks/use-force-update';
 import Konva from 'konva';
 import { cacheBuildings, drawBuildings, removeBuildings } from '../map-layer-buildings/render';
 import { getImageFromKonvaNode } from '@/utils/file';
+import { triggerMapUpdater } from '@/store/reducers/map-reducer';
 
 let isDragging = false;
 let curLi = 0;
@@ -117,9 +118,8 @@ const MapLayerFunctionality = () => {
       }
       await drawBuildings(minLi, minCo, await getImageFromKonvaNode(cacheRef.current!));
       setTimeout(() => {
-        console.log('done');
-
         core.clearBuildingCache();
+        d(triggerMapUpdater());
       }, 20);
       setUpdateBuildingLayer(false);
     })();
@@ -203,6 +203,13 @@ const MapLayerFunctionality = () => {
         removeBuildings([getBuildingKey(curLi, curCo)]);
       }}>
       <Rect x={0} y={0} width={MapLength * UnitPx} height={MapLength * UnitPx} />
+      <Group ref={cacheRef}>
+        {[...core.buildingCache].map((key) => {
+          const [line, column] = parseBuildingKey(key);
+          const b = core.buildings[key];
+          return <Building key={key} line={line} column={column} {...b} />;
+        })}
+      </Group>
       <>
         {/* hoveredBuilding */}
         <Building {...(hoveredBuilding as any)} isHovered hidden={!hoveredBuilding} />
@@ -237,13 +244,6 @@ const MapLayerFunctionality = () => {
           hidden={!previewBuilding || !previewBuilding?.range || !previewConfig.canPlace}
         />
       </>
-      <Group ref={cacheRef}>
-        {[...core.buildingCache].map((key) => {
-          const [line, column] = parseBuildingKey(key);
-          const b = core.buildings[key];
-          return <Building key={key} line={line} column={column} {...b} />;
-        })}
-      </Group>
     </Layer>
   );
 };

@@ -101,8 +101,9 @@ const Building: FC<BuildingProps> = (props) => {
           }
           fontStyle="bold"
           fontSize={10}
-          // shadowColor="white"
-          // shadowBlur={4}
+          stroke="white"
+          strokeWidth={1}
+          fillAfterStrokeEnabled={true}
           text={marker.toString()}
         />
       )}
@@ -115,8 +116,9 @@ const Building: FC<BuildingProps> = (props) => {
         text={text}
         fill={textColor}
         fontSize={fontSize}
-        // shadowColor={textShadowColor}
-        // shadowBlur={5}
+        stroke="white"
+        strokeWidth={1}
+        fillAfterStrokeEnabled={true}
         ellipsis={true}
         fontStyle="bold"
         align="center"

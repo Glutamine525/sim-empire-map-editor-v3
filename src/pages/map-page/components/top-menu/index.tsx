@@ -1,6 +1,5 @@
 import { AUTHOR, MAJOR_VERSION, MINOR_VERSION } from '@/config';
 import { MapCore } from '@/map-core';
-import { CatalogType } from '@/map-core/building';
 import { CivilType, CivilTypeLabel, MapType, OperationType } from '@/map-core/type';
 import {
   changeCivil,
@@ -11,11 +10,12 @@ import {
 } from '@/store/reducers/map-reducer';
 import { changeTheme } from '@/store/reducers/setting-reducer';
 import { mapSelector, settingSelector } from '@/store/selectors';
-import { Button, Dropdown, Menu, Switch, Typography } from '@arco-design/web-react';
+import { Button, Dropdown, Menu, Modal, Switch, Typography } from '@arco-design/web-react';
 import { IconMenu, IconQuestionCircle } from '@arco-design/web-react/icon';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Scrollbar from 'smooth-scrollbar';
+import { clearBuildingLayer } from '../map-layer-buildings/render';
 import styles from './index.module.less';
 
 const { Text } = Typography;
@@ -28,7 +28,10 @@ const TopMenu = () => {
   const { theme } = useSelector(settingSelector);
   const d = useDispatch();
 
-  const { emptyCells, counter } = useMemo(() => MapCore.getInstance(), [mapType, noTree]);
+  const { emptyCells, counter, buildings } = useMemo(
+    () => MapCore.getInstance(),
+    [mapType, noTree, mapUpdater],
+  );
 
   useEffect(() => {
     Scrollbar.init(topMenuRef.current!, {
@@ -50,8 +53,26 @@ const TopMenu = () => {
 
   const MapTypeList = (
     <Menu
-      onClickMenuItem={(_key) => {
+      onClickMenuItem={async (_key) => {
         const key = Number(_key);
+        if (key === mapType) {
+          return;
+        }
+        if (Object.entries(buildings).filter(([, b]) => !b.isFixed).length) {
+          try {
+            await new Promise<void>((resolve, reject) => {
+              Modal.confirm({
+                title: '警告',
+                content: '当前地图内仍有放置的建筑，是否确认更改地图类型？',
+                onConfirm: () => resolve(),
+                onCancel: () => reject(new Error('canceled')),
+              });
+            });
+          } catch {
+            return;
+          }
+        }
+        clearBuildingLayer();
         MapCore.getInstance().init(key, civil, noTree);
         d(changeMapType(key));
         d(changeOperation(OperationType.Empty));
@@ -64,8 +85,26 @@ const TopMenu = () => {
 
   const CivilTypeList = (
     <Menu
-      onClickMenuItem={(_key) => {
+      onClickMenuItem={async (_key) => {
         const key = _key as CivilType;
+        if (key === civil) {
+          return;
+        }
+        if (Object.entries(buildings).filter(([, b]) => !b.isFixed).length) {
+          try {
+            await new Promise<void>((resolve, reject) => {
+              Modal.confirm({
+                title: '警告',
+                content: '当前地图内仍有放置的建筑，是否确认更改文明类型？',
+                onConfirm: () => resolve(),
+                onCancel: () => reject(new Error('canceled')),
+              });
+            });
+          } catch {
+            return;
+          }
+        }
+        clearBuildingLayer();
         MapCore.getInstance().init(mapType, key, noTree);
         d(changeCivil(key as CivilType));
         d(changeOperation(OperationType.Empty));

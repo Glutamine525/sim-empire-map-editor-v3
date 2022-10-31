@@ -1,19 +1,19 @@
 import { MapCore } from '@/map-core';
-import { UnitPx } from '@/map-core/type';
+import { MapLength, UnitPx } from '@/map-core/type';
 import { parseBuildingKey } from '@/utils/coordinate';
 import { getImageFromKonvaNode } from '@/utils/file';
-import { clear } from 'console';
 import Konva from 'konva';
 import { layerRef } from '.';
 
 export async function drawBuildings(line: number, column: number, data: HTMLImageElement) {
-  const shape = new Konva.Image({
-    x: (column - 1) * UnitPx,
-    y: (line - 1) * UnitPx,
-    scale: { x: 0.5, y: 0.5 },
-    image: data,
-  });
-  layerRef.current?.add(shape);
+  layerRef.current?.add(
+    new Konva.Image({
+      x: (column - 1) * UnitPx,
+      y: (line - 1) * UnitPx,
+      scale: { x: 0.5, y: 0.5 },
+      image: data,
+    }),
+  );
 }
 
 export async function cacheBuildings() {
@@ -33,18 +33,31 @@ export function removeBuildings(keys: string[]) {
     const [_line, _column] = parseBuildingKey(key);
     const [line, column] = parseBuildingKey(core.cells[_line][_column].occupied);
     const b = core.getBuilding(key)!;
-    const clearer = new Konva.Shape({
-      sceneFunc: (ctx, shape) => {
-        ctx.clearRect(
-          (column - 1) * UnitPx,
-          (line - 1) * UnitPx,
-          b.width * UnitPx,
-          b.height * UnitPx,
-        );
-        ctx.fillStrokeShape(shape);
-      },
-    });
-    layerRef.current?.add(clearer);
+    layerRef.current?.add(
+      new Konva.Shape({
+        sceneFunc: (ctx, shape) => {
+          ctx.clearRect(
+            (column - 1) * UnitPx,
+            (line - 1) * UnitPx,
+            b.width * UnitPx,
+            b.height * UnitPx,
+          );
+          ctx.fillStrokeShape(shape);
+        },
+      }),
+    );
     core.deleteBuilding(line, column);
   }
+}
+
+export function clearBuildingLayer() {
+  layerRef.current?.destroyChildren();
+  layerRef.current?.add(
+    new Konva.Shape({
+      sceneFunc: (ctx, shape) => {
+        ctx.clearRect(0, 0, MapLength * UnitPx, MapLength * UnitPx);
+        ctx.fillStrokeShape(shape);
+      },
+    }),
+  );
 }

@@ -11,7 +11,7 @@ const MapLayerBuildings = () => {
     });
   }, []);
 
-  return <Layer name="buildings" ref={layerRef} />;
+  return <Layer name="buildings" ref={layerRef} clearBeforeDraw={false} />;
 };
 
 export default memo(MapLayerBuildings);
