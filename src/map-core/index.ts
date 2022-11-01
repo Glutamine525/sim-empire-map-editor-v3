@@ -187,9 +187,13 @@ export class MapCore {
         marker = Math.max(marker, this.getProtectionNum(i, j));
       }
     }
-    this.buildings[key] = { ...b, marker: isRoad ? 0 : marker };
+    this.buildings[key] = { ...b, marker: isRoad ? 1 : marker };
     this.buildingCache.add(key);
     this.updateCounter(b, 1);
+    if (isRoad) {
+      this.updateRoadCount(line, column);
+      return;
+    }
     if (!isProtection) {
       return;
     }
@@ -222,7 +226,15 @@ export class MapCore {
     }
     const [li, co] = parseBuildingKey(occupied);
     const key = getBuildingKey(li, co);
-    const { width: w, height: h, name = 0, range = 0, isFixed, isProtection } = this.buildings[key];
+    const {
+      width: w,
+      height: h,
+      name = 0,
+      range = 0,
+      isFixed,
+      isProtection,
+      isRoad,
+    } = this.buildings[key];
     if (isFixed && !config?.force) {
       return;
     }
@@ -254,7 +266,203 @@ export class MapCore {
     const b = { ...this.buildings[key] };
     this.updateCounter(b, -1);
     delete this.buildings[key];
+
+    if (isRoad) {
+      this.updateRoadCount(line, column);
+      return;
+    }
     return b;
+  }
+
+  public updateRoadCount(line: number, column: number) {
+    const neighbors = [];
+    for (let i = -1; i <= 1; i++) {
+      for (let j = -1; j <= 1; j++) {
+        if (this.isRoad(line + i, column + j)) {
+          neighbors.push({ li: line + i, co: column + j });
+        }
+      }
+    }
+    let queue = [];
+    for (let v of neighbors) {
+      const self = this.getBuilding(v.li, v.co)!;
+      if (this.getRoadDir(v.li, v.co) === 'h') {
+        let hasLeft = false;
+        if (this.isRoad(v.li, v.co - 1)) {
+          const left = this.getBuilding(v.li, v.co - 1)!;
+          let { marker = 1 } = left;
+          if (marker === 1) {
+            left.marker = 1;
+            self.marker = 2;
+            left.isRoadVertex = true;
+          } else {
+            self.marker = marker + 1;
+            if (marker > 1) left.isRoadVertex = false;
+          }
+          self.isRoadVertex = true;
+          queue.push(`${v.li}-${v.co - 1}`);
+          queue.push(`${v.li}-${v.co}`);
+          hasLeft = true;
+        }
+        if (this.isRoad(v.li, v.co + 1)) {
+          const right = this.getBuilding(v.li, v.co + 1)!;
+          let { marker = 1 } = self;
+          if (marker === 1 || !hasLeft) {
+            marker = 1;
+            self.marker = 1;
+            right.marker = 2;
+            self.isRoadVertex = true;
+          } else {
+            right.marker = marker + 1;
+            if (marker > 1) self.isRoadVertex = false;
+          }
+          right.isRoadVertex = true;
+          queue.push(`${v.li}-${v.co}`);
+          queue.push(`${v.li}-${v.co + 1}`);
+          marker += 2;
+          let idx = v.co + 2;
+          while (this.isRoad(v.li, idx)) {
+            this.getBuilding(v.li, idx)!.isRoadVertex = true;
+            this.getBuilding(v.li, idx)!.marker = marker;
+            this.getBuilding(v.li, idx - 1)!.isRoadVertex = false;
+            if (!this.isRoad(v.li - 1, idx - 1) && !this.isRoad(v.li + 1, idx - 1)) {
+              queue.pop();
+            }
+            queue.push(`${v.li}-${idx}`);
+            marker++;
+            idx++;
+          }
+        }
+      }
+    }
+    for (let v of neighbors) {
+      const self = this.getBuilding(v.li, v.co)!;
+      if (this.getRoadDir(v.li, v.co) === 'v') {
+        let hasTop = false;
+        if (this.judgeRoadDirection(v.li - 1, v.co, 'v')) {
+          const top = this.getBuilding(v.li - 1, v.co)!;
+          let { marker = 1 } = top;
+          if (marker === 1) {
+            top.marker = 1;
+            self.marker = 2;
+            top.isRoadVertex = true;
+          } else {
+            self.marker = marker + 1;
+            if (marker > 1) top.isRoadVertex = false;
+          }
+          self.isRoadVertex = true;
+          queue.push(`${v.li - 1}-${v.co}`);
+          queue.push(`${v.li}-${v.co}`);
+          hasTop = true;
+        }
+        if (this.judgeRoadDirection(v.li + 1, v.co, 'v')) {
+          const bottom = this.getBuilding(v.li + 1, v.co)!;
+          let { marker = 1 } = self;
+          if (marker === 1 || !hasTop) {
+            marker = 1;
+            self.marker = 1;
+            bottom.marker = 2;
+            self.isRoadVertex = true;
+          } else {
+            bottom.marker = marker + 1;
+            if (marker > 1) self.isRoadVertex = false;
+          }
+          bottom.isRoadVertex = true;
+          queue.push(`${v.li}-${v.co}`);
+          queue.push(`${v.li + 1}-${v.co}`);
+          marker += 2;
+          let idx = v.li + 2;
+          while (this.judgeRoadDirection(idx, v.co, 'v')) {
+            this.getBuilding(idx, v.co)!.marker = marker;
+            this.getBuilding(idx, v.co)!.isRoadVertex = true;
+            this.getBuilding(idx - 1, v.co)!.isRoadVertex = false;
+            queue.pop();
+            queue.push(`${idx}-${v.co}`);
+            marker++;
+            idx++;
+          }
+        }
+      }
+      if (this.getRoadDir(v.li, v.co) === 'n') {
+        self.isRoadVertex = false;
+        self.marker = 1;
+        queue.push(`${v.li}-${v.co}`);
+      }
+    }
+    queue = [...new Set(queue)];
+    let record: string[] = [];
+    for (let v of queue) {
+      const [li, co] = parseBuildingKey(v);
+      record.push(...this.updateRoadDisplay(li, co));
+    }
+    record = [...new Set(record)];
+    for (let v of record) {
+      this.buildingCache.add(v);
+    }
+  }
+
+  public updateRoadDisplay(line: number, column: number) {
+    const self = this.getBuilding(line, column)!;
+    const selfDir = this.getRoadDir(line, column);
+    if (selfDir === 'h') {
+      for (let i = -1; i < 2; i += 2) {
+        if (this.isRoad(line + i, column)) {
+          const adj = this.getBuilding(line + i, column)!;
+          if (i === -1) {
+            adj.borderBStyle = BorderStyleType.Dashed;
+            self.borderTStyle = BorderStyleType.Dashed;
+          } else {
+            self.borderBStyle = BorderStyleType.Dashed;
+            adj.borderTStyle = BorderStyleType.Dashed;
+          }
+          if (
+            this.judgeRoadDirection(line + i, column, 'v') ||
+            this.judgeRoadDirection(line + i, column, 'n')
+          ) {
+            self.isRoadVertex = true;
+          }
+        }
+      }
+    } else if (selfDir === 'v') {
+      if (this.judgeRoadDirection(line - 1, column, 'v')) {
+        self.borderTStyle = BorderStyleType.None;
+      } else if (this.judgeRoadDirection(line - 1, column, 'h')) {
+        self.borderTStyle = BorderStyleType.Dashed;
+      } else {
+        self.borderTStyle = BorderStyleType.Solid;
+      }
+      if (this.judgeRoadDirection(line + 1, column, 'v')) {
+        self.borderBStyle = BorderStyleType.None;
+      } else if (this.judgeRoadDirection(line + 1, column, 'h')) {
+        self.borderBStyle = BorderStyleType.Dashed;
+      } else {
+        self.borderBStyle = BorderStyleType.Solid;
+      }
+    }
+    const records: string[] = self.isRoad ? [`${line}-${column}`] : [];
+    if (this.isRoad(line, column - 1)) {
+      self.borderLStyle = BorderStyleType.None;
+      records.push(`${line}-${column - 1}`);
+    } else {
+      self.borderLStyle = BorderStyleType.Solid;
+    }
+    if (this.isRoad(line, column + 1)) {
+      self.borderRStyle = BorderStyleType.None;
+      records.push(`${line}-${column + 1}`);
+    } else {
+      self.borderRStyle = BorderStyleType.Solid;
+    }
+    if (!this.isRoad(line - 1, column)) {
+      self.borderTStyle = BorderStyleType.Solid;
+    } else {
+      records.push(`${line - 1}-${column}`);
+    }
+    if (!this.isRoad(line + 1, column)) {
+      self.borderBStyle = BorderStyleType.Solid;
+    } else {
+      records.push(`${line + 1}-${column}`);
+    }
+    return records;
   }
 
   public updateBuildingsMarker(buildings: string[]) {
@@ -314,5 +522,40 @@ export class MapCore {
     return Object.entries(this.cells[line][column].protection)
       .map(([_, v]) => v)
       .filter((v) => v.length).length;
+  }
+
+  public isRoad(line: number, column: number) {
+    return Boolean(this.getBuilding(line, column)?.isRoad);
+  }
+
+  public getRoadDir(line: number, column: number) {
+    if (this.isRoad(line, column - 1)) {
+      return 'h';
+    }
+    if (this.isRoad(line, column + 1)) {
+      return 'h';
+    }
+    if (
+      this.isRoad(line - 1, column) &&
+      !this.isRoad(line - 1, column - 1) &&
+      !this.isRoad(line - 1, column + 1)
+    ) {
+      return 'v';
+    }
+    if (
+      this.isRoad(line + 1, column) &&
+      !this.isRoad(line + 1, column - 1) &&
+      !this.isRoad(line + 1, column + 1)
+    ) {
+      return 'v';
+    }
+    return 'n';
+  }
+
+  public judgeRoadDirection(line: number, column: number, direction: string) {
+    if (this.isRoad(line, column) && this.getRoadDir(line, column) === direction) {
+      return true;
+    }
+    return false;
   }
 }

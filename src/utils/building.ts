@@ -5,6 +5,7 @@ import {
   CivilBuilding,
   SimpleBuilding,
 } from '@/map-core/building';
+import { FixedBuildingColor, FixedBuildingType } from '@/map-core/building/fixed';
 import { CivilType } from '@/map-core/type';
 
 export const RoadImg = new Image();
@@ -13,7 +14,7 @@ RoadImg.src =
 
 export function showMarker(b: Building) {
   if (b?.isRoad) {
-    return (b?.marker || 0) > 1;
+    return b?.isRoadVertex;
   }
   return !b?.isBarrier && !b?.isDecoration && !b?.isProtection && !b?.isWonder;
 }
@@ -28,6 +29,7 @@ export function getRoadBuilding() {
     height: 1,
     name: CatalogType.Road,
     catalog: CatalogType.Road,
+    backgroundColor: FixedBuildingColor[FixedBuildingType.Road],
     isRoad: true,
   };
 }

@@ -42,42 +42,81 @@ const BorderBlock: FC<BorderBlockProps> = (props) => {
 
   const x = mode === 'relative' ? 0 : (co - 1) * UnitPx;
   const y = mode === 'relative' ? 0 : (li - 1) * UnitPx;
-
   const bw = 1; // borderWidth
 
   return (
     <Group x={x} y={y}>
       {borderTStyle !== BorderStyleType.None && (
-        <Line
-          points={[bw, bw / 2, w * UnitPx - bw, bw / 2]}
-          dash={borderTStyle === BorderStyleType.Solid ? undefined : [4, 5]}
-          stroke={borderColor}
-          strokeWidth={bw}
-        />
+        <>
+          <Line
+            points={[bw, bw / 2, w * UnitPx - bw, bw / 2]}
+            dash={borderTStyle === BorderStyleType.Solid ? undefined : [2, 2]}
+            stroke={borderColor}
+            strokeWidth={bw}
+          />
+          {borderTStyle === BorderStyleType.Dashed && (
+            <Line
+              points={[bw + 2, bw / 2, w * UnitPx - bw, bw / 2]}
+              dash={[2, 2]}
+              stroke="white"
+              strokeWidth={bw}
+            />
+          )}
+        </>
       )}
       {borderRStyle !== BorderStyleType.None && (
-        <Line
-          points={[w * UnitPx - bw / 2, bw, w * UnitPx - bw / 2, h * UnitPx - bw]}
-          dash={borderRStyle === BorderStyleType.Solid ? undefined : [4, 5]}
-          stroke={borderColor}
-          strokeWidth={bw}
-        />
+        <>
+          <Line
+            points={[w * UnitPx - bw / 2, bw, w * UnitPx - bw / 2, h * UnitPx - bw]}
+            dash={borderRStyle === BorderStyleType.Solid ? undefined : [2, 2]}
+            stroke={borderColor}
+            strokeWidth={bw}
+          />
+          {borderRStyle === BorderStyleType.Dashed && (
+            <Line
+              points={[w * UnitPx - bw / 2, bw + 2, w * UnitPx - bw / 2, h * UnitPx - bw]}
+              dash={[2, 2]}
+              stroke="white"
+              strokeWidth={bw}
+            />
+          )}
+        </>
       )}
       {borderBStyle !== BorderStyleType.None && (
-        <Line
-          points={[bw, h * UnitPx - bw / 2, w * UnitPx - bw, h * UnitPx - bw / 2]}
-          dash={borderBStyle === BorderStyleType.Solid ? undefined : [4, 5]}
-          stroke={borderColor}
-          strokeWidth={bw}
-        />
+        <>
+          <Line
+            points={[bw, h * UnitPx - bw / 2, w * UnitPx - bw, h * UnitPx - bw / 2]}
+            dash={borderBStyle === BorderStyleType.Solid ? undefined : [2, 2]}
+            stroke={borderColor}
+            strokeWidth={bw}
+          />
+          {borderBStyle === BorderStyleType.Dashed && (
+            <Line
+              points={[bw + 2, h * UnitPx - bw / 2, w * UnitPx - bw, h * UnitPx - bw / 2]}
+              dash={[2, 2]}
+              stroke="white"
+              strokeWidth={bw}
+            />
+          )}
+        </>
       )}
       {borderLStyle !== BorderStyleType.None && (
-        <Line
-          points={[bw / 2, bw, bw / 2, h * UnitPx - bw]}
-          dash={borderLStyle === BorderStyleType.Solid ? undefined : [4, 5]}
-          stroke={borderColor}
-          strokeWidth={bw}
-        />
+        <>
+          <Line
+            points={[bw / 2, bw, bw / 2, h * UnitPx - bw]}
+            dash={borderLStyle === BorderStyleType.Solid ? undefined : [2, 2]}
+            stroke={borderColor}
+            strokeWidth={bw}
+          />
+          {borderLStyle === BorderStyleType.Dashed && (
+            <Line
+              points={[bw / 2, bw + 2, bw / 2, h * UnitPx - bw]}
+              dash={[2, 2]}
+              stroke="white"
+              strokeWidth={bw}
+            />
+          )}
+        </>
       )}
       <Rect
         x={borderLStyle === BorderStyleType.None ? 0 : bw}

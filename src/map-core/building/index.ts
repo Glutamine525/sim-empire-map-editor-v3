@@ -87,4 +87,5 @@ export interface Building {
   borderRStyle?: BorderStyleType;
   borderBStyle?: BorderStyleType;
   borderLStyle?: BorderStyleType;
+  isRoadVertex?: boolean;
 }

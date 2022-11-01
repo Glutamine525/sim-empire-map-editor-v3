@@ -208,6 +208,7 @@ const MapLayerFunctionality = () => {
           return;
         }
         removeBuildings([getBuildingKey(curLi, curCo)]);
+        setUpdateBuildingLayer(true);
       }}>
       <Rect x={0} y={0} width={MapLength * UnitPx} height={MapLength * UnitPx} />
       <Group ref={cacheRef}>

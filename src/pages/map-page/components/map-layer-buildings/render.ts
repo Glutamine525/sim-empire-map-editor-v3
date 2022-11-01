@@ -39,8 +39,8 @@ export function removeBuildings(keys: string[]) {
           ctx.clearRect(
             (column - 1) * UnitPx,
             (line - 1) * UnitPx,
-            b.width * UnitPx,
-            b.height * UnitPx,
+            b.width * UnitPx + 0.5,
+            b.height * UnitPx + 0.5,
           );
           ctx.fillStrokeShape(shape);
         },

@@ -78,7 +78,7 @@ const Building: FC<BuildingProps> = (props) => {
         position="relative"
         width={w}
         height={h}
-        borderColor="rgba(0,0,0,0)"
+        borderColor={isRoad ? 'rgb(169,174,184)' : 'rgba(0,0,0,0)'}
         backgroundColor={isRoad ? undefined : backgroundColor}
         fillPatternImage={isRoad ? RoadImg : undefined}
         shadowColor={!isHovered ? undefined : getArcoColor('--gray-5')}
