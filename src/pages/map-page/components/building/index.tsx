@@ -4,7 +4,7 @@ import { UnitPx } from '@/map-core/type';
 import { RoadImg, showMarker as _showMarker } from '@/utils/building';
 import { getArcoColor } from '@/utils/color';
 import React, { FC, useState } from 'react';
-import { Group, Line, Text } from 'react-konva';
+import { Circle, Group, Line, Text } from 'react-konva';
 import BorderBlock from '../border-block';
 
 interface BuildingProps extends _Building {
@@ -88,25 +88,39 @@ const Building: FC<BuildingProps> = (props) => {
         borderBStyle={borderBStyle}
         borderLStyle={borderLStyle}
       />
-      {showMarker && (
-        <Text
-          x={bw + 2}
-          y={bw + 2}
-          fill={
-            isRoad
-              ? 'black'
-              : marker === MapCore.getInstance().protection.length
-              ? getArcoColor('--success-6')
-              : getArcoColor('--danger-6')
-          }
-          fontStyle="bold"
-          fontSize={10}
-          stroke="white"
-          strokeWidth={1}
-          fillAfterStrokeEnabled={true}
-          text={marker.toString()}
-        />
-      )}
+      {showMarker &&
+        (isRoad ? (
+          <Text
+            x={bw + 2}
+            y={bw + 2}
+            fill={
+              isRoad
+                ? 'black'
+                : marker === MapCore.getInstance().protection.length
+                ? getArcoColor('--success-6')
+                : getArcoColor('--danger-6')
+            }
+            fontStyle="bold"
+            fontSize={10}
+            stroke="white"
+            strokeWidth={1}
+            fillAfterStrokeEnabled={true}
+            text={marker.toString()}
+          />
+        ) : (
+          <Circle
+            x={5}
+            y={5}
+            radius={3}
+            stroke="white"
+            strokeWidth={1}
+            fill={
+              marker === MapCore.getInstance().protection.length
+                ? getArcoColor('--success-6')
+                : getArcoColor('--danger-6')
+            }
+          />
+        ))}
       <Text
         x={bw}
         y={bw}
@@ -116,7 +130,7 @@ const Building: FC<BuildingProps> = (props) => {
         text={text}
         fill={textColor}
         fontSize={fontSize}
-        stroke="white"
+        stroke={textShadowColor}
         strokeWidth={1}
         fillAfterStrokeEnabled={true}
         ellipsis={true}

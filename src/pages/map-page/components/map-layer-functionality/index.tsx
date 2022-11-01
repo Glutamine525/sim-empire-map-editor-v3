@@ -18,6 +18,7 @@ import { triggerMapUpdater } from '@/store/reducers/map-reducer';
 let isDragging = false;
 let curLi = 0;
 let curCo = 0;
+let processing = false;
 
 const MapLayerFunctionality = () => {
   // console.log('<MapLayerFunctionality /> rendered');
@@ -105,6 +106,7 @@ const MapLayerFunctionality = () => {
     }
     const { buildingCache } = core;
     if (!buildingCache.size) {
+      processing = false;
       setUpdateBuildingLayer(false);
       return;
     }
@@ -118,6 +120,7 @@ const MapLayerFunctionality = () => {
       }
       await drawBuildings(minLi, minCo, await getImageFromKonvaNode(cacheRef.current!));
       setTimeout(() => {
+        processing = false;
         core.clearBuildingCache();
         d(triggerMapUpdater());
       }, 20);
@@ -146,7 +149,8 @@ const MapLayerFunctionality = () => {
         if (
           operation === OperationType.PlaceBuilding &&
           previewConfig.canPlace &&
-          previewBuilding
+          previewBuilding &&
+          !processing
         ) {
           core.placeBuilding(brush, li, co);
           forceUpdate();
@@ -173,7 +177,8 @@ const MapLayerFunctionality = () => {
         if (
           operation === OperationType.PlaceBuilding &&
           previewConfig.canPlace &&
-          previewBuilding
+          previewBuilding &&
+          !processing
         ) {
           core.placeBuilding(brush, previewConfig.li, previewConfig.co);
           forceUpdate();
@@ -184,6 +189,7 @@ const MapLayerFunctionality = () => {
         if (operation !== OperationType.PlaceBuilding) {
           return;
         }
+        processing = true;
         setUpdateBuildingLayer(true);
       }}
       onMouseLeave={() => {
@@ -191,6 +197,7 @@ const MapLayerFunctionality = () => {
         if (operation !== OperationType.PlaceBuilding) {
           return;
         }
+        processing = true;
         setUpdateBuildingLayer(true);
       }}
       onDblClick={() => {
