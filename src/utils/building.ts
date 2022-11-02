@@ -6,6 +6,7 @@ import {
   SimpleBuilding,
 } from '@/map-core/building';
 import { FixedBuildingColor, FixedBuildingType } from '@/map-core/building/fixed';
+import { GeneralBuilding } from '@/map-core/building/general';
 import { CivilType } from '@/map-core/type';
 
 export const RoadImg = new Image();
@@ -51,5 +52,17 @@ export function getSelectedBuilding(
       catalog === BuildingType.Municipal && CivilBuilding[civil]['防护'].includes(record.name),
     isWonder: catalog === BuildingType.Wonder || record.isPalace,
     isDecoration: catalog === BuildingType.Decoration,
+  };
+}
+
+export function getGeneralBuilding(size: number): Building {
+  return {
+    width: size,
+    height: size,
+    backgroundColor: GeneralBuilding[size - 2].background,
+    name: GeneralBuilding[size - 2].name,
+    text: GeneralBuilding[size - 2].text,
+    catalog: CatalogType.General,
+    isGeneral: true,
   };
 }

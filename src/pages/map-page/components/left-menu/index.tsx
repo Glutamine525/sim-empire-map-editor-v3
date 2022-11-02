@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { mapSelector } from '@/store/selectors';
 import { changeBrush, changeOperation } from '@/store/reducers/map-reducer';
 import { OperationType } from '@/map-core/type';
-import { getRoadBuilding, getSelectedBuilding } from '@/utils/building';
+import { getGeneralBuilding, getRoadBuilding, getSelectedBuilding } from '@/utils/building';
 import { mapRef } from '../map';
 import downloader from 'js-file-download';
 import { getMapImageName } from '@/utils/file';
@@ -95,6 +95,11 @@ const LeftMenu = () => {
             )!;
             d(changeOperation(OperationType.PlaceBuilding));
             d(changeBrush(getSelectedBuilding(civil, type, record)));
+            return;
+          }
+          if (path[1] === CatalogType.General) {
+            d(changeOperation(OperationType.PlaceBuilding));
+            d(changeBrush(getGeneralBuilding(parseInt(path[0], 10))));
             return;
           }
           switch (path[0]) {
