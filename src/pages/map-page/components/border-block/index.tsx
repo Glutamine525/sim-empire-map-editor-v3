@@ -4,7 +4,9 @@ import React, { FC } from 'react';
 import { Group, Line, Rect } from 'react-konva';
 
 interface BorderBlockProps {
-  position: 'relative' | 'absolute';
+  mode: 'relative' | 'absolute' | 'free';
+  x?: number;
+  y?: number;
   line?: number;
   column?: number;
   width?: number;
@@ -23,7 +25,9 @@ interface BorderBlockProps {
 
 const BorderBlock: FC<BorderBlockProps> = (props) => {
   const {
-    position: mode,
+    mode,
+    x: _x = 0,
+    y: _y = 0,
     line: li = 0,
     column: co = 0,
     width: w = 1,
@@ -40,8 +44,8 @@ const BorderBlock: FC<BorderBlockProps> = (props) => {
     fillPatternImage,
   } = props;
 
-  const x = mode === 'relative' ? 0 : (co - 1) * UnitPx;
-  const y = mode === 'relative' ? 0 : (li - 1) * UnitPx;
+  const x = mode === 'free' ? _x : mode === 'relative' ? 0 : (co - 1) * UnitPx;
+  const y = mode === 'free' ? _y : mode === 'relative' ? 0 : (li - 1) * UnitPx;
   const bw = 1; // borderWidth
 
   return (

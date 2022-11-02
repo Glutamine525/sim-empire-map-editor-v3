@@ -14,10 +14,15 @@ import Konva from 'konva';
 import { cacheBuildings, drawBuildings, removeBuildings } from '../map-layer-buildings/render';
 import { getImageFromKonvaNode } from '@/utils/file';
 import { triggerMapUpdater } from '@/store/reducers/map-reducer';
+import RoadHelper from '../road-helper';
 
 let isDragging = false;
 let curLi = 0;
 let curCo = 0;
+let initLi = -1;
+let initCo = -1;
+let initX = 0;
+let initY = 0;
 let processing = false;
 
 const MapLayerFunctionality = () => {
@@ -142,10 +147,13 @@ const MapLayerFunctionality = () => {
         const {
           evt: { offsetX: x, offsetY: y },
         } = e;
-        console.log(Math.ceil(y / UnitPx), Math.ceil(x / UnitPx));
-
+        const [li, co] = [Math.ceil(y / UnitPx), Math.ceil(x / UnitPx)];
+        console.log(li, co);
+        initLi = li;
+        initCo = co;
+        initX = x;
+        initY = y;
         isDragging = true;
-        const { li, co } = previewConfig;
         if (
           operation === OperationType.PlaceBuilding &&
           previewConfig.canPlace &&
@@ -187,13 +195,22 @@ const MapLayerFunctionality = () => {
       onMouseUp={() => {
         isDragging = false;
         if (operation !== OperationType.PlaceBuilding) {
+          initLi = -1;
+          initCo = -1;
           return;
         }
         processing = true;
+        if (previewBuilding?.isRoad) {
+          core.placeStraightRoad(initLi, initCo, curLi, curCo);
+        }
         setUpdateBuildingLayer(true);
+        initLi = -1;
+        initCo = -1;
       }}
       onMouseLeave={() => {
         isDragging = false;
+        initLi = -1;
+        initCo = -1;
         if (operation !== OperationType.PlaceBuilding) {
           return;
         }
@@ -207,7 +224,11 @@ const MapLayerFunctionality = () => {
         if (!core.cells[curLi][curCo].occupied) {
           return;
         }
-        removeBuildings([getBuildingKey(curLi, curCo)]);
+        const key = getBuildingKey(curLi, curCo);
+        if (core.buildings[key].isFixed) {
+          return;
+        }
+        removeBuildings([key]);
         setUpdateBuildingLayer(true);
       }}>
       <Rect x={0} y={0} width={MapLength * UnitPx} height={MapLength * UnitPx} />
@@ -252,6 +273,13 @@ const MapLayerFunctionality = () => {
           hidden={!previewBuilding || !previewBuilding?.range || !previewConfig.canPlace}
         />
       </>
+      <RoadHelper
+        hidden={!previewBuilding?.isRoad}
+        initLi={initLi}
+        initCo={initCo}
+        curLi={curLi}
+        curCo={curCo}
+      />
     </Layer>
   );
 };

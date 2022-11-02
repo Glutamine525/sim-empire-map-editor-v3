@@ -16,7 +16,7 @@ import {
   FixedBuildingText,
   FixedBuildingType,
 } from './building/fixed';
-import { showMarker } from '@/utils/building';
+import { getRoadBuilding, showMarker } from '@/utils/building';
 
 export class MapCore {
   public static instance: MapCore;
@@ -42,6 +42,8 @@ export class MapCore {
   public buildings!: { [key: string]: Building };
 
   public buildingCache!: Set<string>;
+
+  public roadCache!: Set<string>;
 
   public emptyCells!: number;
 
@@ -73,6 +75,7 @@ export class MapCore {
     );
     this.buildings = {};
     this.buildingCache = new Set<string>();
+    this.roadCache = new Set<string>();
     this.placeBarriers();
     this.placeFixedBuildings();
     this.counter = {
@@ -191,6 +194,7 @@ export class MapCore {
     this.buildingCache.add(key);
     this.updateCounter(b, 1);
     if (isRoad) {
+      this.roadCache.add(key);
       this.updateRoadCount(line, column);
       return;
     }
@@ -219,7 +223,11 @@ export class MapCore {
     this.updateBuildingsMarker([...records]);
   }
 
-  public deleteBuilding(line: number, column: number, config?: { force?: boolean }) {
+  public deleteBuilding(
+    line: number,
+    column: number,
+    config?: { force?: boolean; processingRoadCache?: boolean },
+  ) {
     const { occupied } = this.cells[line][column];
     if (!occupied) {
       return;
@@ -266,12 +274,35 @@ export class MapCore {
     const b = { ...this.buildings[key] };
     this.updateCounter(b, -1);
     delete this.buildings[key];
-
     if (isRoad) {
+      this.roadCache.delete(key);
+      config?.processingRoadCache && this.buildingCache.delete(key);
       this.updateRoadCount(line, column);
-      return;
     }
     return b;
+  }
+
+  public placeStraightRoad(initLi: number, initCo: number, curLi: number, curCo: number) {
+    for (let key of this.roadCache) {
+      const [li, co] = parseBuildingKey(key);
+      this.deleteBuilding(li, co, { processingRoadCache: true });
+    }
+    const deltaLi = curLi - initLi;
+    const deltaCo = curCo - initCo;
+    const w = deltaCo > 0 ? deltaCo + 1 : Math.abs(deltaCo - 1);
+    const h = deltaLi > 0 ? deltaLi + 1 : Math.abs(deltaLi - 1);
+    const realInitLi = deltaLi < 0 ? initLi + deltaLi : initLi;
+    const realInitCo = deltaCo < 0 ? initCo + deltaCo : initCo;
+    const road = getRoadBuilding();
+    for (let i = realInitLi; i < realInitLi + h; i++) {
+      for (let j = realInitCo; j < realInitCo + w; j++) {
+        if (this.cells[i][j].occupied) {
+          continue;
+        }
+        this.placeBuilding(road, i, j);
+      }
+    }
+    this.roadCache.clear();
   }
 
   public updateRoadCount(line: number, column: number) {

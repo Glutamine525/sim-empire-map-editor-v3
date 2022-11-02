@@ -21,7 +21,7 @@ const Range: FC<RangeProps> = (props) => {
     size: _s = 0,
     width: w = 0,
     height: h = 0,
-    color = '#00000',
+    color = '#000000',
     hidden = false,
   } = props;
   const s = Math.max(_s, 4); // size必须>=4
@@ -55,7 +55,7 @@ const Range: FC<RangeProps> = (props) => {
           return (
             <BorderBlock
               key={`${i}-${j}`}
-              position="absolute"
+              mode="absolute"
               line={li - s + i}
               column={co - s + j}
               borderColor={show ? color : 'transparent'}

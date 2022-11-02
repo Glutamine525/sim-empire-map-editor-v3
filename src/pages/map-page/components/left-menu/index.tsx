@@ -102,6 +102,9 @@ const LeftMenu = () => {
               d(changeOperation(OperationType.PlaceBuilding));
               d(changeBrush(getRoadBuilding()));
               break;
+            case '选中建筑':
+              d(changeOperation(OperationType.SelectBuilding));
+              break;
             case '截图':
               (async () => {
                 downloader(

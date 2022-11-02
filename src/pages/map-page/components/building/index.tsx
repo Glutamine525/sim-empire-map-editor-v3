@@ -75,7 +75,7 @@ const Building: FC<BuildingProps> = (props) => {
         });
       }}>
       <BorderBlock
-        position="relative"
+        mode="relative"
         width={w}
         height={h}
         borderColor={isRoad ? 'rgb(169,174,184)' : 'rgba(0,0,0,0)'}
@@ -91,8 +91,10 @@ const Building: FC<BuildingProps> = (props) => {
       {showMarker &&
         (isRoad ? (
           <Text
-            x={bw + 2}
-            y={bw + 2}
+            x={bw}
+            y={bw}
+            width={w * UnitPx - bw * 2}
+            height={h * UnitPx - bw * 2}
             fill={
               isRoad
                 ? 'black'
@@ -101,11 +103,13 @@ const Building: FC<BuildingProps> = (props) => {
                 : getArcoColor('--danger-6')
             }
             fontStyle="bold"
-            fontSize={10}
+            fontSize={14}
             stroke="white"
             strokeWidth={1}
             fillAfterStrokeEnabled={true}
             text={marker.toString()}
+            align="center"
+            verticalAlign="middle"
           />
         ) : (
           <Circle
