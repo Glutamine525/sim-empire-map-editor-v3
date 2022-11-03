@@ -33,7 +33,13 @@ const MapLayerFunctionality = () => {
 
   const cacheRef = useRef<Konva.Group>(null);
 
-  const [previewConfig, setPreviewConfig] = useState({ li: 0, co: 0, canPlace: true, marker: 0 });
+  const [previewConfig, setPreviewConfig] = useState({
+    li: 0,
+    co: 0,
+    canPlace: true,
+    marker: 0,
+    canReplace: false,
+  });
   const [updateBuildingLayer, setUpdateBuildingLayer] = useState(false);
 
   const [updater, forceUpdate] = useForceUpdate();
@@ -67,8 +73,25 @@ const MapLayerFunctionality = () => {
     if (!isAllInRange(curLi - offLi, curCo - offCo, width - 1, height - 1)) {
       return null;
     }
-    const [oLi, oCo] = [curLi - offLi, curCo - offCo];
+    // 检测是否可以覆盖
+    const building = core.getBuilding(curLi, curCo);
+    if (
+      building?.isGeneral &&
+      building?.width === brush.width &&
+      building?.height === brush.height
+    ) {
+      const [_li, _co] = parseBuildingKey(core.cells[curLi][curCo].occupied);
+      setPreviewConfig({
+        li: _li,
+        co: _co,
+        marker: building.marker || 0,
+        canPlace: false,
+        canReplace: true,
+      });
+      return brush;
+    }
     // 检测是否可以放置
+    const [oLi, oCo] = [curLi - offLi, curCo - offCo];
     let canPlace = true;
     let marker = 0;
     const { cells, getProtectionNum } = core;
@@ -84,7 +107,7 @@ const MapLayerFunctionality = () => {
         break;
       }
     }
-    setPreviewConfig({ li: oLi, co: oCo, canPlace, marker });
+    setPreviewConfig({ li: oLi, co: oCo, marker, canPlace, canReplace: false });
     return brush;
   }, [operation, updater, brush]);
 
@@ -160,7 +183,10 @@ const MapLayerFunctionality = () => {
           previewBuilding &&
           !processing
         ) {
-          core.placeBuilding(brush, li, co);
+          core.placeBuilding(brush, previewConfig.li, previewConfig.co);
+          forceUpdate();
+        } else if (previewConfig.canReplace && !processing) {
+          core.replaceBuilding(brush, previewConfig.li, previewConfig.co);
           forceUpdate();
         }
       }}
@@ -189,6 +215,9 @@ const MapLayerFunctionality = () => {
           !processing
         ) {
           core.placeBuilding(brush, previewConfig.li, previewConfig.co);
+          forceUpdate();
+        } else if (previewConfig.canReplace && !processing) {
+          core.replaceBuilding(brush, previewConfig.li, previewConfig.co);
           forceUpdate();
         }
       }}
@@ -224,12 +253,13 @@ const MapLayerFunctionality = () => {
         if (!core.cells[curLi][curCo].occupied) {
           return;
         }
-        const key = getBuildingKey(curLi, curCo);
-        if (core.buildings[key].isFixed) {
+        const { occupied } = core.cells[curLi][curCo];
+        if (core.buildings[occupied].isFixed) {
           return;
         }
-        removeBuildings([key]);
+        removeBuildings([occupied]);
         setUpdateBuildingLayer(true);
+        forceUpdate();
       }}>
       <Rect x={0} y={0} width={MapLength * UnitPx} height={MapLength * UnitPx} />
       <Group ref={cacheRef}>
@@ -260,7 +290,7 @@ const MapLayerFunctionality = () => {
           {...(previewBuilding as any)}
           marker={previewBuilding?.isRoad ? 0 : previewConfig.marker}
           isPreview
-          canPlace={previewConfig.canPlace}
+          canPlace={previewConfig.canPlace || previewConfig.canReplace}
           hidden={!previewBuilding}
         />
         <Range
@@ -270,7 +300,11 @@ const MapLayerFunctionality = () => {
           height={previewBuilding?.height}
           size={previewBuilding?.range}
           color={previewBuilding?.backgroundColor}
-          hidden={!previewBuilding || !previewBuilding?.range || !previewConfig.canPlace}
+          hidden={
+            !previewBuilding ||
+            !previewBuilding?.range ||
+            (!previewConfig.canPlace && !previewConfig.canReplace)
+          }
         />
       </>
       <RoadHelper

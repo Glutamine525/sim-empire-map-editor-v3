@@ -2,7 +2,7 @@ import { MapCore } from '@/map-core';
 import { BuildingType, CivilBuilding } from '@/map-core/building';
 import { OperationType } from '@/map-core/type';
 import { changeBrush, changeOperation } from '@/store/reducers/map-reducer';
-import { getRoadBuilding, getSelectedBuilding } from '@/utils/building';
+import { getGeneralBuilding, getRoadBuilding, getSelectedBuilding } from '@/utils/building';
 import React, { memo, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
@@ -82,6 +82,22 @@ const KeyboardListener = () => {
           break;
         case 'KeyV':
           dispatchProtectionBuilding(3);
+          break;
+        case 'KeyQ':
+          d(changeOperation(OperationType.PlaceBuilding));
+          d(changeBrush(getGeneralBuilding(2)));
+          break;
+        case 'KeyW':
+          d(changeOperation(OperationType.PlaceBuilding));
+          d(changeBrush(getGeneralBuilding(3)));
+          break;
+        case 'KeyE':
+          d(changeOperation(OperationType.PlaceBuilding));
+          d(changeBrush(getGeneralBuilding(4)));
+          break;
+        case 'KeyR':
+          d(changeOperation(OperationType.PlaceBuilding));
+          d(changeBrush(getGeneralBuilding(5)));
           break;
         default:
           break;

@@ -223,6 +223,11 @@ export class MapCore {
     this.updateBuildingsMarker([...records]);
   }
 
+  public replaceBuilding(b: Building, line: number, column: number) {
+    this.deleteBuilding(line, column);
+    this.placeBuilding(b, line, column);
+  }
+
   public deleteBuilding(
     line: number,
     column: number,
@@ -283,6 +288,10 @@ export class MapCore {
   }
 
   public placeStraightRoad(initLi: number, initCo: number, curLi: number, curCo: number) {
+    if (initLi !== curLi && initCo !== curCo) {
+      this.roadCache.clear();
+      return;
+    }
     for (let key of this.roadCache) {
       const [li, co] = parseBuildingKey(key);
       this.deleteBuilding(li, co, { processingRoadCache: true });
