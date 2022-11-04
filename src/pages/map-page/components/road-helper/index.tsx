@@ -30,6 +30,16 @@ const RoadHelper: FC<RoadHelperProps> = (props) => {
 
   return (
     <Group visible={!hidden}>
+      <BorderBlock
+        mode="absolute"
+        line={initLi}
+        column={initCo}
+        width={1}
+        height={1}
+        borderColor={color}
+        backgroundColor={color}
+        backgroundOpacity={0.6}
+      />
       {(initLi === curLi || initCo === curCo) && (
         <BorderBlock
           mode="absolute"
