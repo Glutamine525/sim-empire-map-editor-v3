@@ -17,6 +17,10 @@ import {
   FixedBuildingType,
 } from './building/fixed';
 import { getRoadBuilding, showMarker } from '@/utils/building';
+import {
+  deleteBuildingOnMiniMap,
+  placeBuildingOnMiniMap,
+} from '@/pages/map-page/components/mini-map/render';
 
 export class MapCore {
   public static instance: MapCore;
@@ -112,6 +116,7 @@ export class MapCore {
         borderLStyle: keys.includes(lKey) ? BorderStyleType.None : BorderStyleType.Solid,
       };
       this.emptyCells--;
+      placeBuildingOnMiniMap({ line, column, width: 1, height: 1, backgroundColor: color });
     }
   }
 
@@ -127,6 +132,7 @@ export class MapCore {
       this.cells[line][column].occupied = '';
       delete this.buildings[key];
       this.emptyCells++;
+      deleteBuildingOnMiniMap({ line, column, width: 1, height: 1 });
     }
   }
 
@@ -167,6 +173,13 @@ export class MapCore {
         catalog: FixedBuildingCatalog[type],
       };
       this.buildingCache.add(key);
+      placeBuildingOnMiniMap({
+        line,
+        column,
+        width: FixedBuildingSize[type],
+        height: FixedBuildingSize[type],
+        backgroundColor: FixedBuildingColor[type],
+      });
     }
   }
 
@@ -182,7 +195,15 @@ export class MapCore {
     if (this.buildings[key]) {
       return;
     }
-    const { width: w, height: h, name = '', isProtection, range = 0, isRoad } = b;
+    const {
+      width: w,
+      height: h,
+      name = '',
+      range = 0,
+      backgroundColor = '#ffffff',
+      isProtection,
+      isRoad,
+    } = b;
     let marker = 0;
     for (let i = line; i < line + h; i++) {
       for (let j = column; j < column + w; j++) {
@@ -193,6 +214,13 @@ export class MapCore {
     this.buildings[key] = { ...b, marker: isRoad ? 1 : marker };
     this.buildingCache.add(key);
     this.updateCounter(b, 1);
+    placeBuildingOnMiniMap({
+      line,
+      column,
+      width: w,
+      height: h,
+      backgroundColor,
+    });
     if (isRoad) {
       this.roadCache.add(key);
       this.updateRoadCount(line, column);
@@ -279,6 +307,7 @@ export class MapCore {
     const b = { ...this.buildings[key] };
     this.updateCounter(b, -1);
     delete this.buildings[key];
+    deleteBuildingOnMiniMap({ line, column, width: w, height: h });
     if (isRoad) {
       this.roadCache.delete(key);
       config?.processingRoadCache && this.buildingCache.delete(key);

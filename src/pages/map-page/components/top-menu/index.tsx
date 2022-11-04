@@ -16,6 +16,7 @@ import React, { useEffect, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Scrollbar from 'smooth-scrollbar';
 import { clearBuildingLayer } from '../map-layer-buildings/render';
+import { initMiniMap } from '../mini-map/render';
 import styles from './index.module.less';
 
 const { Text } = Typography;
@@ -49,6 +50,10 @@ const TopMenu = () => {
     // } else {
     //   document.body.removeAttribute('arco-theme');
     // }
+    setTimeout(() => {
+      // 异步初始化，以便小地图可以正确绘制初始地图
+      MapCore.getInstance().init(mapType, civil, noTree);
+    });
   }, []);
 
   const MapTypeList = (
@@ -73,6 +78,7 @@ const TopMenu = () => {
           }
         }
         clearBuildingLayer();
+        initMiniMap();
         MapCore.getInstance().init(key, civil, noTree);
         d(changeMapType(key));
         d(changeOperation(OperationType.Empty));
@@ -105,6 +111,7 @@ const TopMenu = () => {
           }
         }
         clearBuildingLayer();
+        initMiniMap();
         MapCore.getInstance().init(mapType, key, noTree);
         d(changeCivil(key as CivilType));
         d(changeOperation(OperationType.Empty));

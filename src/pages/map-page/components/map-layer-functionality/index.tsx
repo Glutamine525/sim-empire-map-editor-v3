@@ -148,6 +148,7 @@ const MapLayerFunctionality = () => {
       }
       await drawBuildings(minLi, minCo, await getImageFromKonvaNode(cacheRef.current!));
       setTimeout(() => {
+        // 防止地图出现白色闪屏，延迟建筑缓存的消失
         processing = false;
         core.clearBuildingCache();
         d(triggerMapUpdater());

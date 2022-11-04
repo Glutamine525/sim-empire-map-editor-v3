@@ -12,6 +12,12 @@ import MapLayerBuildings from '../map-layer-buildings';
 import KeyboardListener from '../keyboard-listener';
 import Konva from 'konva';
 
+let scrollbar: Scrollbar;
+
+export function getMapScrollbar() {
+  return scrollbar;
+}
+
 export const mapRef = createRef<Konva.Stage>();
 
 const Map = () => {
@@ -25,7 +31,7 @@ const Map = () => {
   }, []);
 
   useEffect(() => {
-    const scrollbar = Scrollbar.init(wrapperRef.current!, {
+    scrollbar = Scrollbar.init(wrapperRef.current!, {
       damping: 0.2,
       alwaysShowTracks: true,
       plugins: {

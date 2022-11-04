@@ -4,6 +4,10 @@ export const MapLength = 116;
 
 export const MapType = [5, 4, 3];
 
+export const MiniMapRatio = 4;
+
+export const MiniMapDisplayRatio = 2;
+
 export enum CivilType {
   China = 'china',
   Persian = 'persian',
