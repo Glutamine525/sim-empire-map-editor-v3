@@ -29,7 +29,7 @@ export const CivilTypeLabel = {
 export enum OperationType {
   Empty = '空',
   PlaceBuilding = '放置建筑',
-  SelectBuilding = '选择建筑',
+  MoveBuilding = '移动建筑',
   DeleteBuilding = '删除建筑',
   WatermarkMode = '水印模式',
 }

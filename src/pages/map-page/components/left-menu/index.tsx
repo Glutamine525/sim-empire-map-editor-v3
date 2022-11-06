@@ -40,7 +40,7 @@ const LeftMenu = () => {
     [CatalogType.General]: GeneralBuilding,
     [CatalogType.Special]: [],
     [CatalogType.Cancel]: [],
-    [CatalogType.Select]: [],
+    [CatalogType.Move]: [],
     [CatalogType.Delete]: [],
     [CatalogType.WatermarkMode]: [],
     [CatalogType.ImportExport]: [{ name: '导入新文明' }, { name: '导入地图' }, { name: '截图' }],
@@ -108,7 +108,7 @@ const LeftMenu = () => {
               d(changeBrush(getRoadBuilding()));
               break;
             case '选中建筑':
-              d(changeOperation(OperationType.SelectBuilding));
+              d(changeOperation(OperationType.MoveBuilding));
               break;
             case '截图':
               (async () => {

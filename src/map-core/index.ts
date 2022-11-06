@@ -3,6 +3,7 @@ import { Cell, CivilType, MapCounter, MapLength } from './type';
 import {
   getBuildingKey,
   isInBuildingRange,
+  isInRange,
   isInRange as _isInRange,
   parseBuildingKey,
 } from '../utils/coordinate';
@@ -49,6 +50,8 @@ export class MapCore {
 
   public roadCache!: Set<string>;
 
+  public selectCache!: Set<string>;
+
   public emptyCells!: number;
 
   public counter!: MapCounter;
@@ -80,6 +83,7 @@ export class MapCore {
     this.buildings = {};
     this.buildingCache = new Set<string>();
     this.roadCache = new Set<string>();
+    this.selectCache = new Set<string>();
     this.placeBarriers();
     this.placeFixedBuildings();
     this.counter = {
@@ -334,7 +338,7 @@ export class MapCore {
     const road = getRoadBuilding();
     for (let i = realInitLi; i < realInitLi + h; i++) {
       for (let j = realInitCo; j < realInitCo + w; j++) {
-        if (this.cells[i][j].occupied) {
+        if (this.cells[i][j].occupied || !isInRange(i, j)) {
           continue;
         }
         this.placeBuilding(road, i, j);
@@ -546,6 +550,25 @@ export class MapCore {
       }
       this.buildings[key].marker = marker;
     }
+  }
+
+  public selectBuildingInBlock(initLi: number, initCo: number, curLi: number, curCo: number) {
+    this.selectCache.clear();
+    const deltaLi = curLi - initLi;
+    const deltaCo = curCo - initCo;
+    const w = deltaCo > 0 ? deltaCo + 1 : Math.abs(deltaCo - 1);
+    const h = deltaLi > 0 ? deltaLi + 1 : Math.abs(deltaLi - 1);
+    const realInitLi = deltaLi < 0 ? initLi + deltaLi : initLi;
+    const realInitCo = deltaCo < 0 ? initCo + deltaCo : initCo;
+    for (let li = realInitLi; li < realInitLi + h; li++) {
+      for (let co = realInitCo; co < realInitCo + w; co++) {
+        const { occupied } = this.cells[li][co];
+        if (!occupied) continue;
+        if (this.buildings[occupied].isFixed) continue;
+        this.selectCache.add(occupied);
+      }
+    }
+    console.log(this.selectCache);
   }
 
   public updateCounter(b: Building, diff: number) {

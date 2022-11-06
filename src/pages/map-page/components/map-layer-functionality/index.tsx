@@ -4,7 +4,7 @@ import { Building as _Building } from '@/map-core/building';
 import Building from '../building';
 import Range from '../range';
 import { MapCore } from '@/map-core';
-import { getBuildingKey, isAllInRange, isInRange, parseBuildingKey } from '@/utils/coordinate';
+import { isAllInRange, isInRange, parseBuildingKey } from '@/utils/coordinate';
 import { canHover } from '@/utils/building';
 import { useDispatch, useSelector } from 'react-redux';
 import { mapSelector } from '@/store/selectors';
@@ -15,6 +15,11 @@ import { cacheBuildings, drawBuildings, removeBuildings } from '../map-layer-bui
 import { getImageFromKonvaNode } from '@/utils/file';
 import { triggerMapUpdater } from '@/store/reducers/map-reducer';
 import RoadHelper from '../road-helper';
+import MoveBlock from '../move-block';
+import DeleteBlock from '../delete-block';
+import { Html } from 'react-konva-utils';
+import FunctionBlockEffect from '../function-block-effect';
+import { getArcoColor } from '@/utils/color';
 
 let isDragging = false;
 let curLi = 0;
@@ -116,13 +121,11 @@ const MapLayerFunctionality = () => {
     if (brush.name !== '普通住宅') {
       return;
     }
-    let count = 0;
     for (let li = 1; li < 116; li++) {
       for (let co = 1; co < (116 * 3) / 4; co++) {
         if (!isInRange(li, co)) continue;
         if (core.cells[li][co].occupied) continue;
         core.placeBuilding(brush, li, co);
-        count++;
       }
     }
     setUpdateBuildingLayer(true);
@@ -158,6 +161,8 @@ const MapLayerFunctionality = () => {
   }, [updateBuildingLayer]);
 
   useEffect(() => {
+    core.selectCache.clear();
+    forceUpdate();
     if (operation !== OperationType.Empty) {
       return;
     }
@@ -196,6 +201,12 @@ const MapLayerFunctionality = () => {
           // 拖拽时禁止设置当前坐标，防止卡顿
           return;
         }
+        if (
+          [OperationType.MoveBuilding, OperationType.DeleteBuilding].includes(operation) &&
+          !isDragging
+        ) {
+          return;
+        }
         const {
           evt: { offsetX: x, offsetY: y },
         } = e;
@@ -224,18 +235,20 @@ const MapLayerFunctionality = () => {
       }}
       onMouseUp={() => {
         isDragging = false;
-        if (operation !== OperationType.PlaceBuilding) {
+        if (operation === OperationType.PlaceBuilding) {
+          processing = true;
+          if (previewBuilding?.isRoad) {
+            core.placeStraightRoad(initLi, initCo, curLi, curCo);
+          }
+          setUpdateBuildingLayer(true);
           initLi = -1;
           initCo = -1;
           return;
+        } else if ([OperationType.MoveBuilding, OperationType.DeleteBuilding].includes(operation)) {
+          core.selectBuildingInBlock(initLi, initCo, curLi, curCo);
+          forceUpdate();
+          return;
         }
-        processing = true;
-        if (previewBuilding?.isRoad) {
-          core.placeStraightRoad(initLi, initCo, curLi, curCo);
-        }
-        setUpdateBuildingLayer(true);
-        initLi = -1;
-        initCo = -1;
       }}
       onMouseLeave={() => {
         isDragging = false;
@@ -270,6 +283,30 @@ const MapLayerFunctionality = () => {
           return <Building key={key} line={line} column={column} {...b} />;
         })}
       </Group>
+      {[...core.selectCache].map((key) => {
+        const [line, column] = parseBuildingKey(key);
+        const b = core.buildings[key];
+        return <Building key={key} line={line} column={column} {...b} />;
+      })}
+      {[OperationType.MoveBuilding, OperationType.DeleteBuilding].includes(operation) && (
+        <Html>
+          {[...core.selectCache].map((key) => {
+            const [line, column] = parseBuildingKey(key);
+            const b = core.buildings[key];
+            return (
+              <FunctionBlockEffect
+                key={key}
+                line={line}
+                column={column}
+                {...b}
+                effectColor={getArcoColor(
+                  operation === OperationType.MoveBuilding ? '--blue-5' : '--red-5',
+                )}
+              />
+            );
+          })}
+        </Html>
+      )}
       <>
         {/* hoveredBuilding */}
         <Building {...(hoveredBuilding as any)} isHovered hidden={!hoveredBuilding} />
@@ -309,7 +346,26 @@ const MapLayerFunctionality = () => {
         />
       </>
       <RoadHelper
-        hidden={!previewBuilding?.isRoad}
+        hidden={!previewBuilding?.isRoad || !isDragging}
+        initLi={initLi}
+        initCo={initCo}
+        curLi={curLi}
+        curCo={curCo}
+      />
+      <MoveBlock
+        hidden={
+          // operation !== OperationType.MoveBuilding || !isDragging || core.selectCache.size === 0
+          !(operation === OperationType.MoveBuilding && (isDragging || core.selectCache.size > 0))
+        }
+        initLi={initLi}
+        initCo={initCo}
+        curLi={curLi}
+        curCo={curCo}
+      />
+      <DeleteBlock
+        hidden={
+          operation !== OperationType.DeleteBuilding || !isDragging || core.selectCache.size === 0
+        }
         initLi={initLi}
         initCo={initCo}
         curLi={curLi}

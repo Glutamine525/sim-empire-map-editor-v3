@@ -71,6 +71,12 @@ const KeyboardListener = () => {
           d(changeOperation(OperationType.PlaceBuilding));
           d(changeBrush(getRoadBuilding()));
           break;
+        case 'KeyS':
+          d(changeOperation(OperationType.MoveBuilding));
+          break;
+        case 'KeyD':
+          d(changeOperation(OperationType.DeleteBuilding));
+          break;
         case 'KeyZ':
           dispatchProtectionBuilding(0);
           break;

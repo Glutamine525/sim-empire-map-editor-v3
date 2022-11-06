@@ -42,7 +42,7 @@ export enum CatalogType {
   General = '通用',
   Special = '特殊建筑',
   Cancel = '取消操作',
-  Select = '选中建筑',
+  Move = '移动建筑',
   Delete = '删除建筑',
   WatermarkMode = '水印模式',
   ImportExport = '导入导出',

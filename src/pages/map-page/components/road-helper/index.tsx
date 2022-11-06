@@ -1,9 +1,11 @@
+import { BorderStyleType } from '@/map-core/building';
 import { settingSelector } from '@/store/selectors';
 import { getArcoColor } from '@/utils/color';
 import React, { FC, useMemo } from 'react';
 import { Group } from 'react-konva';
 import { useSelector } from 'react-redux';
 import BorderBlock from '../border-block';
+import FunctionalBlock from '../functional-block';
 
 interface RoadHelperProps {
   initLi: number;
@@ -23,11 +25,6 @@ const RoadHelper: FC<RoadHelperProps> = (props) => {
     [theme],
   );
 
-  const deltaLi = curLi - initLi;
-  const deltaCo = curCo - initCo;
-  const w = deltaCo > 0 ? deltaCo + 1 : Math.abs(deltaCo - 1);
-  const h = deltaLi > 0 ? deltaLi + 1 : Math.abs(deltaLi - 1);
-
   return (
     <Group visible={!hidden}>
       <BorderBlock
@@ -41,12 +38,8 @@ const RoadHelper: FC<RoadHelperProps> = (props) => {
         backgroundOpacity={0.6}
       />
       {(initLi === curLi || initCo === curCo) && (
-        <BorderBlock
-          mode="absolute"
-          line={deltaLi < 0 ? initLi + deltaLi : initLi}
-          column={deltaCo < 0 ? initCo + deltaCo : initCo}
-          width={w}
-          height={h}
+        <FunctionalBlock
+          {...props}
           borderColor={color}
           backgroundColor={color}
           backgroundOpacity={0.4}
