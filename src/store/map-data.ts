@@ -27,7 +27,6 @@ export interface BuildingConfig {
 
 export const mapData: { [key: string]: UseSubscribeStore<BuildingConfig> } = {};
 
-console.time('init');
 for (let i = 1; i <= CHESSBOARD_LEN; i++) {
   for (let j = 1; j <= CHESSBOARD_LEN; j++) {
     mapData[`${i}-${j}`] = createSubscribeStore<BuildingConfig>({
@@ -35,7 +34,6 @@ for (let i = 1; i <= CHESSBOARD_LEN; i++) {
     });
   }
 }
-console.timeEnd('init');
 
 export const useMapData = (arg0: number | string, arg1?: number) => {
   let key: string;

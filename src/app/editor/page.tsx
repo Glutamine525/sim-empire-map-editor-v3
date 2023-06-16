@@ -1,7 +1,9 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import Chessboard from '@/components/editor/chessboard';
+import LeftMenu from '@/components/editor/left-menu';
+import Map from '@/components/editor/map';
+import TopMenu from '@/components/editor/top-menu';
 import withNoSSR from '@/utils/no-ssr';
 
 const Page = () => {
@@ -13,7 +15,9 @@ const Page = () => {
 
   return (
     <>
-      <Chessboard />
+      <TopMenu />
+      <LeftMenu />
+      <Map />
     </>
   );
 };

@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, ReactNode } from 'react';
 import { BLOCK_PX } from '@/config';
 import styles from './index.module.css';
 
@@ -9,6 +9,7 @@ interface BlockProps {
   h?: number;
   text?: string;
   bg?: string;
+  children?: ReactNode;
 }
 
 const Block: FC<BlockProps> = ({
@@ -18,6 +19,7 @@ const Block: FC<BlockProps> = ({
   h = 1,
   text = '',
   bg = '',
+  children,
 }) => {
   return (
     <div
@@ -32,6 +34,7 @@ const Block: FC<BlockProps> = ({
     >
       {row}-{col}
       {text}
+      {children}
     </div>
   );
 };

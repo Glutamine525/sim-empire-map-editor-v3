@@ -10,11 +10,7 @@ interface BuildingProps {
 const Building: FC<BuildingProps> = ({ row, col }) => {
   const [data] = useMapData(row, col);
 
-  return (
-    <div>
-      <Block row={row} col={col} bg={data.bg} />
-    </div>
-  );
+  return <Block row={row} col={col} bg={data.bg} />;
 };
 
 export default Building;
