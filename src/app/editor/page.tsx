@@ -7,6 +7,7 @@ import Map from '@/components/editor/map';
 import TopMenu from '@/components/editor/top-menu';
 import { EDITOR_PAGE_UI_SETTING } from '@/config';
 import withNoSSR from '@/utils/no-ssr';
+import 'perfect-scrollbar/css/perfect-scrollbar.css';
 import styles from './index.module.css';
 
 const Page = () => {

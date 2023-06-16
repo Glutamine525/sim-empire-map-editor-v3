@@ -14,7 +14,6 @@ const InteractLayer = () => {
         position: 'relative',
         width: CHESSBOARD_LEN * BLOCK_PX,
         height: CHESSBOARD_LEN * BLOCK_PX,
-        zIndex: 1,
       }}
       onMouseDown={e => {
         setIsMouseDown(true);

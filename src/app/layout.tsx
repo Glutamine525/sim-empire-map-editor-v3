@@ -1,9 +1,6 @@
 import { FC, PropsWithChildren } from 'react';
-import { Inter } from 'next/font/google';
 import '@arco-design/web-react/dist/css/arco.css';
 import './globals.css';
-
-const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
   title: 'Create Next App',
@@ -13,7 +10,7 @@ export const metadata = {
 const RootLayout: FC<PropsWithChildren> = ({ children }) => {
   return (
     <html>
-      <body className={inter.className}>{children}</body>
+      <body>{children}</body>
     </html>
   );
 };
