@@ -1,18 +1,16 @@
 import React from 'react';
+import SiderComponent from '@arco-design/web-react/es/Layout/sider';
 import { EDITOR_PAGE_UI_SETTING } from '@/config';
 import styles from './index.module.css';
 
 const LeftMenu = () => {
   return (
-    <div
+    <SiderComponent
       className={styles.container}
-      style={{
-        width: EDITOR_PAGE_UI_SETTING.leftMenuWidth,
-        paddingTop: EDITOR_PAGE_UI_SETTING.topMenuHeight,
-      }}
+      width={EDITOR_PAGE_UI_SETTING.leftMenuWidth}
     >
       LeftMenu
-    </div>
+    </SiderComponent>
   );
 };
 
