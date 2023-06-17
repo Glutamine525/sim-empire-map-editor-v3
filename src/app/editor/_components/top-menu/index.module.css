@@ -1,3 +1,59 @@
 .container {
-  background-color: aqua;
+  border-bottom: 1px solid var(--color-border);
+  background-color: var(--color-bg-2);
+  color: var(--color-text-1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.controller-container,
+.controller-container > div {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.controller-container > div + div {
+  margin-left: 12px;
+}
+
+.controller-container > div > div + * {
+  margin-left: 4px;
+}
+
+.dropdown-button {
+  padding: 0 8px;
+  font-weight: bold;
+}
+
+.operation-container {
+  display: flex;
+}
+
+.operation {
+  margin-left: 4px;
+  font-weight: bold;
+}
+
+.counter-container {
+}
+
+.button-container {
+  display: flex;
+  align-items: center;
+}
+
+.theme-button {
+  color: #ffb700 !important;
+}
+
+body[arco-theme='dark'] .theme-button {
+  color: #ffffff !important;
 }
