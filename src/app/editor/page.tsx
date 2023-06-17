@@ -2,11 +2,11 @@
 
 import React, { useEffect } from 'react';
 import LayoutComponent from '@arco-design/web-react/es/Layout';
-import LeftMenu from '@/components/editor/left-menu';
-import Map from '@/components/editor/map';
-import TopMenu from '@/components/editor/top-menu';
 import { EDITOR_PAGE_UI_SETTING } from '@/config';
 import withNoSSR from '@/utils/no-ssr';
+import LeftMenu from './_components/left-menu';
+import Map from './_components/map';
+import TopMenu from './_components/top-menu';
 import 'perfect-scrollbar/css/perfect-scrollbar.css';
 import styles from './index.module.css';
 
