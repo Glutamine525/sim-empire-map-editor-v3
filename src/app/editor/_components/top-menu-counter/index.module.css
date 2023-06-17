@@ -1,0 +1,29 @@
+.container {
+  display: flex;
+  align-items: center;
+
+  height: 100%;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+}
+
+.col + .col {
+  margin-left: 8px;
+}
+
+.item {
+  display: flex;
+
+  font-size: 12px;
+}
+
+.type {
+  margin-right: 4px;
+}
+
+.value {
+  font-weight: bold;
+}

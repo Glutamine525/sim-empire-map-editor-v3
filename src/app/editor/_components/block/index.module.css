@@ -1,9 +1,13 @@
 .container {
   position: absolute;
-  background: white;
-  box-sizing: border-box;
-  border: 1px solid blueviolet;
-  font-size: 12px;
-  color: black;
+
   overflow: hidden;
+
+  box-sizing: border-box;
+
+  color: black;
+  border: 1px solid blueviolet;
+  background: white;
+
+  font-size: 12px;
 }

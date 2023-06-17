@@ -1,11 +1,16 @@
 .container {
-  border-bottom: 1px solid var(--color-border);
-  background-color: var(--color-bg-2);
-  color: var(--color-text-1);
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  box-sizing: border-box;
   padding: 0 24px;
+
+  transition: all 0.1s cubic-bezier(0, 0, 1, 1);
+
+  color: var(--color-text-1);
+  border-bottom: 1px solid var(--color-border);
+  background-color: var(--color-bg-2);
 }
 
 .title {
@@ -15,9 +20,10 @@
 
 .controller-container,
 .controller-container > div {
-  height: 100%;
   display: flex;
   align-items: center;
+
+  height: 100%;
 }
 
 .controller-container > div + div {
@@ -30,6 +36,7 @@
 
 .dropdown-button {
   padding: 0 8px;
+
   font-weight: bold;
 }
 
@@ -39,10 +46,8 @@
 
 .operation {
   margin-left: 4px;
-  font-weight: bold;
-}
 
-.counter-container {
+  font-weight: bold;
 }
 
 .button-container {

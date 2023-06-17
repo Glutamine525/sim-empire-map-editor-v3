@@ -10,6 +10,7 @@ import {
 } from '@arco-design/web-react/icon';
 import { EDITOR_PAGE_UI_SETTING } from '@/config';
 import useColorTheme, { ThemeType } from '@/hooks/use-color-theme';
+import TopMenuCounter from '../top-menu-counter';
 import styles from './index.module.css';
 
 const dropList = (
@@ -61,7 +62,7 @@ const TopMenu = () => {
         <div>当前操作:</div>
         <div className={styles.operation}>无</div>
       </div>
-      <div className={styles['counter-container']}></div>
+      <TopMenuCounter />
       <div className={styles['button-container']}>
         <Button
           shape="square"
