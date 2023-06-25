@@ -11,11 +11,11 @@ import 'perfect-scrollbar/css/perfect-scrollbar.css';
 import styles from './index.module.css';
 
 const Page = () => {
+  console.log('page render');
+
   useEffect(() => {
     console.log(performance.now());
   }, []);
-
-  console.log('page render');
 
   return (
     <LayoutComponent className={styles.container}>
