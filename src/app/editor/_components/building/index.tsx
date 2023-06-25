@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { useMapData } from '@/store/map-data';
+import { useBuildingData } from '@/store/building-data';
 import Block from '../block';
 
 interface BuildingProps {
@@ -8,7 +8,7 @@ interface BuildingProps {
 }
 
 const Building: FC<BuildingProps> = ({ row, col }) => {
-  const [data] = useMapData(row, col);
+  const [data] = useBuildingData(row, col);
 
   return <Block row={row} col={col} bg={data.bg} />;
 };

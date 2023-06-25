@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
-import { BLOCK_PX, CHESSBOARD_LEN } from '@/config';
+import { BLOCK_PX } from '@/config';
+import { MapLength } from '@/map-core/type';
 import Building from '../building';
 
 const BuildingLayer = () => {
@@ -7,14 +8,14 @@ const BuildingLayer = () => {
     <div
       style={{
         position: 'absolute',
-        width: CHESSBOARD_LEN * BLOCK_PX,
-        height: CHESSBOARD_LEN * BLOCK_PX,
+        width: MapLength * BLOCK_PX,
+        height: MapLength * BLOCK_PX,
       }}
     >
-      {Array.from(Array(CHESSBOARD_LEN), (_, row) => {
+      {Array.from(Array(MapLength), (_, row) => {
         return (
           <Fragment key={row + 1}>
-            {Array.from(Array(CHESSBOARD_LEN), (_, col) => {
+            {Array.from(Array(MapLength), (_, col) => {
               const id = `${row + 1}-${col + 1}`;
               return <Building key={id} row={row + 1} col={col + 1} />;
             })}

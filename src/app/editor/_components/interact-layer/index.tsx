@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { BLOCK_PX, CHESSBOARD_LEN } from '@/config';
-import { mapData } from '@/store/map-data';
+import { BLOCK_PX } from '@/config';
+import { MapLength } from '@/map-core/type';
+import { buildingData } from '@/store/building-data';
 
 const InteractLayer = () => {
   const [isMouseDown, setIsMouseDown] = useState(false);
@@ -12,8 +13,8 @@ const InteractLayer = () => {
     <div
       style={{
         position: 'relative',
-        width: CHESSBOARD_LEN * BLOCK_PX,
-        height: CHESSBOARD_LEN * BLOCK_PX,
+        width: MapLength * BLOCK_PX,
+        height: MapLength * BLOCK_PX,
       }}
       onMouseDown={e => {
         setIsMouseDown(true);
@@ -24,7 +25,7 @@ const InteractLayer = () => {
         const line = Math.ceil(offsetY / BLOCK_PX);
         const column = Math.ceil(offsetX / BLOCK_PX);
 
-        mapData[line + '-' + column].set({ bg: 'pink' });
+        buildingData[line + '-' + column].set({ bg: 'pink' });
       }}
       onMouseMove={e => {
         const {
@@ -42,7 +43,7 @@ const InteractLayer = () => {
           return;
         }
 
-        mapData[line + '-' + column].set({ bg: 'pink' });
+        buildingData[line + '-' + column].set({ bg: 'pink' });
       }}
       onMouseUp={() => {
         setIsMouseDown(false);
