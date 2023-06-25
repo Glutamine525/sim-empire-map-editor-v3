@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
+import { buildingData } from '@/app/editor/_store/building-data';
 import { BLOCK_PX } from '@/config';
 import { MapLength } from '@/map-core/type';
-import { buildingData } from '@/store/building-data';
 
 const InteractLayer = () => {
   const [isMouseDown, setIsMouseDown] = useState(false);

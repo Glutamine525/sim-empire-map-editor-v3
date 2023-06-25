@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { useBuildingData } from '@/store/building-data';
+import { useBuildingData } from '@/app/editor/_store/building-data';
 import Block from '../block';
 
 interface BuildingProps {

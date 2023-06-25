@@ -1,7 +1,8 @@
-import { useMemo, useSyncExternalStore } from 'react';
+import { SetStateAction, useMemo, useSyncExternalStore } from 'react';
 
-export interface UseSubscribeStore<T> extends ReturnType<typeof createSubscribeState<T>> {
-  (): readonly [T, (s: T) => void];
+export interface UseSubscribeStore<T>
+  extends ReturnType<typeof createSubscribeState<T>> {
+  (): readonly [T, (s: SetStateAction<T>) => void];
 }
 
 function createSubscribeState<T>(state: T) {
@@ -11,9 +12,13 @@ function createSubscribeState<T>(state: T) {
 
     return {
       get: () => value,
-      set: (s: T) => {
-        value = s;
-        subscribers.forEach((fn) => fn());
+      set: (s: SetStateAction<T>) => {
+        if (s instanceof Function) {
+          value = s(value);
+        } else {
+          value = s;
+        }
+        subscribers.forEach(fn => fn());
       },
       subscribe: (fn: Function) => subscribers.add(fn),
       unSubscribe: (fn: Function) => subscribers.delete(fn),

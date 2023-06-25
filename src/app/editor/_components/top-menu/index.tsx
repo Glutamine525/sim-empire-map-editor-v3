@@ -10,19 +10,53 @@ import {
 } from '@arco-design/web-react/icon';
 import { EDITOR_PAGE_UI_SETTING } from '@/config';
 import useColorTheme, { ThemeType } from '@/hooks/use-color-theme';
+import { CivilType, CivilTypeLabel, MapType } from '@/map-core/type';
+import { useMapConfig } from '../../_store/map-config';
 import TopMenuCounter from '../top-menu-counter';
 import styles from './index.module.css';
 
-const dropList = (
-  <Menu>
-    <Menu.Item key="1">Beijing</Menu.Item>
-    <Menu.Item key="2">Shanghai</Menu.Item>
-    <Menu.Item key="3">Guangzhou</Menu.Item>
-  </Menu>
-);
+const MapTypeDropList = () => {
+  const [, setMapConfig] = useMapConfig();
+
+  return (
+    <Menu
+      onClickMenuItem={data => {
+        setMapConfig(state => ({ ...state, mapType: Number(data) }));
+      }}
+    >
+      {Object.values(MapType).map(type => {
+        if (typeof type === 'string') {
+          return null;
+        }
+        return <Menu.Item key={type.toString()}>{type}</Menu.Item>;
+      })}
+    </Menu>
+  );
+};
+
+const CivilDropList = () => {
+  const [, setMapConfig] = useMapConfig();
+
+  return (
+    <Menu
+      onClickMenuItem={data => {
+        setMapConfig(state => ({ ...state, civil: data as CivilType }));
+      }}
+    >
+      {Object.entries(CivilTypeLabel).map(entry => {
+        const [civil, civilLabel] = entry;
+        if (civil === CivilType.Custom) {
+          return null;
+        }
+        return <Menu.Item key={civil}>{civilLabel}</Menu.Item>;
+      })}
+    </Menu>
+  );
+};
 
 const TopMenu = () => {
   const [theme, toggleTheme] = useColorTheme();
+  const [mapConfig, setMapConfig] = useMapConfig();
 
   return (
     <HeaderComponent
@@ -35,27 +69,37 @@ const TopMenu = () => {
       <div className={styles['controller-container']}>
         <div>
           <div>地图:</div>
-          <Dropdown droplist={dropList}>
+          <Dropdown droplist={MapTypeDropList()}>
             <Button type="text" className={styles['dropdown-button']}>
-              5
+              {mapConfig.mapType}
             </Button>
           </Dropdown>
         </div>
         <div>
           <div>文明:</div>
-          <Dropdown droplist={dropList}>
+          <Dropdown droplist={CivilDropList()}>
             <Button type="text" className={styles['dropdown-button']}>
-              中国
+              {CivilTypeLabel[mapConfig.civil]}
             </Button>
           </Dropdown>
         </div>
         <div>
           <div>无木:</div>
-          <Switch />
+          <Switch
+            checked={mapConfig.noTree}
+            onChange={noTree => {
+              setMapConfig(state => ({ ...state, noTree }));
+            }}
+          />
         </div>
         <div>
           <div>旋转:</div>
-          <Switch />
+          <Switch
+            checked={mapConfig.rotated}
+            onChange={rotated => {
+              setMapConfig(state => ({ ...state, rotated }));
+            }}
+          />
         </div>
       </div>
       <div className={styles['operation-container']}>
