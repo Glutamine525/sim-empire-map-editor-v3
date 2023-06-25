@@ -1,5 +1,7 @@
 import React, { FC } from 'react';
+import { shallow } from 'zustand/shallow';
 import { MapCounterType } from '@/map-core/type';
+import { useMapConfig } from '../../_store/map-config';
 import styles from './index.module.css';
 
 const postfixMap = {
@@ -29,23 +31,52 @@ const Item: FC<ItemProps> = ({ type, value }) => {
 };
 
 const TopMenuCounter = () => {
+  const [counter, emptyCells] = useMapConfig(
+    state => [state.counter, state.emptyCells],
+    shallow,
+  );
+
   return (
     <div className={styles.container}>
       <div className={styles.col}>
-        <Item type={MapCounterType.House} value={0} />
-        <Item type={MapCounterType.Villa} value={0} />
+        <Item
+          type={MapCounterType.House}
+          value={counter[MapCounterType.House]}
+        />
+        <Item
+          type={MapCounterType.Villa}
+          value={counter[MapCounterType.Villa]}
+        />
       </div>
       <div className={styles.col}>
-        <Item type={MapCounterType.Granary} value={0} />
-        <Item type={MapCounterType.Warehouse} value={0} />
+        <Item
+          type={MapCounterType.Granary}
+          value={counter[MapCounterType.Granary]}
+        />
+        <Item
+          type={MapCounterType.Warehouse}
+          value={counter[MapCounterType.Warehouse]}
+        />
       </div>
       <div className={styles.col}>
-        <Item type={MapCounterType.Agriculture} value={0} />
-        <Item type={MapCounterType.Industry} value={0} />
+        <Item
+          type={MapCounterType.Agriculture}
+          value={counter[MapCounterType.Agriculture]}
+        />
+        <Item
+          type={MapCounterType.Industry}
+          value={counter[MapCounterType.Industry]}
+        />
       </div>
       <div className={styles.col}>
-        <Item type={MapCounterType.General} value={0} />
-        <Item type={MapCounterType.Coverage} value={0} />
+        <Item
+          type={MapCounterType.General}
+          value={counter[MapCounterType.General]}
+        />
+        <Item
+          type={MapCounterType.Coverage}
+          value={(counter[MapCounterType.Coverage] / (emptyCells || 1)) * 100}
+        />
       </div>
     </div>
   );

@@ -34,12 +34,6 @@
   margin-left: 4px;
 }
 
-.dropdown-button {
-  padding: 0 8px;
-
-  font-weight: bold;
-}
-
 .operation-container {
   display: flex;
 }
