@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Menu } from '@arco-design/web-react';
 import SiderComponent from '@arco-design/web-react/es/Layout/sider';
+import classcat from 'classcat';
 import Image from 'next/image';
 import { EDITOR_PAGE_UI_SETTING } from '@/app/editor/_config';
 import {
@@ -36,6 +37,9 @@ const Icon = ({ catalog }: { catalog: CatalogType }) => (
 const LeftMenu = () => {
   const civil = useMapConfig(state => state.civil);
 
+  const [menuWidth, setMenuWidth] = useState(
+    EDITOR_PAGE_UI_SETTING.leftMenuWidth,
+  );
   const [subMenuContent, setSubMenuContent] = useState<{
     [key in CatalogType]: SimpleBuildingConfig[];
   }>({
@@ -63,6 +67,9 @@ const LeftMenu = () => {
     [CatalogType.WatermarkMode]: [],
   });
 
+  const isCollapsed =
+    menuWidth === EDITOR_PAGE_UI_SETTING.leftMenuWidthCollapsed;
+
   useEffect(() => {
     const buildingConfig = CivilBuilding[civil];
     setSubMenuContent(state => ({
@@ -81,11 +88,24 @@ const LeftMenu = () => {
   }, [civil]);
 
   return (
-    <SiderComponent
-      className={styles.container}
-      width={EDITOR_PAGE_UI_SETTING.leftMenuWidth}
-    >
-      <Menu accordion={true} className={styles['menu-container']} mode="pop">
+    <SiderComponent className={styles.container} width={menuWidth}>
+      <Menu
+        accordion={true}
+        className={classcat({
+          [styles['menu-container']]: true,
+          [styles['collapsed']]: isCollapsed,
+        })}
+        mode="pop"
+        tooltipProps={{ content: null }}
+        hasCollapseButton={true}
+        onCollapseChange={collapse => {
+          if (collapse) {
+            setMenuWidth(EDITOR_PAGE_UI_SETTING.leftMenuWidthCollapsed);
+            return;
+          }
+          setMenuWidth(EDITOR_PAGE_UI_SETTING.leftMenuWidth);
+        }}
+      >
         {Object.entries(subMenuContent).map(([_catalog, subMenu]) => {
           const catalog = _catalog as CatalogType;
           if (!subMenu.length) {

@@ -21,6 +21,15 @@
   padding-right: 12px !important;
 }
 
+.menu-container.collapsed :global(.arco-menu-pop-header),
+.menu-container.collapsed :global(.arco-menu-inline-header) {
+  padding: 0 6px !important;
+}
+
+.menu-container.collapsed :global(.arco-menu-item) {
+  padding: 0 6px !important;
+}
+
 .main-menu-container {
   display: flex;
   align-items: center;
