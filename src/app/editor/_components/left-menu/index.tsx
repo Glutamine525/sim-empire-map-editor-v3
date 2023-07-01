@@ -1,11 +1,12 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Menu } from '@arco-design/web-react';
 import SiderComponent from '@arco-design/web-react/es/Layout/sider';
 import Image from 'next/image';
-import PerfectScrollbar from 'perfect-scrollbar';
 import { EDITOR_PAGE_UI_SETTING } from '@/app/editor/_config';
 import {
+  BuildingType,
   CatalogType,
+  CivilBuilding,
   ImportExportSubmenu,
   SimpleBuildingConfig,
 } from '@/map-core/building';
@@ -58,39 +59,39 @@ const LeftMenu = () => {
     [CatalogType.WatermarkMode]: [],
   });
 
-  const container = useRef<HTMLDivElement>();
-
   useEffect(() => {
-    const scrollbar = new PerfectScrollbar(container.current!, {
-      wheelPropagation: true,
-    });
-
-    return () => {
-      scrollbar.destroy();
-    };
-  }, []);
+    const buildingConfig = CivilBuilding[civil];
+    setSubMenuContent(state => ({
+      ...state,
+      [BuildingType.Residence]: buildingConfig[BuildingType.Residence],
+      [BuildingType.Agriculture]: buildingConfig[BuildingType.Agriculture],
+      [BuildingType.Industry]: buildingConfig[BuildingType.Industry],
+      [BuildingType.Commerce]: buildingConfig[BuildingType.Commerce],
+      [BuildingType.Municipal]: buildingConfig[BuildingType.Municipal],
+      [BuildingType.Culture]: buildingConfig[BuildingType.Culture],
+      [BuildingType.Religion]: buildingConfig[BuildingType.Religion],
+      [BuildingType.Military]: buildingConfig[BuildingType.Military],
+      [BuildingType.Decoration]: buildingConfig[BuildingType.Decoration],
+      [BuildingType.Wonder]: buildingConfig[BuildingType.Wonder],
+    }));
+  }, [civil]);
 
   return (
     <SiderComponent
-      ref={container}
       className={styles.container}
       width={EDITOR_PAGE_UI_SETTING.leftMenuWidth}
     >
-      <Menu
-        accordion={true}
-        className={styles['menu-container']}
-        // mode="pop"
-      >
+      <Menu accordion={true} className={styles['menu-container']} mode="pop">
         {Object.entries(subMenuContent).map(([_catalog, subMenu]) => {
           const catalog = _catalog as CatalogType;
           if (!subMenu.length) {
             return (
               <MenuItem key={catalog} className={styles['main-menu-container']}>
                 <Icon catalog={catalog} />
+                <div className={styles.text}>{catalog}</div>
                 <div className={styles['key-shortcut']}>
                   {mapMenuToShortcut[catalog].trim() || '空格'}
                 </div>
-                <div className={styles.text}>{catalog}</div>
               </MenuItem>
             );
           }
@@ -100,15 +101,26 @@ const LeftMenu = () => {
               title={
                 <div className={styles['main-menu-container']}>
                   <Icon catalog={catalog} />
+                  <div className={styles.text}>{catalog}</div>
                   <div className={styles['key-shortcut']}>
                     {mapMenuToShortcut[catalog]}
                   </div>
-                  <div className={styles.text}>{catalog}</div>
                 </div>
               }
+              triggerProps={{ className: styles['pop-sub-menu-container'] }}
             >
-              {subMenu.map(v => (
-                <MenuItem key={v.name}>{v.name}</MenuItem>
+              {subMenu.map((v, i) => (
+                <MenuItem key={v.name} className={styles['sub-menu-container']}>
+                  <div>
+                    {i + 1}. {v.name}
+                  </div>
+                  <div className={styles['key-container']}>
+                    <div className={styles['key-shortcut']}>
+                      {mapMenuToShortcut[catalog]}
+                    </div>
+                    +<div className={styles['key-shortcut']}>{i + 1}</div>
+                  </div>
+                </MenuItem>
               ))}
             </SubMenu>
           );
