@@ -1,0 +1,14 @@
+.debug-coord {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+
+  transform: scale(0.4);
+  transform-origin: bottom right;
+  text-align: right;
+  white-space: nowrap;
+
+  color: rgba(0, 0, 0, 0.6);
+
+  font-size: 20px;
+}

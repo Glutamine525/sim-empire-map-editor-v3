@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef } from 'react';
 import Content from '@arco-design/web-react/es/Layout/content';
 import PerfectScrollbar from 'perfect-scrollbar';
+import { BLOCK_PX } from '@/config';
 import BuildingLayer from '../building-layer';
 import InteractLayer from '../interact-layer';
 import styles from './index.module.css';
@@ -13,7 +14,7 @@ const Map = () => {
   console.log('Chessboard render');
 
   useEffect(() => {
-    new PerfectScrollbar(container.current!, {
+    const scrollbar = new PerfectScrollbar(container.current!, {
       wheelPropagation: true,
     });
     const { scrollHeight, scrollWidth, clientWidth, clientHeight } =
@@ -22,11 +23,19 @@ const Map = () => {
       (scrollWidth - clientWidth) / 2,
       (scrollHeight - clientHeight) / 2,
     );
+
+    return () => {
+      scrollbar.destroy();
+    };
   }, []);
 
   return (
     <Content className={styles.wrapper}>
-      <div ref={container} className={styles.container}>
+      <div
+        ref={container}
+        className={styles.container}
+        style={{ padding: BLOCK_PX }}
+      >
         {buildings}
         <InteractLayer />
       </div>

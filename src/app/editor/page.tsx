@@ -11,7 +11,7 @@ import 'perfect-scrollbar/css/perfect-scrollbar.css';
 import styles from './index.module.css';
 
 const Page = () => {
-  console.log('page render');
+  console.log('Page render');
 
   useEffect(() => {
     console.log(performance.now());

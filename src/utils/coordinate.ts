@@ -6,60 +6,55 @@ export function parseBuildingKey(key: string) {
   return data;
 }
 
-export function getBuildingKey(line: number, column: number) {
-  return `${line}-${column}`;
+export function getBuildingKey(row: number, col: number) {
+  return `${row}-${col}`;
 }
 
 // 检测当前cell是否再地图范围内
-export function isInRange(line: number, column: number) {
+export function isInRange(row: number, col: number) {
   const halfLength = MapLength / 2;
-  if (line + column <= halfLength + 2) return false;
-  if (line + column >= halfLength * 3) return false;
-  if (line <= column - halfLength) return false;
-  if (line >= column + halfLength) return false;
+  if (row + col <= halfLength + 2) return false;
+  if (row + col >= halfLength * 3) return false;
+  if (row <= col - halfLength) return false;
+  if (row >= col + halfLength) return false;
   return true;
 }
 
-export function isBoundary(line: number, column: number) {
+export function isBoundary(row: number, col: number) {
   const halfLength = MapLength / 2;
-  if (line + column == halfLength + 2) return true;
-  if (line + column == halfLength * 3) return true;
-  if (line == column - halfLength) return true;
-  if (line == column + halfLength) return true;
+  if (row + col == halfLength + 2) return true;
+  if (row + col == halfLength * 3) return true;
+  if (row == col - halfLength) return true;
+  if (row == col + halfLength) return true;
   return false;
 }
 
 // 检测建筑是否都在地图范围内
-export function isAllInRange(
-  line: number,
-  column: number,
-  width: number,
-  height: number,
-) {
+export function isAllInRange(row: number, col: number, w: number, h: number) {
   return (
-    isInRange(line, column) &&
-    isInRange(line + height, column) &&
-    isInRange(line, column + width) &&
-    isInRange(line + height, column + width)
+    isInRange(row, col) &&
+    isInRange(row + h, col) &&
+    isInRange(row, col + w) &&
+    isInRange(row + h, col + w)
   );
 }
 
 // 检测[li, co]是否在建筑范围内
 export function isInBuildingRange(
-  li: number,
-  co: number,
-  originLi: number,
-  originCo: number,
-  width: number,
-  height: number,
+  row: number,
+  col: number,
+  originRow: number,
+  originCol: number,
+  w: number,
+  h: number,
   range: number,
 ) {
   const diff = range - 4;
-  const relativeLi = li - originLi;
-  const relativeCo = co - originCo;
+  const relativeLi = row - originRow;
+  const relativeCo = col - originCol;
   if (relativeLi + relativeCo + range + diff < 0) return false;
-  if (relativeLi + relativeCo > range + diff + width + height - 2) return false;
-  if (relativeLi < relativeCo - (range + diff + width - 1)) return false;
-  if (relativeLi > relativeCo + (range + diff + height - 1)) return false;
+  if (relativeLi + relativeCo > range + diff + w + h - 2) return false;
+  if (relativeLi < relativeCo - (range + diff + w - 1)) return false;
+  if (relativeLi > relativeCo + (range + diff + h - 1)) return false;
   return true;
 }

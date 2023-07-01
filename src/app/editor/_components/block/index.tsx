@@ -7,7 +7,6 @@ interface BlockProps {
   col: number;
   w?: number;
   h?: number;
-  text?: string;
   bg?: string;
   children?: ReactNode;
 }
@@ -17,7 +16,6 @@ const Block: FC<BlockProps> = ({
   col,
   w = 1,
   h = 1,
-  text = '',
   bg = '',
   children,
 }) => {
@@ -32,8 +30,6 @@ const Block: FC<BlockProps> = ({
         backgroundColor: bg,
       }}
     >
-      {row}-{col}
-      {text}
       {children}
     </div>
   );

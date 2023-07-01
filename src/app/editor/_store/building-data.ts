@@ -1,5 +1,6 @@
 import { BuildingConfig } from '@/map-core/building';
 import { MapLength } from '@/map-core/type';
+import { isInRange } from '@/utils/coordinate';
 import createSubscribeStore, {
   UseSubscribeStore,
 } from '@/utils/create-subscribe-store';
@@ -8,9 +9,12 @@ export const buildingData: {
   [key: string]: UseSubscribeStore<BuildingConfig>;
 } = {};
 
-for (let i = 1; i <= MapLength; i++) {
-  for (let j = 1; j <= MapLength; j++) {
-    buildingData[`${i}-${j}`] = createSubscribeStore<BuildingConfig>({
+for (let row = 1; row <= MapLength; row++) {
+  for (let col = 1; col <= MapLength; col++) {
+    if (!isInRange(row, col)) {
+      continue;
+    }
+    buildingData[`${row}-${col}`] = createSubscribeStore<BuildingConfig>({
       bg: 'white',
     });
   }
@@ -24,4 +28,12 @@ export const useBuildingData = (arg0: number | string, arg1?: number) => {
     key = arg0;
   }
   return buildingData[key]();
+};
+
+export const resetBuildingData = () => {
+  for (const v in buildingData) {
+    buildingData[v].set({
+      bg: 'white',
+    });
+  }
 };
