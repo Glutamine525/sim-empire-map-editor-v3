@@ -4,6 +4,7 @@ import {
   MapCounter,
   MapCounterType,
   MapType,
+  OperationType,
 } from '@/map-core/type';
 
 interface MapConfigState {
@@ -11,12 +12,14 @@ interface MapConfigState {
   civil: CivilType;
   noTree: boolean;
   rotated: boolean;
+  operation: OperationType;
   counter: MapCounter;
   emptyCells: number;
   changeMapType: (mapType: MapType) => void;
   changeCivil: (civil: CivilType) => void;
   changeNoTree: (noTree: boolean) => void;
   changeRotated: (rotated: boolean) => void;
+  changeOperation: (operation: OperationType) => void;
   changeCounter: (counter: MapCounter) => void;
   changeEmptyCells: (emptyCells: number) => void;
 }
@@ -26,6 +29,7 @@ export const useMapConfig = create<MapConfigState>()(set => ({
   civil: CivilType.China,
   noTree: false,
   rotated: false,
+  operation: OperationType.Empty,
   counter: {
     [MapCounterType.House]: 0,
     [MapCounterType.Villa]: 0,
@@ -37,10 +41,11 @@ export const useMapConfig = create<MapConfigState>()(set => ({
     [MapCounterType.Coverage]: 0,
   },
   emptyCells: 0,
-  changeMapType: mapType => set(state => ({ ...state, mapType })),
-  changeCivil: civil => set(state => ({ ...state, civil })),
-  changeNoTree: noTree => set(state => ({ ...state, noTree })),
-  changeRotated: rotated => set(state => ({ ...state, rotated })),
-  changeCounter: counter => set(state => ({ ...state, counter })),
-  changeEmptyCells: emptyCells => set(state => ({ ...state, emptyCells })),
+  changeMapType: mapType => set({ mapType }),
+  changeCivil: civil => set({ civil }),
+  changeNoTree: noTree => set({ noTree }),
+  changeRotated: rotated => set({ rotated }),
+  changeOperation: operation => set({ operation }),
+  changeCounter: counter => set({ counter }),
+  changeEmptyCells: emptyCells => set({ emptyCells }),
 }));

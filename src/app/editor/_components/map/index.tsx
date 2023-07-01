@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { createRef, useEffect, useMemo } from 'react';
 import Content from '@arco-design/web-react/es/Layout/content';
 import PerfectScrollbar from 'perfect-scrollbar';
 import { BLOCK_PX } from '@/config';
@@ -6,20 +6,20 @@ import BuildingLayer from '../building-layer';
 import InteractLayer from '../interact-layer';
 import styles from './index.module.css';
 
+export const mapContainer = createRef<HTMLDivElement>();
+
 const Map = () => {
   const buildings = useMemo(() => <BuildingLayer />, []);
-
-  const container = useRef<HTMLDivElement>(null);
 
   console.log('Chessboard render');
 
   useEffect(() => {
-    const scrollbar = new PerfectScrollbar(container.current!, {
+    const scrollbar = new PerfectScrollbar(mapContainer.current!, {
       wheelPropagation: true,
     });
     const { scrollHeight, scrollWidth, clientWidth, clientHeight } =
-      container.current!;
-    container.current!.scrollTo(
+      mapContainer.current!;
+    mapContainer.current!.scrollTo(
       (scrollWidth - clientWidth) / 2,
       (scrollHeight - clientHeight) / 2,
     );
@@ -32,7 +32,7 @@ const Map = () => {
   return (
     <Content className={styles.wrapper}>
       <div
-        ref={container}
+        ref={mapContainer}
         className={styles.container}
         style={{ padding: BLOCK_PX }}
       >

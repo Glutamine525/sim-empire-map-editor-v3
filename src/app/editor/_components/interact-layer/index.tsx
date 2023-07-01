@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
-import { buildingData } from '@/app/editor/_store/building-data';
 import { BLOCK_PX } from '@/config';
-import { MapLength } from '@/map-core/type';
+import { MapLength, OperationType } from '@/map-core/type';
+import { useMapConfig } from '../../_store/map-config';
+import { mapContainer } from '../map';
 
 const InteractLayer = () => {
+  const operation = useMapConfig(state => state.operation);
+
   const [isMouseDown, setIsMouseDown] = useState(false);
+  const [originMousePos, setOriginMousePos] = useState({ x: 0, y: 0 });
   const [mouseCoord, setMouseCoord] = useState({ line: 0, column: 0 });
 
   console.log('InteractLayer render');
@@ -19,17 +23,26 @@ const InteractLayer = () => {
       onMouseDown={e => {
         setIsMouseDown(true);
         const {
-          nativeEvent: { offsetX, offsetY },
+          // nativeEvent: { offsetX, offsetY },
+          clientX,
+          clientY,
         } = e;
 
-        const line = Math.ceil(offsetY / BLOCK_PX);
-        const column = Math.ceil(offsetX / BLOCK_PX);
+        setOriginMousePos({
+          x: mapContainer.current!.scrollLeft + clientX,
+          y: mapContainer.current!.scrollTop + clientY,
+        });
 
-        buildingData[line + '-' + column].set({ bg: 'pink' });
+        // const line = Math.ceil(offsetY / BLOCK_PX);
+        // const column = Math.ceil(offsetX / BLOCK_PX);
+
+        // buildingData[line + '-' + column].set({ bg: 'pink' });
       }}
       onMouseMove={e => {
         const {
           nativeEvent: { offsetX, offsetY },
+          clientX,
+          clientY,
         } = e;
 
         const line = Math.ceil(offsetY / BLOCK_PX);
@@ -43,7 +56,12 @@ const InteractLayer = () => {
           return;
         }
 
-        buildingData[line + '-' + column].set({ bg: 'pink' });
+        if (operation === OperationType.Empty) {
+          mapContainer.current!.scrollLeft = originMousePos.x - clientX;
+          mapContainer.current!.scrollTop = originMousePos.y - clientY;
+        }
+
+        // buildingData[line + '-' + column].set({ bg: 'pink' });
       }}
       onMouseUp={() => {
         setIsMouseDown(false);
