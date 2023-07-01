@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, memo } from 'react';
 import { shallow } from 'zustand/shallow';
 import { MapCounterType } from '@/map-core/type';
 import { useMapConfig } from '../../_store/map-config';
@@ -82,4 +82,4 @@ const TopMenuCounter = () => {
   );
 };
 
-export default TopMenuCounter;
+export default memo(TopMenuCounter);

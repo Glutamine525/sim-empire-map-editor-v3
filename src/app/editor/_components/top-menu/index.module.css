@@ -18,22 +18,6 @@
   font-weight: bold;
 }
 
-.controller-container,
-.controller-container > div {
-  display: flex;
-  align-items: center;
-
-  height: 100%;
-}
-
-.controller-container > div + div {
-  margin-left: 12px;
-}
-
-.controller-container > div > div + * {
-  margin-left: 4px;
-}
-
 .operation-container {
   display: flex;
 }
@@ -42,17 +26,4 @@
   margin-left: 4px;
 
   font-weight: bold;
-}
-
-.button-container {
-  display: flex;
-  align-items: center;
-}
-
-.theme-button {
-  color: #ffb700 !important;
-}
-
-body[arco-theme='dark'] .theme-button {
-  color: #ffffff !important;
 }

@@ -1,0 +1,21 @@
+.container,
+.container > div {
+  display: flex;
+  align-items: center;
+
+  height: 100%;
+}
+
+.container > div + div {
+  margin-left: 12px;
+}
+
+.container > div > div + * {
+  margin-left: 4px;
+}
+
+.dropdown-button {
+  padding: 0 8px;
+
+  font-weight: bold;
+}
