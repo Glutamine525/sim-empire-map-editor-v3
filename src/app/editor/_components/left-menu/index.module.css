@@ -4,6 +4,23 @@
   transition: all 0.1s cubic-bezier(0, 0, 1, 1);
 
   color: var(--color-text-1);
-  border-bottom: 1px solid var(--color-border);
+  border-right: 1px solid var(--color-border);
   background-color: var(--color-bg-2);
+}
+
+.container > div:first-of-type {
+  overflow: unset;
+}
+
+.main-menu-container {
+  display: flex;
+  align-items: center;
+
+  width: 100%;
+}
+
+.icon {
+  margin-right: 8px;
+
+  object-fit: cover;
 }

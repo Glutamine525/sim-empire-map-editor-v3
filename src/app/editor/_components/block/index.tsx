@@ -1,5 +1,5 @@
 import React, { FC, ReactNode } from 'react';
-import { BLOCK_PX } from '@/config';
+import { BLOCK_PX } from '@/app/editor/_config';
 import styles from './index.module.css';
 
 interface BlockProps {

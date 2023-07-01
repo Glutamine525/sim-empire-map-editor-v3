@@ -2,7 +2,7 @@
 
 import React, { useEffect } from 'react';
 import LayoutComponent from '@arco-design/web-react/es/Layout';
-import { EDITOR_PAGE_UI_SETTING } from '@/config';
+import { EDITOR_PAGE_UI_SETTING } from '@/app/editor/_config';
 import withNoSSR from '@/utils/no-ssr';
 import LeftMenu from './_components/left-menu';
 import Map from './_components/map';

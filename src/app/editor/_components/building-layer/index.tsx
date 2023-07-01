@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { BLOCK_PX } from '@/config';
+import { BLOCK_PX } from '@/app/editor/_config';
 import { MapLength } from '@/map-core/type';
 import { isInRange } from '@/utils/coordinate';
 import Building from '../building';

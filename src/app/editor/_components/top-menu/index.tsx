@@ -1,6 +1,6 @@
 import React from 'react';
 import HeaderComponent from '@arco-design/web-react/es/Layout/header';
-import { EDITOR_PAGE_UI_SETTING } from '@/config';
+import { EDITOR_PAGE_UI_SETTING } from '@/app/editor/_config';
 import TopMenuButton from '../top-menu-button';
 import TopMenuController from '../top-menu-controller';
 import TopMenuCounter from '../top-menu-counter';

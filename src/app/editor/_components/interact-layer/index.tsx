@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BLOCK_PX } from '@/config';
+import { BLOCK_PX } from '@/app/editor/_config';
 import { MapLength, OperationType } from '@/map-core/type';
 import { useMapConfig } from '../../_store/map-config';
 import { mapContainer } from '../map';
