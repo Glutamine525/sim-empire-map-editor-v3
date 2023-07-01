@@ -31,6 +31,8 @@
 .main-menu-container > .text {
   flex-grow: 1;
 
+  margin: 0 8px;
+
   text-align: center;
 }
 
@@ -54,8 +56,6 @@
 }
 
 .icon {
-  margin-right: 8px;
-
   object-fit: cover;
 }
 
@@ -67,7 +67,6 @@
   box-sizing: border-box;
   width: 16px;
   height: 18px;
-  margin-left: 8px;
 
   transform: scale(0.9);
   transform-origin: right center;
@@ -82,6 +81,10 @@
     'Liberation Mono', 'Courier New', monospace;
   font-size: 12px;
   font-weight: bold;
+}
+
+.key-shortcut:first-of-type {
+  margin-left: 8px;
 }
 
 body[arco-theme='dark'] .key-shortcut {
