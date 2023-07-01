@@ -15,7 +15,7 @@ for (let row = 1; row <= MapLength; row++) {
       continue;
     }
     buildingData[`${row}-${col}`] = createSubscribeStore<BuildingConfig>({
-      bg: 'white',
+      bg: 'var(--color-bg-5)',
     });
   }
 }
@@ -33,7 +33,7 @@ export const useBuildingData = (arg0: number | string, arg1?: number) => {
 export const resetBuildingData = () => {
   for (const v in buildingData) {
     buildingData[v].set({
-      bg: 'white',
+      bg: 'var(--color-bg-5)',
     });
   }
 };

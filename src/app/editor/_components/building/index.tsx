@@ -15,7 +15,9 @@ const Building: FC<BuildingProps> = ({ row, col }) => {
     <Block row={row} col={col} bg={data.bg}>
       {process.env.NODE_ENV === 'development' && (
         <div className={styles['debug-coord']}>
-          {row}-{col}
+          {row}
+          <br />
+          {col}
         </div>
       )}
     </Block>

@@ -1,0 +1,11 @@
+.wrapper {
+  position: absolute;
+
+  box-sizing: border-box;
+
+  background-color: var(--color-bg-3);
+}
+
+.container {
+  position: absolute;
+}
