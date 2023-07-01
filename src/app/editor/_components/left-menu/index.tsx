@@ -90,7 +90,7 @@ const LeftMenu = () => {
                 <Icon catalog={catalog} />
                 <div className={styles.text}>{catalog}</div>
                 <div className={styles['key-shortcut']}>
-                  {mapMenuToShortcut[catalog].trim() || '空格'}
+                  {mapMenuToShortcut[catalog].trim() || '⎵'}
                 </div>
               </MenuItem>
             );
