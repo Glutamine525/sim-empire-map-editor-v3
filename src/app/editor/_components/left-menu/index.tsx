@@ -12,7 +12,11 @@ import {
 } from '@/map-core/building';
 import { GeneralBuilding } from '@/map-core/building/general';
 import { catalogImageMap } from '../../_config/images';
-import { mapIdxToShortcut, mapMenuToShortcut } from '../../_config/shortcut';
+import {
+  mapIdxToShortcut,
+  mapMenuToShortcut,
+  shortcutIdxCap,
+} from '../../_config/shortcut';
 import { useMapConfig } from '../../_store/map-config';
 import styles from './index.module.css';
 
@@ -114,15 +118,17 @@ const LeftMenu = () => {
                   <div>
                     {i + 1}. {v.name}
                   </div>
-                  <div className={styles['key-container']}>
-                    <div className={styles['key-shortcut']}>
-                      {mapMenuToShortcut[catalog]}
+                  {i < shortcutIdxCap && (
+                    <div className={styles['key-container']}>
+                      <div className={styles['key-shortcut']}>
+                        {mapMenuToShortcut[catalog]}
+                      </div>
+                      +
+                      <div className={styles['key-shortcut']}>
+                        {mapIdxToShortcut[i]}
+                      </div>
                     </div>
-                    +
-                    <div className={styles['key-shortcut']}>
-                      {mapIdxToShortcut[i]}
-                    </div>
-                  </div>
+                  )}
                 </MenuItem>
               ))}
             </SubMenu>
