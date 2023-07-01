@@ -11,11 +11,22 @@ import {
 } from '@/map-core/building';
 import { GeneralBuilding } from '@/map-core/building/general';
 import { catalogImageMap } from '../../_config/images';
+import { mapMenuToShortcut } from '../../_config/shortcut';
 import { useMapConfig } from '../../_store/map-config';
 import styles from './index.module.css';
 
 const MenuItem = Menu.Item;
 const SubMenu = Menu.SubMenu;
+
+const Icon = ({ catalog }: { catalog: CatalogType }) => (
+  <Image
+    src={catalogImageMap[catalog].src}
+    alt={catalog}
+    className={styles.icon}
+    width={28}
+    height={28}
+  />
+);
 
 const LeftMenu = () => {
   const civil = useMapConfig(state => state.civil);
@@ -65,19 +76,21 @@ const LeftMenu = () => {
       className={styles.container}
       width={EDITOR_PAGE_UI_SETTING.leftMenuWidth}
     >
-      <Menu accordion={true}>
-        {Object.entries(subMenuContent).map(([catalog, subMenu]) => {
+      <Menu
+        accordion={true}
+        className={styles['menu-container']}
+        // mode="pop"
+      >
+        {Object.entries(subMenuContent).map(([_catalog, subMenu]) => {
+          const catalog = _catalog as CatalogType;
           if (!subMenu.length) {
             return (
               <MenuItem key={catalog} className={styles['main-menu-container']}>
-                <Image
-                  src={catalogImageMap[catalog as CatalogType].src}
-                  alt={catalog}
-                  className={styles.icon}
-                  width={28}
-                  height={28}
-                />
-                {catalog}
+                <Icon catalog={catalog} />
+                <div className={styles['key-shortcut']}>
+                  {mapMenuToShortcut[catalog].trim() || '空格'}
+                </div>
+                <div className={styles.text}>{catalog}</div>
               </MenuItem>
             );
           }
@@ -86,14 +99,11 @@ const LeftMenu = () => {
               key={catalog}
               title={
                 <div className={styles['main-menu-container']}>
-                  <Image
-                    src={catalogImageMap[catalog as CatalogType].src}
-                    alt={catalog}
-                    className={styles.icon}
-                    width={28}
-                    height={28}
-                  />
-                  {catalog}
+                  <Icon catalog={catalog} />
+                  <div className={styles['key-shortcut']}>
+                    {mapMenuToShortcut[catalog]}
+                  </div>
+                  <div className={styles.text}>{catalog}</div>
                 </div>
               }
             >
