@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Menu } from '@arco-design/web-react';
+import { Button, Menu, Tooltip } from '@arco-design/web-react';
 import SiderComponent from '@arco-design/web-react/es/Layout/sider';
 import { IconMenuFold, IconMenuUnfold } from '@arco-design/web-react/icon';
 import classcat from 'classcat';
@@ -120,14 +120,21 @@ const LeftMenu = () => {
       >
         {Object.entries(subMenuContent).map(([_catalog, subMenu]) => {
           const catalog = _catalog as CatalogType;
-          if (!subMenu.length) {
+          if (subMenu.length === 0) {
             return (
-              <MenuItem key={catalog} className={styles['main-menu-container']}>
-                <Icon catalog={catalog} />
-                <div className={styles.text}>{catalog}</div>
-                <div className={styles['key-shortcut']}>
-                  {mapMenuToShortcut[catalog].trim() || '⎵'}
-                </div>
+              <MenuItem key={catalog}>
+                <Tooltip
+                  content={isCollapsed ? catalog : null}
+                  position="right"
+                >
+                  <div className={styles['main-menu-container']}>
+                    <Icon catalog={catalog} />
+                    <div className={styles.text}>{catalog}</div>
+                    <div className={styles['key-shortcut']}>
+                      {mapMenuToShortcut[catalog].trim() || '⎵'}
+                    </div>
+                  </div>
+                </Tooltip>
               </MenuItem>
             );
           }
