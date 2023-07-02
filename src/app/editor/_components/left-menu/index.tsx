@@ -145,6 +145,11 @@ const LeftMenu = () => {
               }
               triggerProps={{ className: styles['pop-sub-menu-container'] }}
             >
+              {isCollapsed && (
+                <div className={styles['pop-sub-menu-title']} key="title">
+                  {catalog}
+                </div>
+              )}
               {subMenu.map((v, i) => (
                 <MenuItem key={v.name} className={styles['sub-menu-container']}>
                   <div>
