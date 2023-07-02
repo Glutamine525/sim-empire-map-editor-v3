@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Button, Menu, Tooltip } from '@arco-design/web-react';
 import SiderComponent from '@arco-design/web-react/es/Layout/sider';
 import { IconMenuFold, IconMenuUnfold } from '@arco-design/web-react/icon';
+import { useKeyPress } from 'ahooks';
 import classcat from 'classcat';
 import Image from 'next/image';
 import PerfectScrollbar from 'perfect-scrollbar';
@@ -18,6 +19,7 @@ import { catalogImageMap } from '../../_config/images';
 import {
   mapIdxToShortcut,
   mapMenuToShortcut,
+  mapShortcutToMenu,
   shortcutIdxCap,
 } from '../../_config/shortcut';
 import { useMapConfig } from '../../_store/map-config';
@@ -38,8 +40,6 @@ const Icon = ({ catalog }: { catalog: CatalogType }) => (
 
 const LeftMenu = () => {
   const civil = useMapConfig(state => state.civil);
-
-  const container = useRef<HTMLDivElement>();
 
   const [menuWidth, setMenuWidth] = useState(
     EDITOR_PAGE_UI_SETTING.leftMenuWidth,
@@ -70,9 +70,75 @@ const LeftMenu = () => {
     ),
     [CatalogType.WatermarkMode]: [],
   });
+  const [subMenuOpened, setSubMenuOpened] = useState<{
+    [key in CatalogType]: boolean;
+  }>({
+    [CatalogType.Road]: false,
+    [CatalogType.Residence]: false,
+    [CatalogType.Agriculture]: false,
+    [CatalogType.Industry]: false,
+    [CatalogType.Commerce]: false,
+    [CatalogType.Municipal]: false,
+    [CatalogType.Culture]: false,
+    [CatalogType.Religion]: false,
+    [CatalogType.Military]: false,
+    [CatalogType.Decoration]: false,
+    [CatalogType.Wonder]: false,
+    [CatalogType.General]: false,
+    [CatalogType.Special]: false,
+    [CatalogType.Cancel]: false,
+    [CatalogType.Move]: false,
+    [CatalogType.Delete]: false,
+    [CatalogType.Undo]: false,
+    [CatalogType.Redo]: false,
+    [CatalogType.ImportExport]: false,
+    [CatalogType.WatermarkMode]: false,
+  });
+
+  const container = useRef<HTMLDivElement>();
+  const lastOpenedMenu = useRef<CatalogType>();
 
   const isCollapsed =
     menuWidth === EDITOR_PAGE_UI_SETTING.leftMenuWidthCollapsed;
+
+  useKeyPress(
+    Object.keys(mapShortcutToMenu),
+    e => {
+      const key = e.key === ' ' ? e.code : e.key.toUpperCase();
+      if (key === 'Space') {
+        e.preventDefault();
+      }
+      const catalog = mapShortcutToMenu[key] as CatalogType;
+      console.log(key, catalog, lastOpenedMenu.current);
+      if (subMenuContent[catalog].length === 0) {
+        if (lastOpenedMenu.current) {
+          setSubMenuOpened(state => ({
+            ...state,
+            [lastOpenedMenu.current!]: false,
+          }));
+        }
+        return;
+      }
+      if (!lastOpenedMenu.current) {
+        // 没有打开的子菜单，打开当前选中的子菜单
+        setSubMenuOpened(state => ({ ...state, [catalog]: true }));
+        lastOpenedMenu.current = catalog;
+      } else if (lastOpenedMenu.current !== catalog) {
+        // 有打开的子菜单，且和当前选中的子菜单不同，关闭前一个子菜单，打开当前选中的子菜单
+        setSubMenuOpened(state => ({
+          ...state,
+          [catalog]: true,
+          [lastOpenedMenu.current!]: false,
+        }));
+        lastOpenedMenu.current = catalog;
+      } else {
+        // 有打开的子菜单，且和当前选中的子菜单相同，关闭该子菜单
+        setSubMenuOpened(state => ({ ...state, [catalog]: false }));
+        lastOpenedMenu.current = undefined;
+      }
+    },
+    { useCapture: true },
+  );
 
   useEffect(() => {
     const scrollbar = new PerfectScrollbar(container.current!, {
@@ -115,6 +181,7 @@ const LeftMenu = () => {
           [styles['collapsed']]: isCollapsed,
         })}
         mode="pop"
+        selectable={false}
         tooltipProps={{ content: null }}
         collapse={isCollapsed}
       >
@@ -131,7 +198,9 @@ const LeftMenu = () => {
                     <Icon catalog={catalog} />
                     <div className={styles.text}>{catalog}</div>
                     <div className={styles['key-shortcut']}>
-                      {mapMenuToShortcut[catalog].trim() || '⎵'}
+                      {mapMenuToShortcut[catalog] === 'Space'
+                        ? '⎵'
+                        : mapMenuToShortcut[catalog]}
                     </div>
                   </div>
                 </Tooltip>
@@ -150,7 +219,13 @@ const LeftMenu = () => {
                   </div>
                 </div>
               }
-              triggerProps={{ className: styles['pop-sub-menu-container'] }}
+              triggerProps={{
+                className: styles['pop-sub-menu-container'],
+                popupVisible: subMenuOpened[catalog],
+                onVisibleChange: visible => {
+                  setSubMenuOpened(state => ({ ...state, [catalog]: visible }));
+                },
+              }}
             >
               {isCollapsed && (
                 <div className={styles['pop-sub-menu-title']} key="title">
