@@ -38,7 +38,32 @@ const Icon = ({ catalog }: { catalog: CatalogType }) => (
   />
 );
 
+const defaultSubMenuOpenedState = {
+  [CatalogType.Road]: false,
+  [CatalogType.Residence]: false,
+  [CatalogType.Agriculture]: false,
+  [CatalogType.Industry]: false,
+  [CatalogType.Commerce]: false,
+  [CatalogType.Municipal]: false,
+  [CatalogType.Culture]: false,
+  [CatalogType.Religion]: false,
+  [CatalogType.Military]: false,
+  [CatalogType.Decoration]: false,
+  [CatalogType.Wonder]: false,
+  [CatalogType.General]: false,
+  [CatalogType.Special]: false,
+  [CatalogType.Cancel]: false,
+  [CatalogType.Move]: false,
+  [CatalogType.Delete]: false,
+  [CatalogType.Undo]: false,
+  [CatalogType.Redo]: false,
+  [CatalogType.ImportExport]: false,
+  [CatalogType.WatermarkMode]: false,
+};
+
 const LeftMenu = () => {
+  console.log('LeftMenu render');
+
   const civil = useMapConfig(state => state.civil);
 
   const [menuWidth, setMenuWidth] = useState(
@@ -72,31 +97,13 @@ const LeftMenu = () => {
   });
   const [subMenuOpened, setSubMenuOpened] = useState<{
     [key in CatalogType]: boolean;
-  }>({
-    [CatalogType.Road]: false,
-    [CatalogType.Residence]: false,
-    [CatalogType.Agriculture]: false,
-    [CatalogType.Industry]: false,
-    [CatalogType.Commerce]: false,
-    [CatalogType.Municipal]: false,
-    [CatalogType.Culture]: false,
-    [CatalogType.Religion]: false,
-    [CatalogType.Military]: false,
-    [CatalogType.Decoration]: false,
-    [CatalogType.Wonder]: false,
-    [CatalogType.General]: false,
-    [CatalogType.Special]: false,
-    [CatalogType.Cancel]: false,
-    [CatalogType.Move]: false,
-    [CatalogType.Delete]: false,
-    [CatalogType.Undo]: false,
-    [CatalogType.Redo]: false,
-    [CatalogType.ImportExport]: false,
-    [CatalogType.WatermarkMode]: false,
-  });
+  }>(defaultSubMenuOpenedState);
 
   const container = useRef<HTMLDivElement>();
-  const lastOpenedMenu = useRef<CatalogType>();
+
+  const resetSubMenuOpened = () => {
+    setSubMenuOpened(defaultSubMenuOpenedState);
+  };
 
   const isCollapsed =
     menuWidth === EDITOR_PAGE_UI_SETTING.leftMenuWidthCollapsed;
@@ -109,33 +116,11 @@ const LeftMenu = () => {
         e.preventDefault();
       }
       const catalog = mapShortcutToMenu[key] as CatalogType;
-      console.log(key, catalog, lastOpenedMenu.current);
+      resetSubMenuOpened();
       if (subMenuContent[catalog].length === 0) {
-        if (lastOpenedMenu.current) {
-          setSubMenuOpened(state => ({
-            ...state,
-            [lastOpenedMenu.current!]: false,
-          }));
-        }
         return;
       }
-      if (!lastOpenedMenu.current) {
-        // 没有打开的子菜单，打开当前选中的子菜单
-        setSubMenuOpened(state => ({ ...state, [catalog]: true }));
-        lastOpenedMenu.current = catalog;
-      } else if (lastOpenedMenu.current !== catalog) {
-        // 有打开的子菜单，且和当前选中的子菜单不同，关闭前一个子菜单，打开当前选中的子菜单
-        setSubMenuOpened(state => ({
-          ...state,
-          [catalog]: true,
-          [lastOpenedMenu.current!]: false,
-        }));
-        lastOpenedMenu.current = catalog;
-      } else {
-        // 有打开的子菜单，且和当前选中的子菜单相同，关闭该子菜单
-        setSubMenuOpened(state => ({ ...state, [catalog]: false }));
-        lastOpenedMenu.current = undefined;
-      }
+      setSubMenuOpened(state => ({ ...state, [catalog]: true }));
     },
     { useCapture: true },
   );
@@ -222,8 +207,20 @@ const LeftMenu = () => {
               triggerProps={{
                 className: styles['pop-sub-menu-container'],
                 popupVisible: subMenuOpened[catalog],
+                trigger: ['hover', 'click'],
                 onVisibleChange: visible => {
+                  resetSubMenuOpened();
                   setSubMenuOpened(state => ({ ...state, [catalog]: visible }));
+                },
+                onClick: () => {
+                  resetSubMenuOpened();
+                  setSubMenuOpened(state => ({
+                    ...state,
+                    [catalog]: !state[catalog],
+                  }));
+                },
+                onClickOutside: () => {
+                  resetSubMenuOpened();
                 },
               }}
             >
