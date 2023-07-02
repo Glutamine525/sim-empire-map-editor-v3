@@ -1,15 +1,15 @@
 .container {
   height: 100%;
 
-  transition: all 0.1s cubic-bezier(0, 0, 1, 1);
-
   color: var(--color-text-1);
   border-right: 1px solid var(--color-border);
   background-color: var(--color-bg-2);
 }
 
-.menu-container {
-  height: 100%;
+.container :global(.arco-layout-sider-children) {
+  overflow: unset;
+
+  height: unset;
 }
 
 .menu-container :global(.arco-menu-icon-suffix) {
@@ -87,7 +87,7 @@
   box-shadow: 0 2px 0 #c9cdd4;
 
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-    'Liberation Mono', 'Courier New', monospace;
+  'Liberation Mono', 'Courier New', monospace;
   font-size: 12px;
   font-weight: bold;
 }
@@ -101,4 +101,26 @@ body[arco-theme='dark'] .key-shortcut {
   border: 1px solid hsla(0, 0%, 100%, 0.12);
   background: #202022;
   box-shadow: 0 2px 0 hsla(0, 0%, 100%, 0.12);
+}
+
+.collapse-button-container {
+  position: fixed;
+  z-index: 100;
+  bottom: 1px;
+
+  width: 40px;
+  height: 40px;
+
+  transition: left 0.2s cubic-bezier(0.34, 0.69, 0.1, 1);
+
+  border-radius: 50%;
+  background: var(--color-bg-2) !important;
+}
+
+.collapse-button {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+
+  color: var(--color-text-2) !important;
 }

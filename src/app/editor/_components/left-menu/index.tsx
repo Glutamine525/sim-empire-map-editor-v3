@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { Menu } from '@arco-design/web-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { Button, Menu } from '@arco-design/web-react';
 import SiderComponent from '@arco-design/web-react/es/Layout/sider';
+import { IconMenuFold, IconMenuUnfold } from '@arco-design/web-react/icon';
 import classcat from 'classcat';
 import Image from 'next/image';
+import PerfectScrollbar from 'perfect-scrollbar';
 import { EDITOR_PAGE_UI_SETTING } from '@/app/editor/_config';
 import {
   BuildingType,
@@ -36,6 +38,8 @@ const Icon = ({ catalog }: { catalog: CatalogType }) => (
 
 const LeftMenu = () => {
   const civil = useMapConfig(state => state.civil);
+
+  const container = useRef<HTMLDivElement>();
 
   const [menuWidth, setMenuWidth] = useState(
     EDITOR_PAGE_UI_SETTING.leftMenuWidth,
@@ -71,6 +75,17 @@ const LeftMenu = () => {
     menuWidth === EDITOR_PAGE_UI_SETTING.leftMenuWidthCollapsed;
 
   useEffect(() => {
+    const scrollbar = new PerfectScrollbar(container.current!, {
+      wheelPropagation: true,
+      suppressScrollX: true,
+    });
+
+    return () => {
+      scrollbar.destroy();
+    };
+  }, []);
+
+  useEffect(() => {
     const buildingConfig = CivilBuilding[civil];
     setSubMenuContent(state => ({
       ...state,
@@ -88,7 +103,11 @@ const LeftMenu = () => {
   }, [civil]);
 
   return (
-    <SiderComponent className={styles.container} width={menuWidth}>
+    <SiderComponent
+      ref={container}
+      className={styles.container}
+      width={menuWidth}
+    >
       <Menu
         accordion={true}
         className={classcat({
@@ -97,14 +116,7 @@ const LeftMenu = () => {
         })}
         mode="pop"
         tooltipProps={{ content: null }}
-        hasCollapseButton={true}
-        onCollapseChange={collapse => {
-          if (collapse) {
-            setMenuWidth(EDITOR_PAGE_UI_SETTING.leftMenuWidthCollapsed);
-            return;
-          }
-          setMenuWidth(EDITOR_PAGE_UI_SETTING.leftMenuWidth);
-        }}
+        collapse={isCollapsed}
       >
         {Object.entries(subMenuContent).map(([_catalog, subMenu]) => {
           const catalog = _catalog as CatalogType;
@@ -155,6 +167,26 @@ const LeftMenu = () => {
           );
         })}
       </Menu>
+      <div
+        className={styles['collapse-button-container']}
+        style={{
+          left: menuWidth - 20,
+        }}
+      >
+        <Button
+          shape="circle"
+          type="text"
+          className={styles['collapse-button']}
+          icon={isCollapsed ? <IconMenuUnfold /> : <IconMenuFold />}
+          onClick={() => {
+            if (isCollapsed) {
+              setMenuWidth(EDITOR_PAGE_UI_SETTING.leftMenuWidth);
+              return;
+            }
+            setMenuWidth(EDITOR_PAGE_UI_SETTING.leftMenuWidthCollapsed);
+          }}
+        />
+      </div>
     </SiderComponent>
   );
 };
