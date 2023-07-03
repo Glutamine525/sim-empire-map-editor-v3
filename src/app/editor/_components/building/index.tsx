@@ -12,8 +12,8 @@ const Building: FC<BuildingProps> = ({ row, col }) => {
   const [data] = useBuildingData(row, col);
 
   return (
-    <Block row={row} col={col} bg={data.bg}>
-      {process.env.NODE_ENV === 'development' && (
+    <Block row={row} col={col} {...data}>
+      {process.env.NODE_ENV === 'development' && !data.isBarrier && (
         <div className={styles['debug-coord']}>
           {row}
           <br />

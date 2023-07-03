@@ -162,6 +162,7 @@ export class MapCore {
           : BorderStyleType.Solid,
       };
       this.emptyCells--;
+      this.mapUpdater?.(key, this.buildings[key]);
       this.miniMapUpdater?.(key, {
         w: 1,
         h: 1,
