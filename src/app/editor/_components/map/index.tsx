@@ -3,7 +3,7 @@ import Content from '@arco-design/web-react/es/Layout/content';
 import PerfectScrollbar from 'perfect-scrollbar';
 import { shallow } from 'zustand/shallow';
 import { MapCore } from '@/map-core';
-import { buildingData } from '../../_store/building-data';
+import { buildingData, resetBuildingData } from '../../_store/building-data';
 import { useMapConfig } from '../../_store/map-config';
 import BuildingLayer from '../building-layer';
 import InteractLayer from '../interact-layer';
@@ -38,12 +38,16 @@ const Map = () => {
       (scrollWidth - clientWidth) / 2,
       (scrollHeight - clientHeight) / 2,
     );
-    mapCore.init(mapType, civil, noTree);
 
     return () => {
       scrollbar.destroy();
     };
   }, []);
+
+  useEffect(() => {
+    resetBuildingData();
+    mapCore.init(mapType, civil, noTree);
+  }, [mapCore, mapType, civil, noTree]);
 
   return (
     <Content className={styles.wrapper}>
