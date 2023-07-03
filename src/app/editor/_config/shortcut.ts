@@ -113,3 +113,13 @@ export const mapIdxToShortcut: { [key: number]: string } = {
 };
 
 export const shortcutIdxCap = Object.keys(mapShortcutToIdx).length;
+
+export const protectionShortcut = ['Z', 'X', 'C', 'V', 'B'];
+
+export const mapProtectionShortcutToIdx: { [key: string]: number } = {
+  Z: 0,
+  X: 1,
+  C: 2,
+  V: 3,
+  B: 4,
+};

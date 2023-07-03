@@ -23,8 +23,10 @@ import {
   ahooksIdxKeyFilter,
   mapIdxToShortcut,
   mapMenuToShortcut,
+  mapProtectionShortcutToIdx,
   mapShortcutToIdx,
   mapShortcutToMenu,
+  protectionShortcut,
   shortcutIdxCap,
 } from '../../_config/shortcut';
 import { useMapConfig } from '../../_store/map-config';
@@ -142,6 +144,22 @@ const LeftMenu = () => {
       return;
     }
     onClickMenuItem(openedSubMenu.current + '-' + mapShortcutToIdx[e.key]);
+  });
+
+  useKeyPress(protectionShortcut, e => {
+    const key = e.key.toUpperCase();
+    const index = mapProtectionShortcutToIdx[key];
+    if (index >= CivilBuilding[civil]['防护'].length) {
+      return;
+    }
+    const name = CivilBuilding[civil]['防护'][index];
+    const buildingIndex = subMenuContent[CatalogType.Municipal].findIndex(
+      v => v.name === name,
+    );
+    if (buildingIndex === -1) {
+      return;
+    }
+    onClickMenuItem(CatalogType.Municipal + '-' + buildingIndex);
   });
 
   useEffect(() => {
