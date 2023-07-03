@@ -4,6 +4,7 @@ import { EDITOR_PAGE_UI_SETTING } from '@/app/editor/_config';
 import TopMenuButton from '../top-menu-button';
 import TopMenuController from '../top-menu-controller';
 import TopMenuCounter from '../top-menu-counter';
+import TopMenuOperation from '../top-menu-operation';
 import styles from './index.module.css';
 
 const TopMenu = () => {
@@ -18,10 +19,7 @@ const TopMenu = () => {
     >
       <div className={styles.title}>模拟帝国布局图编辑器</div>
       <TopMenuController />
-      <div className={styles['operation-container']}>
-        <div>当前操作:</div>
-        <div className={styles.operation}>无</div>
-      </div>
+      <TopMenuOperation />
       <TopMenuCounter />
       <TopMenuButton />
     </HeaderComponent>

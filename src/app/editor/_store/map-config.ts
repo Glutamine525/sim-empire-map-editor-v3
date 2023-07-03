@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { BuildingConfig } from '@/map-core/building';
 import {
   CivilType,
   MapCounter,
@@ -13,6 +14,7 @@ interface MapConfigState {
   noTree: boolean;
   rotated: boolean;
   operation: OperationType;
+  brush: BuildingConfig | undefined;
   counter: MapCounter;
   emptyCells: number;
   changeMapType: (mapType: MapType) => void;
@@ -20,6 +22,7 @@ interface MapConfigState {
   changeNoTree: (noTree: boolean) => void;
   changeRotated: (rotated: boolean) => void;
   changeOperation: (operation: OperationType) => void;
+  changeBrush: (brush: BuildingConfig | undefined) => void;
   changeCounter: (counter: MapCounter) => void;
   changeEmptyCells: (emptyCells: number) => void;
 }
@@ -30,6 +33,7 @@ export const useMapConfig = create<MapConfigState>()(set => ({
   noTree: false,
   rotated: false,
   operation: OperationType.Empty,
+  brush: undefined,
   counter: {
     [MapCounterType.House]: 0,
     [MapCounterType.Villa]: 0,
@@ -46,6 +50,7 @@ export const useMapConfig = create<MapConfigState>()(set => ({
   changeNoTree: noTree => set({ noTree }),
   changeRotated: rotated => set({ rotated }),
   changeOperation: operation => set({ operation }),
+  changeBrush: brush => set({ brush }),
   changeCounter: counter => set({ counter }),
   changeEmptyCells: emptyCells => set({ emptyCells }),
 }));

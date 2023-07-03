@@ -68,6 +68,28 @@ export const mapShortcutToIdx: { [key: string]: number } = {
   '/': 18,
 };
 
+export const ahooksIdxKeyFilter = [
+  '1',
+  '2',
+  '3',
+  '4',
+  '5',
+  '6',
+  '7',
+  '8',
+  '9',
+  '0',
+  'dash',
+  'equalsign',
+  'openbracket',
+  'closebracket',
+  'semicolon',
+  'singlequote',
+  'comma',
+  'period',
+  'forwardslash',
+];
+
 export const mapIdxToShortcut: { [key: number]: string } = {
   0: '1',
   1: '2',

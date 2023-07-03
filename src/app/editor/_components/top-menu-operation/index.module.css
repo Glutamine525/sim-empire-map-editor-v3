@@ -1,0 +1,9 @@
+.container {
+  display: flex;
+}
+
+.text {
+  margin-left: 4px;
+
+  font-weight: bold;
+}

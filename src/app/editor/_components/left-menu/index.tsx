@@ -6,6 +6,7 @@ import { useKeyPress } from 'ahooks';
 import classcat from 'classcat';
 import Image from 'next/image';
 import PerfectScrollbar from 'perfect-scrollbar';
+import { shallow } from 'zustand/shallow';
 import { EDITOR_PAGE_UI_SETTING } from '@/app/editor/_config';
 import {
   BuildingType,
@@ -15,10 +16,14 @@ import {
   SimpleBuildingConfig,
 } from '@/map-core/building';
 import { GeneralBuilding } from '@/map-core/building/general';
+import { OperationType } from '@/map-core/type';
+import { getRoadBuilding, getSelectedBuilding } from '@/utils/building';
 import { catalogImageMap } from '../../_config/images';
 import {
+  ahooksIdxKeyFilter,
   mapIdxToShortcut,
   mapMenuToShortcut,
+  mapShortcutToIdx,
   mapShortcutToMenu,
   shortcutIdxCap,
 } from '../../_config/shortcut';
@@ -64,7 +69,10 @@ const defaultSubMenuOpenedState = {
 const LeftMenu = () => {
   console.log('LeftMenu render');
 
-  const civil = useMapConfig(state => state.civil);
+  const [civil, changeOperation, changeBrush] = useMapConfig(
+    state => [state.civil, state.changeOperation, state.changeBrush],
+    shallow,
+  );
 
   const [menuWidth, setMenuWidth] = useState(
     EDITOR_PAGE_UI_SETTING.leftMenuWidth,
@@ -100,6 +108,7 @@ const LeftMenu = () => {
   }>(defaultSubMenuOpenedState);
 
   const container = useRef<HTMLDivElement>();
+  const openedSubMenu = useRef<CatalogType>();
 
   const resetSubMenuOpened = () => {
     setSubMenuOpened(defaultSubMenuOpenedState);
@@ -118,12 +127,22 @@ const LeftMenu = () => {
       const catalog = mapShortcutToMenu[key] as CatalogType;
       resetSubMenuOpened();
       if (subMenuContent[catalog].length === 0) {
+        openedSubMenu.current = undefined;
+        onClickMenuItem(catalog);
         return;
       }
       setSubMenuOpened(state => ({ ...state, [catalog]: true }));
+      openedSubMenu.current = catalog;
     },
     { useCapture: true },
   );
+
+  useKeyPress(ahooksIdxKeyFilter, e => {
+    if (!openedSubMenu.current) {
+      return;
+    }
+    onClickMenuItem(openedSubMenu.current + '-' + mapShortcutToIdx[e.key]);
+  });
 
   useEffect(() => {
     const scrollbar = new PerfectScrollbar(container.current!, {
@@ -153,6 +172,36 @@ const LeftMenu = () => {
     }));
   }, [civil]);
 
+  const onClickMenuItem = (key: string) => {
+    resetSubMenuOpened();
+    const [catalog, _index] = key.split('-') as [CatalogType, string];
+    const index = Number(_index);
+    console.log({ catalog, index });
+    switch (catalog) {
+      case CatalogType.Road:
+        changeOperation(OperationType.PlaceBuilding);
+        changeBrush(getRoadBuilding());
+        return;
+      case CatalogType.Cancel:
+        changeOperation(OperationType.Empty);
+        return;
+      case CatalogType.ImportExport:
+        return;
+      default:
+        if (isNaN(index)) {
+          return;
+        }
+        changeOperation(OperationType.PlaceBuilding);
+        changeBrush(
+          getSelectedBuilding(
+            civil,
+            catalog as BuildingType,
+            subMenuContent[catalog][index],
+          ),
+        );
+    }
+  };
+
   return (
     <SiderComponent
       ref={container}
@@ -169,6 +218,7 @@ const LeftMenu = () => {
         selectable={false}
         tooltipProps={{ content: null }}
         collapse={isCollapsed}
+        onClickMenuItem={onClickMenuItem}
       >
         {Object.entries(subMenuContent).map(([_catalog, subMenu]) => {
           const catalog = _catalog as CatalogType;
@@ -211,16 +261,28 @@ const LeftMenu = () => {
                 onVisibleChange: visible => {
                   resetSubMenuOpened();
                   setSubMenuOpened(state => ({ ...state, [catalog]: visible }));
+                  if (visible) {
+                    openedSubMenu.current = catalog;
+                  } else {
+                    openedSubMenu.current = undefined;
+                  }
                 },
                 onClick: () => {
-                  resetSubMenuOpened();
-                  setSubMenuOpened(state => ({
-                    ...state,
-                    [catalog]: !state[catalog],
-                  }));
+                  setSubMenuOpened(state => {
+                    if (state[catalog]) {
+                      openedSubMenu.current = undefined;
+                    } else {
+                      openedSubMenu.current = catalog;
+                    }
+                    return {
+                      ...state,
+                      [catalog]: !state[catalog],
+                    };
+                  });
                 },
                 onClickOutside: () => {
                   resetSubMenuOpened();
+                  openedSubMenu.current = undefined;
                 },
               }}
             >
@@ -230,7 +292,10 @@ const LeftMenu = () => {
                 </div>
               )}
               {subMenu.map((v, i) => (
-                <MenuItem key={v.name} className={styles['sub-menu-container']}>
+                <MenuItem
+                  key={catalog + '-' + i}
+                  className={styles['sub-menu-container']}
+                >
                   <div>
                     {i + 1}. {v.name}
                   </div>

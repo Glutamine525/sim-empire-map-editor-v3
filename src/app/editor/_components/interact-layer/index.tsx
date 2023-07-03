@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
+import { shallow } from 'zustand/shallow';
 import { BLOCK_PX } from '@/app/editor/_config';
 import { MapLength, OperationType } from '@/map-core/type';
 import { useMapConfig } from '../../_store/map-config';
 import { mapContainer } from '../map';
 
 const InteractLayer = () => {
-  const operation = useMapConfig(state => state.operation);
+  const [operation] = useMapConfig(state => [state.operation], shallow);
 
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [originMousePos, setOriginMousePos] = useState({ x: 0, y: 0 });
