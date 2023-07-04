@@ -57,7 +57,9 @@ export class MapCore {
     if (!this.instance) {
       this.instance = new MapCore();
     }
-    window.__map__ = this.instance;
+    if (typeof window !== 'undefined') {
+      window.__map__ = this.instance;
+    }
     return this.instance;
   }
 
@@ -231,6 +233,7 @@ export class MapCore {
         catalog: FixedBuildingCatalog[type],
         isEmpty: false,
       };
+      this.mapUpdater?.(key, this.buildings[key]);
       this.miniMapUpdater?.(key, {
         w: FixedBuildingSize[type],
         h: FixedBuildingSize[type],

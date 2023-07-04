@@ -1,19 +1,58 @@
 import React, { FC } from 'react';
-import { useBuildingData } from '@/app/editor/_store/building-data';
-import Block from '../block';
+import classcat from 'classcat';
+import { MapCore } from '@/map-core';
+import { BuildingConfig } from '@/map-core/building';
+import { showMarker } from '@/utils/building';
+import Block, { BlockProps } from '../block';
 import styles from './index.module.css';
 
-interface BuildingProps {
-  row: number;
-  col: number;
+interface BuildingProps extends BlockProps, BuildingConfig {
+  isHovered?: boolean;
+  isPreview?: boolean;
+  canPlace?: boolean;
+  isHidden?: boolean;
 }
 
-const Building: FC<BuildingProps> = ({ row, col }) => {
-  const [data] = useBuildingData(row, col);
+const core = MapCore.getInstance();
+
+const Building: FC<BuildingProps> = props => {
+  const {
+    row,
+    col,
+    w = 1,
+    h = 1,
+    text,
+    isRoad,
+    isHovered,
+    isPreview,
+    canPlace,
+    isHidden,
+  } = props;
 
   return (
-    <Block row={row} col={col} {...data}>
-      {process.env.NODE_ENV === 'development' && !data.isBarrier && (
+    <Block
+      {...props}
+      className={classcat({
+        [props.className || '']: true,
+        [styles.container]: true,
+        [styles.large]: w > 1 || h > 1,
+        [styles['is-hovered']]: isHovered,
+        [styles['is-preview']]: isPreview,
+        [styles['can-place']]: canPlace,
+        [styles['is-hidden']]: isHidden,
+      })}
+    >
+      {!isRoad && showMarker(props) && (
+        <div
+          className={classcat({
+            [styles['circle-marker']]: true,
+            [styles['full-protection']]:
+              props.marker === core.protection.length,
+          })}
+        />
+      )}
+      {text}
+      {process.env.NODE_ENV === 'development' && (
         <div className={styles['debug-coord']}>
           {row}
           <br />

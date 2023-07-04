@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import { BLOCK_PX } from '@/app/editor/_config';
 import { MapLength } from '@/map-core/type';
 import { isInRange } from '@/utils/coordinate';
-import Building from '../building';
+import BasicBuilding from '../basic-building';
 import styles from './index.module.css';
 
 const Border = () => (
@@ -43,7 +43,7 @@ const BuildingLayer = () => {
                   return null;
                 }
                 const id = `${row}-${col}`;
-                return <Building key={id} row={row} col={col} />;
+                return <BasicBuilding key={id} row={row} col={col} />;
               })}
             </Fragment>
           );

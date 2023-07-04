@@ -2,12 +2,13 @@
   position: absolute;
 
   overflow: hidden;
+  align-items: center;
+  justify-content: center;
 
   box-sizing: border-box;
 
-  color: black;
-  border: 1px solid black;
-  background: white;
+  user-select: none;
+  text-align: center;
 
-  font-size: 12px;
+  border: 1px solid var(--color-border);
 }
