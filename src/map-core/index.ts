@@ -280,7 +280,7 @@ export class MapCore {
     }
     this.buildings[key] = { ...b, marker: isRoad ? 1 : marker, isEmpty: false };
     this.mapUpdater(key, this.buildings[key]);
-    this.miniMapUpdater(key, this.buildings[key]);
+    this.miniMapUpdater?.(key, this.buildings[key]);
     this.updateCounter(b, 1);
     if (isRoad) {
       this.roadCache.add(key);
@@ -367,7 +367,7 @@ export class MapCore {
     this.updateCounter(b, -1);
     delete this.buildings[key];
     this.mapUpdater(key, EMPTY_CELL);
-    this.miniMapUpdater(key, {
+    this.miniMapUpdater?.(key, {
       ...EMPTY_CELL,
       w: b.w,
       h: b.h,

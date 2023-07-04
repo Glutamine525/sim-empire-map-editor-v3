@@ -99,7 +99,7 @@ const InteractLayer = () => {
       onMouseDown={e => {
         setIsMouseDown(true);
         const {
-          // nativeEvent: { offsetX, offsetY },
+          nativeEvent: { offsetX, offsetY },
           clientX,
           clientY,
         } = e;
@@ -109,10 +109,22 @@ const InteractLayer = () => {
           y: mapContainer.current!.scrollTop + clientY,
         });
 
-        // const line = Math.ceil(offsetY / BLOCK_PX);
-        // const column = Math.ceil(offsetX / BLOCK_PX);
+        const row = Math.ceil(offsetY / BLOCK_PX);
+        const col = Math.ceil(offsetX / BLOCK_PX);
 
-        // buildingData[line + '-' + column].set({ bg: 'pink' });
+        if (operation === OperationType.PlaceBuilding) {
+          if (previewConfig.canPlace) {
+            mapCore.placeBuilding(brush!, previewConfig.row, previewConfig.col);
+            setMouseCoord({ row, col });
+          } else if (previewConfig.canReplace) {
+            mapCore.replaceBuilding(
+              brush!,
+              previewConfig.row,
+              previewConfig.col,
+            );
+            setMouseCoord({ row, col });
+          }
+        }
       }}
       onMouseMove={e => {
         const {
@@ -135,6 +147,18 @@ const InteractLayer = () => {
         if (operation === OperationType.Empty) {
           mapContainer.current!.scrollLeft = originMousePos.x - clientX;
           mapContainer.current!.scrollTop = originMousePos.y - clientY;
+        } else if (operation === OperationType.PlaceBuilding) {
+          if (previewConfig.canPlace) {
+            mapCore.placeBuilding(brush!, previewConfig.row, previewConfig.col);
+            setMouseCoord({ row, col });
+          } else if (previewConfig.canReplace) {
+            mapCore.replaceBuilding(
+              brush!,
+              previewConfig.row,
+              previewConfig.col,
+            );
+            setMouseCoord({ row, col });
+          }
         }
 
         // buildingData[line + '-' + column].set({ bg: 'pink' });

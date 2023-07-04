@@ -31,7 +31,7 @@ const Map = () => {
 
   useLayoutEffect(() => {
     mapCore.mapUpdater = (key, b) => {
-      buildingData[key].set(b);
+      buildingData[key].set({ ...b });
     };
     mapCore.counterUpdater = changeCounter;
   });
