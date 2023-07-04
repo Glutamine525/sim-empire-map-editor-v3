@@ -94,7 +94,7 @@ const InteractLayer = () => {
       style={{
         width: MapLength * BLOCK_PX,
         height: MapLength * BLOCK_PX,
-        padding: BLOCK_PX,
+        margin: BLOCK_PX,
       }}
       onMouseDown={e => {
         setIsMouseDown(true);
@@ -121,11 +121,11 @@ const InteractLayer = () => {
           clientY,
         } = e;
 
-        const line = Math.ceil(offsetY / BLOCK_PX);
-        const column = Math.ceil(offsetX / BLOCK_PX);
+        const row = Math.ceil(offsetY / BLOCK_PX);
+        const col = Math.ceil(offsetX / BLOCK_PX);
 
-        if (line !== mouseCoord.row || column !== mouseCoord.col) {
-          setMouseCoord({ row: line, col: column });
+        if (row !== mouseCoord.row || col !== mouseCoord.col) {
+          setMouseCoord({ row, col });
         }
 
         if (!isMouseDown) {

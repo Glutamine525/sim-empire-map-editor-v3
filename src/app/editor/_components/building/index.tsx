@@ -52,13 +52,6 @@ const Building: FC<BuildingProps> = props => {
         />
       )}
       {text}
-      {process.env.NODE_ENV === 'development' && (
-        <div className={styles['debug-coord']}>
-          {row}
-          <br />
-          {col}
-        </div>
-      )}
     </Block>
   );
 };
