@@ -2,7 +2,7 @@ import React, { createRef, useEffect, useLayoutEffect, useMemo } from 'react';
 import Content from '@arco-design/web-react/es/Layout/content';
 import PerfectScrollbar from 'perfect-scrollbar';
 import { shallow } from 'zustand/shallow';
-import { MapCore } from '@/map-core';
+import useMapCore from '../../_hooks/use-map-core';
 import { buildingData, resetBuildingData } from '../../_store/building-data';
 import { useMapConfig } from '../../_store/map-config';
 import BuildingLayer from '../building-layer';
@@ -14,18 +14,26 @@ export const mapContainer = createRef<HTMLDivElement>();
 const Map = () => {
   console.log('Chessboard render');
 
-  const [mapType, civil, noTree] = useMapConfig(
-    state => [state.mapType, state.civil, state.noTree],
-    shallow,
-  );
+  const [mapType, civil, noTree, changeCounter, changeEmptyCells] =
+    useMapConfig(
+      state => [
+        state.mapType,
+        state.civil,
+        state.noTree,
+        state.changeCounter,
+        state.changeEmptyCells,
+      ],
+      shallow,
+    );
 
-  const mapCore = useMemo(() => MapCore.getInstance(), []);
+  const mapCore = useMapCore();
   const buildings = useMemo(() => <BuildingLayer />, []);
 
   useLayoutEffect(() => {
     mapCore.mapUpdater = (key, b) => {
       buildingData[key].set(b);
     };
+    mapCore.counterUpdater = changeCounter;
   });
 
   useEffect(() => {
@@ -47,7 +55,11 @@ const Map = () => {
   useEffect(() => {
     resetBuildingData();
     mapCore.init(mapType, civil, noTree);
-  }, [mapCore, mapType, civil, noTree]);
+  }, [mapType, civil, noTree]);
+
+  useEffect(() => {
+    changeEmptyCells(mapCore.emptyCells);
+  }, [mapType, noTree]);
 
   return (
     <Content className={styles.wrapper}>
