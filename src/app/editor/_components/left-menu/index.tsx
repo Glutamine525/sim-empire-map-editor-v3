@@ -17,7 +17,11 @@ import {
 } from '@/map-core/building';
 import { GeneralBuilding } from '@/map-core/building/general';
 import { OperationType } from '@/map-core/type';
-import { getRoadBuilding, getSelectedBuilding } from '@/utils/building';
+import {
+  getGeneralBuilding,
+  getRoadBuilding,
+  getSelectedBuilding,
+} from '@/utils/building';
 import { catalogImageMap } from '../../_config/images';
 import {
   ahooksIdxKeyFilter,
@@ -199,6 +203,10 @@ const LeftMenu = () => {
       case CatalogType.Road:
         changeOperation(OperationType.PlaceBuilding);
         changeBrush(getRoadBuilding());
+        return;
+      case CatalogType.General:
+        changeOperation(OperationType.PlaceBuilding);
+        changeBrush(getGeneralBuilding(index + 2));
         return;
       case CatalogType.Cancel:
         changeOperation(OperationType.Empty);

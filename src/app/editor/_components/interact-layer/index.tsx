@@ -10,6 +10,8 @@ import { mapContainer } from '../map';
 import styles from './index.module.css';
 
 const InteractLayer = () => {
+  console.log('InteractLayer render');
+
   const mapCore = useMapCore();
   const [operation, brush] = useMapConfig(
     state => [state.operation, state.brush],
@@ -85,8 +87,6 @@ const InteractLayer = () => {
     });
     return brush;
   }, [operation, brush, mouseCoord]);
-
-  console.log('InteractLayer render');
 
   return (
     <div
