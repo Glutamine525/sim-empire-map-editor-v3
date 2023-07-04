@@ -9,6 +9,7 @@ export interface BlockProps {
   col: number;
   w?: number;
   h?: number;
+  color?: string;
   bg?: string;
   borderTStyle?: BorderStyleType;
   borderRStyle?: BorderStyleType;
@@ -24,7 +25,8 @@ const Block: FC<BlockProps> = ({
   col,
   w = 1,
   h = 1,
-  bg = '',
+  color = '#000000',
+  bg = '#ffffff',
   borderTStyle = BorderStyleType.Solid,
   borderRStyle = BorderStyleType.Solid,
   borderBStyle = BorderStyleType.Solid,
@@ -44,6 +46,7 @@ const Block: FC<BlockProps> = ({
         left: (col - 1) * BLOCK_PX,
         width: w * BLOCK_PX,
         height: h * BLOCK_PX,
+        color,
         backgroundColor: bg,
         borderTopStyle: borderTStyle,
         borderRightStyle: borderRStyle,
