@@ -8,6 +8,7 @@ import useMapCore from '../../_hooks/use-map-core';
 import { useMapConfig } from '../../_store/map-config';
 import Building from '../building';
 import { mapContainer } from '../map';
+import Range from '../range';
 import styles from './index.module.css';
 
 const InteractLayer = () => {
@@ -155,7 +156,9 @@ const InteractLayer = () => {
         const col = Math.ceil(offsetX / BLOCK_PX);
 
         if (row !== mouseCoord.row || col !== mouseCoord.col) {
-          setMouseCoord({ row, col });
+          if (operation !== OperationType.Empty || !isMouseDown) {
+            setMouseCoord({ row, col });
+          }
         }
 
         if (!isMouseDown) {
@@ -189,6 +192,7 @@ const InteractLayer = () => {
         const { row, col } = mouseCoord;
         const deletedBuilding = mapCore.deleteBuilding(row, col);
         if (deletedBuilding) {
+          setMouseCoord({ row, col });
           // add operation history
         }
       }}
@@ -202,6 +206,10 @@ const InteractLayer = () => {
         canPlace={previewConfig.canPlace || previewConfig.canReplace}
       />
       <Building isHidden={!hoverBuilding} isHovered={true} {...hoverBuilding} />
+      <Range
+        isHidden={!hoverBuilding || !hoverBuilding.range}
+        {...hoverBuilding}
+      />
     </div>
   );
 };
