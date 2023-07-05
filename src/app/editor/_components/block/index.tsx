@@ -5,8 +5,8 @@ import { BorderStyleType } from '@/map-core/building';
 import styles from './index.module.css';
 
 export interface BlockProps {
-  row: number;
-  col: number;
+  row?: number;
+  col?: number;
   w?: number;
   h?: number;
   color?: string;
@@ -21,8 +21,8 @@ export interface BlockProps {
 }
 
 const Block: FC<BlockProps> = ({
-  row,
-  col,
+  row = 0,
+  col = 0,
   w = 1,
   h = 1,
   color = '#000000',
@@ -35,6 +35,10 @@ const Block: FC<BlockProps> = ({
   className = '',
   children,
 }) => {
+  if (!row || !col) {
+    return null;
+  }
+
   return (
     <div
       className={classcat({

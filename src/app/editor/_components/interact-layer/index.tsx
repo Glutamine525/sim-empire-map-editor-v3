@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { shallow } from 'zustand/shallow';
 import { BLOCK_PX } from '@/app/editor/_config';
 import { MapLength, OperationType } from '@/map-core/type';
+import { canHover } from '@/utils/building';
 import { isAllInRange, parseBuildingKey } from '@/utils/coordinate';
 import useMapCore from '../../_hooks/use-map-core';
 import { useMapConfig } from '../../_store/map-config';
@@ -87,6 +88,23 @@ const InteractLayer = () => {
     });
     return brush;
   }, [operation, brush, mouseCoord]);
+
+  const hoverBuilding = useMemo(() => {
+    const { row, col } = mouseCoord;
+    if (operation !== OperationType.Empty || !row || !col) {
+      return;
+    }
+    const { occupied } = mapCore.cells[row][col];
+    if (!occupied) {
+      return;
+    }
+    const b = mapCore.buildings[occupied];
+    if (!canHover(b)) {
+      return;
+    }
+    const [r, c] = parseBuildingKey(occupied);
+    return { ...b, row: r, col: c };
+  }, [operation, mouseCoord]);
 
   return (
     <div
@@ -176,13 +194,14 @@ const InteractLayer = () => {
       }}
     >
       <Building
+        isHidden={!previewBuilding}
         {...previewConfig}
         {...previewBuilding}
         isPreview={true}
         marker={previewBuilding?.isRoad ? 0 : previewBuilding?.marker}
         canPlace={previewConfig.canPlace || previewConfig.canReplace}
-        isHidden={!previewBuilding}
       />
+      <Building isHidden={!hoverBuilding} isHovered={true} {...hoverBuilding} />
     </div>
   );
 };

@@ -17,8 +17,6 @@ const core = MapCore.getInstance();
 
 const Building: FC<BuildingProps> = props => {
   const {
-    row,
-    col,
     w = 1,
     h = 1,
     text,
