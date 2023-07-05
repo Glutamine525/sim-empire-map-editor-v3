@@ -75,7 +75,12 @@ const TopMenuCounter = () => {
         />
         <Item
           type={MapCounterType.Coverage}
-          value={(counter[MapCounterType.Coverage] / (emptyCells || 1)) * 100}
+          value={Number(
+            (
+              (counter[MapCounterType.Coverage] / (emptyCells || 1)) *
+              100
+            ).toFixed(2),
+          )}
         />
       </div>
     </div>

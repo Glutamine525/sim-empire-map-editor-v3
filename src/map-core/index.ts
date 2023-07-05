@@ -121,7 +121,7 @@ export class MapCore {
       [MapCounterType.General]: 0,
       [MapCounterType.Coverage]: 0,
     };
-    this.counterUpdater?.(this.counter);
+    this.counterUpdater?.({ ...this.counter });
   }
 
   public placeBarrier(type: BarrierType) {
@@ -656,7 +656,7 @@ export class MapCore {
       this.counter[MapCounterType.General] += diff;
     }
     this.counter[MapCounterType.Coverage] += diff * width * height;
-    this.counterUpdater(this.counter);
+    this.counterUpdater({ ...this.counter });
   }
 
   public getBuilding(keyOrRow: string | number, col?: number) {
