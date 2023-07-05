@@ -9,6 +9,7 @@ import { useMapConfig } from '../../_store/map-config';
 import Building from '../building';
 import { mapContainer } from '../map';
 import Range from '../range';
+import RoadHelper from '../road-helper';
 import styles from './index.module.css';
 
 const InteractLayer = () => {
@@ -21,7 +22,12 @@ const InteractLayer = () => {
   );
 
   const [isMouseDown, setIsMouseDown] = useState(false);
-  const [originMousePos, setOriginMousePos] = useState({ x: 0, y: 0 });
+  const [originMousePos, setOriginMousePos] = useState({
+    x: 0,
+    y: 0,
+    row: 0,
+    col: 0,
+  });
   const [mouseCoord, setMouseCoord] = useState({ row: 0, col: 0 });
   const [previewConfig, setPreviewConfig] = useState({
     row: 0,
@@ -123,13 +129,15 @@ const InteractLayer = () => {
           clientY,
         } = e;
 
+        const row = Math.ceil(offsetY / BLOCK_PX);
+        const col = Math.ceil(offsetX / BLOCK_PX);
+
         setOriginMousePos({
           x: mapContainer.current!.scrollLeft + clientX,
           y: mapContainer.current!.scrollTop + clientY,
+          row,
+          col,
         });
-
-        const row = Math.ceil(offsetY / BLOCK_PX);
-        const col = Math.ceil(offsetX / BLOCK_PX);
 
         if (operation === OperationType.PlaceBuilding) {
           if (previewConfig.canPlace) {
@@ -184,6 +192,17 @@ const InteractLayer = () => {
       }}
       onMouseUp={() => {
         setIsMouseDown(false);
+        if (operation === OperationType.PlaceBuilding) {
+          if (brush?.isRoad) {
+            mapCore.placeStraightRoad(
+              originMousePos.row,
+              originMousePos.col,
+              mouseCoord.row,
+              mouseCoord.col,
+            );
+          }
+        }
+        setOriginMousePos({ x: 0, y: 0, row: 0, col: 0 });
       }}
       onDoubleClick={() => {
         if (operation !== OperationType.Empty) {
@@ -220,6 +239,13 @@ const InteractLayer = () => {
         }
         {...previewConfig}
         {...previewBuilding}
+      />
+      <RoadHelper
+        isHidden={operation !== OperationType.PlaceBuilding || !brush?.isRoad}
+        initRow={originMousePos.row}
+        initCol={originMousePos.col}
+        curRow={mouseCoord.row}
+        curCol={mouseCoord.col}
       />
     </div>
   );
