@@ -323,10 +323,7 @@ const LeftMenu = () => {
                 </div>
               )}
               {subMenu.map((v, i) => (
-                <MenuItem
-                  key={catalog + '-' + i}
-                  className={styles['sub-menu-container']}
-                >
+                <MenuItem key={catalog + '-' + i}>
                   <div>
                     {i + 1}. {v.name}
                   </div>
