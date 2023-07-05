@@ -110,8 +110,8 @@
 
 .collapsed .main-menu-container > .key-shortcut {
   position: absolute;
-  right: 0;
   bottom: 0;
+  left: 0;
 }
 
 body[arco-theme='dark'] .key-shortcut {
@@ -119,6 +119,36 @@ body[arco-theme='dark'] .key-shortcut {
   border: 1px solid hsla(0, 0%, 100%, 0.12);
   background: #202022;
   box-shadow: 0 2px 0 hsla(0, 0%, 100%, 0.12);
+}
+
+.key-shortcut-arrow {
+  border-right-style: none !important;
+}
+
+.key-shortcut-arrow::after {
+  position: absolute;
+  z-index: -1;
+  right: -4px;
+
+  display: block;
+
+  width: 11px;
+  height: 11px;
+
+  content: '';
+  transform: rotate(-45deg);
+
+  border-right: 1px solid #c9cdd4;
+  border-bottom: 1px solid #c9cdd4;
+  background: #ffffff;
+  box-shadow: 0 1px 0 #c9cdd4;
+}
+
+body[arco-theme='dark'] .key-shortcut-arrow::after {
+  border-right: 1px solid hsla(0, 0%, 100%, 0.12);
+  border-bottom: 1px solid hsla(0, 0%, 100%, 0.12);
+  background: #202022;
+  box-shadow: 0 1px 0 hsla(0, 0%, 100%, 0.12);
 }
 
 .collapse-button-container {

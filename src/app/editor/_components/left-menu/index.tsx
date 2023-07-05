@@ -275,7 +275,12 @@ const LeftMenu = () => {
                 <div className={styles['main-menu-container']}>
                   <Icon catalog={catalog} />
                   <div className={styles.text}>{catalog}</div>
-                  <div className={styles['key-shortcut']}>
+                  <div
+                    className={classcat([
+                      styles['key-shortcut'],
+                      styles['key-shortcut-arrow'],
+                    ])}
+                  >
                     {mapMenuToShortcut[catalog]}
                   </div>
                 </div>
