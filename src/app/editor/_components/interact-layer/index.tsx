@@ -197,18 +197,29 @@ const InteractLayer = () => {
         }
       }}
     >
+      {/* hover building */}
+      <Building isHidden={!hoverBuilding} isHovered={true} {...hoverBuilding} />
+      <Range
+        isHidden={!hoverBuilding || !hoverBuilding.range}
+        {...hoverBuilding}
+      />
+      {/* preview building */}
       <Building
         isHidden={!previewBuilding}
         {...previewConfig}
         {...previewBuilding}
         isPreview={true}
-        marker={previewBuilding?.isRoad ? 0 : previewBuilding?.marker}
+        marker={previewBuilding?.isRoad ? 0 : previewConfig?.marker}
         canPlace={previewConfig.canPlace || previewConfig.canReplace}
       />
-      <Building isHidden={!hoverBuilding} isHovered={true} {...hoverBuilding} />
       <Range
-        isHidden={!hoverBuilding || !hoverBuilding.range}
-        {...hoverBuilding}
+        isHidden={
+          !previewBuilding ||
+          !previewBuilding.range ||
+          (!previewConfig.canPlace && !previewConfig.canReplace)
+        }
+        {...previewConfig}
+        {...previewBuilding}
       />
     </div>
   );
