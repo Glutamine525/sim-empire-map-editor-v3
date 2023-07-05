@@ -175,6 +175,7 @@ export class MapCore {
       this.cells[row][col].occupied = '';
       delete this.buildings[key];
       this.emptyCells++;
+      this.mapUpdater?.(key, EMPTY_CELL);
       this.miniMapUpdater?.(key, {
         ...EMPTY_CELL,
         w: 1,

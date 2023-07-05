@@ -2,6 +2,7 @@ import React, { memo } from 'react';
 import { Button, Dropdown, Menu, Switch } from '@arco-design/web-react';
 import { shallow } from 'zustand/shallow';
 import { CivilType, CivilTypeLabel, MapType } from '@/map-core/type';
+import useMapCore from '../../_hooks/use-map-core';
 import { useMapConfig } from '../../_store/map-config';
 import styles from './index.module.css';
 
@@ -63,6 +64,7 @@ const CivilDropList = () => {
 const TopMenuController = () => {
   console.log('TopMenuController render');
 
+  const mapCore = useMapCore();
   const [mapType, civil, noTree, rotated, changeNoTree, changeRotated] =
     useMapConfig(
       state => [
@@ -100,6 +102,7 @@ const TopMenuController = () => {
           checked={noTree}
           onChange={noTree => {
             changeNoTree(noTree);
+            mapCore.toggleNoTree(noTree);
           }}
         />
       </div>

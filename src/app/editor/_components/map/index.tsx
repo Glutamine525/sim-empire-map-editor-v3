@@ -55,7 +55,7 @@ const Map = () => {
   useEffect(() => {
     resetBuildingData();
     mapCore.init(mapType, civil, noTree);
-  }, [mapType, civil, noTree]);
+  }, [mapType, civil]);
 
   useEffect(() => {
     changeEmptyCells(mapCore.emptyCells);
