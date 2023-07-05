@@ -37,17 +37,7 @@ declare global {
 }
 
 const EMPTY_CELL: BuildingConfig = {
-  w: 1,
-  h: 1,
-  text: '',
-  marker: 0,
   isEmpty: true,
-  isRoad: false,
-  bg: '',
-  borderTStyle: BorderStyleType.Solid,
-  borderRStyle: BorderStyleType.Solid,
-  borderBStyle: BorderStyleType.Solid,
-  borderLStyle: BorderStyleType.Solid,
 };
 
 export class MapCore {

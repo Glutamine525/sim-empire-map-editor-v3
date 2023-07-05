@@ -15,7 +15,6 @@ for (let row = 1; row <= MapLength; row++) {
       continue;
     }
     buildingData[`${row}-${col}`] = createSubscribeStore<BuildingConfig>({
-      bg: 'var(--color-bg-5)',
       isEmpty: true,
     });
   }
@@ -34,7 +33,6 @@ export const useBuildingData = (arg0: number | string, arg1?: number) => {
 export const resetBuildingData = () => {
   for (const v in buildingData) {
     buildingData[v].set({
-      bg: 'var(--color-bg-5)',
       isEmpty: true,
     });
   }

@@ -164,6 +164,16 @@ const InteractLayer = () => {
       onMouseUp={() => {
         setIsMouseDown(false);
       }}
+      onDoubleClick={() => {
+        if (operation !== OperationType.Empty) {
+          return;
+        }
+        const { row, col } = mouseCoord;
+        const deletedBuilding = mapCore.deleteBuilding(row, col);
+        if (deletedBuilding) {
+          // add operation history
+        }
+      }}
     >
       <Building
         {...previewConfig}
