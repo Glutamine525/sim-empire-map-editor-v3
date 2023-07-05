@@ -39,7 +39,7 @@ export function isAllInRange(row: number, col: number, w: number, h: number) {
   );
 }
 
-// 检测[li, co]是否在建筑范围内
+// 检测[row, col]是否在建筑范围内
 export function isInBuildingRange(
   row: number,
   col: number,
@@ -50,11 +50,11 @@ export function isInBuildingRange(
   range: number,
 ) {
   const diff = range - 4;
-  const relativeLi = row - originRow;
-  const relativeCo = col - originCol;
-  if (relativeLi + relativeCo + range + diff < 0) return false;
-  if (relativeLi + relativeCo > range + diff + w + h - 2) return false;
-  if (relativeLi < relativeCo - (range + diff + w - 1)) return false;
-  if (relativeLi > relativeCo + (range + diff + h - 1)) return false;
+  const relativeRow = row - originRow;
+  const relativeCol = col - originCol;
+  if (relativeRow + relativeCol + range + diff < 0) return false;
+  if (relativeRow + relativeCol > range + diff + w + h - 2) return false;
+  if (relativeRow < relativeCol - (range + diff + w - 1)) return false;
+  if (relativeRow > relativeCol + (range + diff + h - 1)) return false;
   return true;
 }

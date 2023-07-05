@@ -160,8 +160,6 @@ const InteractLayer = () => {
             setMouseCoord({ row, col });
           }
         }
-
-        // buildingData[line + '-' + column].set({ bg: 'pink' });
       }}
       onMouseUp={() => {
         setIsMouseDown(false);

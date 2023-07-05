@@ -37,7 +37,7 @@ export default function useColorTheme(): [ThemeType, () => void] {
     } else {
       changeTheme(ThemeType.Light);
     }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   return [theme || ThemeType.Light, toggleTheme];
 }

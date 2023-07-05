@@ -199,8 +199,8 @@ export function importMapData(
   core.init(mapType, civil, noTree);
   const roadBuilding = getRoadBuilding();
   roads.forEach((coord: string) => {
-    const [line, column] = parseBuildingKey(coord);
-    core.placeBuilding(roadBuilding, line, column);
+    const [row, col] = parseBuildingKey(coord);
+    core.placeBuilding(roadBuilding, row, col);
   });
   for (const key in buildings) {
     const [catalog, name] = key.split('-');
@@ -217,8 +217,8 @@ export function importMapData(
             )!,
           );
     for (const coord of buildings[key]) {
-      const [line, column] = parseBuildingKey(coord);
-      core.placeBuilding(b, line, column);
+      const [row, col] = parseBuildingKey(coord);
+      core.placeBuilding(b, row, col);
     }
   }
   core.roadCache.clear();

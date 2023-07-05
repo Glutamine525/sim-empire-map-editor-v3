@@ -138,12 +138,12 @@ export class MapCore {
     const keys = BuildingFixed[type][this.mapType - 3];
     const color = BarrierColor[type];
     for (const key of keys) {
-      const [line, column] = parseBuildingKey(key);
-      const tKey = `${line - 1}-${column}`;
-      const bKey = `${line + 1}-${column}`;
-      const lKey = `${line}-${column - 1}`;
-      const rKey = `${line}-${column + 1}`;
-      this.cells[line][column].occupied = key;
+      const [row, col] = parseBuildingKey(key);
+      const tKey = `${row - 1}-${col}`;
+      const bKey = `${row + 1}-${col}`;
+      const lKey = `${row}-${col - 1}`;
+      const rKey = `${row}-${col + 1}`;
+      this.cells[row][col].occupied = key;
       this.buildings[key] = {
         w: 1,
         h: 1,
@@ -181,8 +181,8 @@ export class MapCore {
     }
     const keys = BuildingFixed[BarrierType.Tree][this.mapType - 3];
     for (const key of keys) {
-      const [line, column] = parseBuildingKey(key);
-      this.cells[line][column].occupied = '';
+      const [row, col] = parseBuildingKey(key);
+      this.cells[row][col].occupied = '';
       delete this.buildings[key];
       this.emptyCells++;
       this.miniMapUpdater?.(key, {
@@ -206,16 +206,16 @@ export class MapCore {
   public placeFixedBuilding(type: FixedBuildingType) {
     const keys = BuildingFixed[type][this.mapType - 3];
     for (const key of keys) {
-      const [line, column] = parseBuildingKey(key);
+      const [row, col] = parseBuildingKey(key);
       if (FixedBuildingSize[type] > 1) {
-        for (let i = line; i < line + FixedBuildingSize[type]; i++) {
-          for (let j = column; j < column + FixedBuildingSize[type]; j++) {
+        for (let i = row; i < row + FixedBuildingSize[type]; i++) {
+          for (let j = col; j < col + FixedBuildingSize[type]; j++) {
             this.cells[i][j].occupied = key;
             this.emptyCells--;
           }
         }
       } else {
-        this.cells[line][column].occupied = key;
+        this.cells[row][col].occupied = key;
         this.emptyCells--;
       }
       this.buildings[key] = {
@@ -258,8 +258,8 @@ export class MapCore {
     return false;
   }
 
-  public placeBuilding(b: BuildingConfig, line: number, column: number) {
-    const key = getBuildingKey(line, column);
+  public placeBuilding(b: BuildingConfig, row: number, col: number) {
+    const key = getBuildingKey(row, col);
     if (this.buildings[key]) {
       return;
     }
@@ -272,8 +272,8 @@ export class MapCore {
       isRoad,
     } = b;
     let marker = 0;
-    for (let i = line; i < line + h; i++) {
-      for (let j = column; j < column + w; j++) {
+    for (let i = row; i < row + h; i++) {
+      for (let j = col; j < col + w; j++) {
         this.cells[i][j].occupied = key;
         marker = Math.max(marker, this.getProtectionNum(i, j));
       }
@@ -284,16 +284,16 @@ export class MapCore {
     this.updateCounter(b, 1);
     if (isRoad) {
       this.roadCache.add(key);
-      this.updateRoadCount(line, column);
+      this.updateRoadCount(row, col);
       return;
     }
     if (!isProtection) {
       return;
     }
     const records = new Set<string>();
-    for (let i = line - range; i < line + h + range; i++) {
-      for (let j = column - range; j < column + w + range; j++) {
-        if (!isInBuildingRange(i, j, line, column, w, h, range)) continue;
+    for (let i = row - range; i < row + h + range; i++) {
+      for (let j = col - range; j < col + w + range; j++) {
+        if (!isInBuildingRange(i, j, row, col, w, h, range)) continue;
         if (i < 1 || j < 1) continue;
         if (i > MapLength || j > MapLength) continue;
         const cell = this.cells[i][j];
@@ -311,22 +311,22 @@ export class MapCore {
     this.updateBuildingsMarker(Array.from(records));
   }
 
-  public replaceBuilding(b: BuildingConfig, line: number, column: number) {
-    this.deleteBuilding(line, column);
-    this.placeBuilding(b, line, column);
+  public replaceBuilding(b: BuildingConfig, row: number, col: number) {
+    this.deleteBuilding(row, col);
+    this.placeBuilding(b, row, col);
   }
 
   public deleteBuilding(
-    line: number,
-    column: number,
+    _row: number,
+    _col: number,
     config?: { force?: boolean },
   ) {
-    const { occupied } = this.cells[line][column];
+    const { occupied } = this.cells[_row][_col];
     if (!occupied) {
       return;
     }
-    const [li, co] = parseBuildingKey(occupied);
-    const key = getBuildingKey(li, co);
+    const [row, col] = parseBuildingKey(occupied);
+    const key = getBuildingKey(row, col);
     const {
       w: w = 1,
       h: h = 1,
@@ -341,9 +341,9 @@ export class MapCore {
     }
     if (isProtection) {
       const records = new Set<string>();
-      for (let i = li - range; i < li + h + range; i++) {
-        for (let j = co - range; j < co + w + range; j++) {
-          if (!isInBuildingRange(i, j, li, co, w, h, range)) {
+      for (let i = row - range; i < row + h + range; i++) {
+        for (let j = col - range; j < col + w + range; j++) {
+          if (!isInBuildingRange(i, j, row, col, w, h, range)) {
             continue;
           }
           if (i < 1 || j < 1) continue;
@@ -358,12 +358,12 @@ export class MapCore {
       }
       this.updateBuildingsMarker(Array.from(records));
     }
-    for (let i = li; i < li + h; i++) {
-      for (let j = co; j < co + w; j++) {
+    for (let i = row; i < row + h; i++) {
+      for (let j = col; j < col + w; j++) {
         this.cells[i][j].occupied = '';
       }
     }
-    const b = { ...this.buildings[key], originLine: li, originColumn: co };
+    const b = { ...this.buildings[key], originRow: row, originCol: col };
     this.updateCounter(b, -1);
     delete this.buildings[key];
     this.mapUpdater(key, EMPTY_CELL);
@@ -374,35 +374,35 @@ export class MapCore {
     });
     if (isRoad) {
       this.roadCache.delete(key);
-      this.updateRoadCount(line, column);
+      this.updateRoadCount(_row, _col);
     }
     return b;
   }
 
   public placeStraightRoad(
-    initLi: number,
-    initCo: number,
-    curLi: number,
-    curCo: number,
+    initRow: number,
+    initCol: number,
+    curRow: number,
+    curCol: number,
   ) {
     const coords = Array.from(this.roadCache);
-    if (initLi !== curLi && initCo !== curCo) {
+    if (initRow !== curRow && initCol !== curCol) {
       this.roadCache.clear();
       return coords;
     }
     for (const key of coords) {
-      const [li, co] = parseBuildingKey(key);
-      this.deleteBuilding(li, co);
+      const [row, col] = parseBuildingKey(key);
+      this.deleteBuilding(row, col);
     }
-    const deltaLi = curLi - initLi;
-    const deltaCo = curCo - initCo;
-    const w = deltaCo > 0 ? deltaCo + 1 : Math.abs(deltaCo - 1);
-    const h = deltaLi > 0 ? deltaLi + 1 : Math.abs(deltaLi - 1);
-    const realInitLi = deltaLi < 0 ? initLi + deltaLi : initLi;
-    const realInitCo = deltaCo < 0 ? initCo + deltaCo : initCo;
+    const deltaRow = curRow - initRow;
+    const deltaCol = curCol - initCol;
+    const w = deltaCol > 0 ? deltaCol + 1 : Math.abs(deltaCol - 1);
+    const h = deltaRow > 0 ? deltaRow + 1 : Math.abs(deltaRow - 1);
+    const realInitRow = deltaRow < 0 ? initRow + deltaRow : initRow;
+    const realInitCol = deltaCol < 0 ? initCol + deltaCol : initCol;
     const road = getRoadBuilding();
-    for (let i = realInitLi; i < realInitLi + h; i++) {
-      for (let j = realInitCo; j < realInitCo + w; j++) {
+    for (let i = realInitRow; i < realInitRow + h; i++) {
+      for (let j = realInitCol; j < realInitCol + w; j++) {
         if (this.cells[i][j].occupied || !_isInRange(i, j)) {
           continue;
         }
@@ -413,22 +413,22 @@ export class MapCore {
     return coords;
   }
 
-  public updateRoadCount(line: number, column: number) {
-    const neighbors = [];
+  public updateRoadCount(row: number, col: number) {
+    const neighbors: { row: number; col: number }[] = [];
     for (let i = -1; i <= 1; i++) {
       for (let j = -1; j <= 1; j++) {
-        if (this.isRoad(line + i, column + j)) {
-          neighbors.push({ li: line + i, co: column + j });
+        if (this.isRoad(row + i, col + j)) {
+          neighbors.push({ row: row + i, col: col + j });
         }
       }
     }
     let queue = [];
     for (const v of neighbors) {
-      const self = this.getBuilding(v.li, v.co)!;
-      if (this.getRoadDir(v.li, v.co) === 'h') {
+      const self = this.getBuilding(v.row, v.col)!;
+      if (this.getRoadDir(v.row, v.col) === 'h') {
         let hasLeft = false;
-        if (this.isRoad(v.li, v.co - 1)) {
-          const left = this.getBuilding(v.li, v.co - 1)!;
+        if (this.isRoad(v.row, v.col - 1)) {
+          const left = this.getBuilding(v.row, v.col - 1)!;
           const { marker = 1 } = left;
           if (marker === 1) {
             left.marker = 1;
@@ -439,12 +439,12 @@ export class MapCore {
             if (marker > 1) left.isRoadVertex = false;
           }
           self.isRoadVertex = true;
-          queue.push(`${v.li}-${v.co - 1}`);
-          queue.push(`${v.li}-${v.co}`);
+          queue.push(`${v.row}-${v.col - 1}`);
+          queue.push(`${v.row}-${v.col}`);
           hasLeft = true;
         }
-        if (this.isRoad(v.li, v.co + 1)) {
-          const right = this.getBuilding(v.li, v.co + 1)!;
+        if (this.isRoad(v.row, v.col + 1)) {
+          const right = this.getBuilding(v.row, v.col + 1)!;
           let { marker = 1 } = self;
           if (marker === 1 || !hasLeft) {
             marker = 1;
@@ -456,21 +456,21 @@ export class MapCore {
             if (marker > 1) self.isRoadVertex = false;
           }
           right.isRoadVertex = true;
-          queue.push(`${v.li}-${v.co}`);
-          queue.push(`${v.li}-${v.co + 1}`);
+          queue.push(`${v.row}-${v.col}`);
+          queue.push(`${v.row}-${v.col + 1}`);
           marker += 2;
-          let idx = v.co + 2;
-          while (this.isRoad(v.li, idx)) {
-            this.getBuilding(v.li, idx)!.isRoadVertex = true;
-            this.getBuilding(v.li, idx)!.marker = marker;
-            this.getBuilding(v.li, idx - 1)!.isRoadVertex = false;
+          let idx = v.col + 2;
+          while (this.isRoad(v.row, idx)) {
+            this.getBuilding(v.row, idx)!.isRoadVertex = true;
+            this.getBuilding(v.row, idx)!.marker = marker;
+            this.getBuilding(v.row, idx - 1)!.isRoadVertex = false;
             if (
-              !this.isRoad(v.li - 1, idx - 1) &&
-              !this.isRoad(v.li + 1, idx - 1)
+              !this.isRoad(v.row - 1, idx - 1) &&
+              !this.isRoad(v.row + 1, idx - 1)
             ) {
               queue.pop();
             }
-            queue.push(`${v.li}-${idx}`);
+            queue.push(`${v.row}-${idx}`);
             marker++;
             idx++;
           }
@@ -478,11 +478,11 @@ export class MapCore {
       }
     }
     for (const v of neighbors) {
-      const self = this.getBuilding(v.li, v.co)!;
-      if (this.getRoadDir(v.li, v.co) === 'v') {
+      const self = this.getBuilding(v.row, v.col)!;
+      if (this.getRoadDir(v.row, v.col) === 'v') {
         let hasTop = false;
-        if (this.judgeRoadDirection(v.li - 1, v.co, 'v')) {
-          const top = this.getBuilding(v.li - 1, v.co)!;
+        if (this.judgeRoadDirection(v.row - 1, v.col, 'v')) {
+          const top = this.getBuilding(v.row - 1, v.col)!;
           const { marker = 1 } = top;
           if (marker === 1) {
             top.marker = 1;
@@ -493,12 +493,12 @@ export class MapCore {
             if (marker > 1) top.isRoadVertex = false;
           }
           self.isRoadVertex = true;
-          queue.push(`${v.li - 1}-${v.co}`);
-          queue.push(`${v.li}-${v.co}`);
+          queue.push(`${v.row - 1}-${v.col}`);
+          queue.push(`${v.row}-${v.col}`);
           hasTop = true;
         }
-        if (this.judgeRoadDirection(v.li + 1, v.co, 'v')) {
-          const bottom = this.getBuilding(v.li + 1, v.co)!;
+        if (this.judgeRoadDirection(v.row + 1, v.col, 'v')) {
+          const bottom = this.getBuilding(v.row + 1, v.col)!;
           let { marker = 1 } = self;
           if (marker === 1 || !hasTop) {
             marker = 1;
@@ -510,32 +510,32 @@ export class MapCore {
             if (marker > 1) self.isRoadVertex = false;
           }
           bottom.isRoadVertex = true;
-          queue.push(`${v.li}-${v.co}`);
-          queue.push(`${v.li + 1}-${v.co}`);
+          queue.push(`${v.row}-${v.col}`);
+          queue.push(`${v.row + 1}-${v.col}`);
           marker += 2;
-          let idx = v.li + 2;
-          while (this.judgeRoadDirection(idx, v.co, 'v')) {
-            this.getBuilding(idx, v.co)!.marker = marker;
-            this.getBuilding(idx, v.co)!.isRoadVertex = true;
-            this.getBuilding(idx - 1, v.co)!.isRoadVertex = false;
+          let idx = v.row + 2;
+          while (this.judgeRoadDirection(idx, v.col, 'v')) {
+            this.getBuilding(idx, v.col)!.marker = marker;
+            this.getBuilding(idx, v.col)!.isRoadVertex = true;
+            this.getBuilding(idx - 1, v.col)!.isRoadVertex = false;
             queue.pop();
-            queue.push(`${idx}-${v.co}`);
+            queue.push(`${idx}-${v.col}`);
             marker++;
             idx++;
           }
         }
       }
-      if (this.getRoadDir(v.li, v.co) === 'n') {
+      if (this.getRoadDir(v.row, v.col) === 'n') {
         self.isRoadVertex = false;
         self.marker = 1;
-        queue.push(`${v.li}-${v.co}`);
+        queue.push(`${v.row}-${v.col}`);
       }
     }
     queue = Array.from(queue);
     let record: string[] = [];
     for (const v of queue) {
-      const [li, co] = parseBuildingKey(v);
-      record.push(...this.updateRoadDisplay(li, co));
+      const [r, c] = parseBuildingKey(v);
+      record.push(...this.updateRoadDisplay(r, c));
     }
     record = Array.from(record);
     for (const v of record) {
@@ -543,13 +543,13 @@ export class MapCore {
     }
   }
 
-  public updateRoadDisplay(line: number, column: number) {
-    const self = this.getBuilding(line, column)!;
-    const selfDir = this.getRoadDir(line, column);
+  public updateRoadDisplay(row: number, col: number) {
+    const self = this.getBuilding(row, col)!;
+    const selfDir = this.getRoadDir(row, col);
     if (selfDir === 'h') {
       for (let i = -1; i < 2; i += 2) {
-        if (this.isRoad(line + i, column)) {
-          const adj = this.getBuilding(line + i, column)!;
+        if (this.isRoad(row + i, col)) {
+          const adj = this.getBuilding(row + i, col)!;
           if (i === -1) {
             adj.borderBStyle = BorderStyleType.Dashed;
             self.borderTStyle = BorderStyleType.Dashed;
@@ -558,63 +558,63 @@ export class MapCore {
             adj.borderTStyle = BorderStyleType.Dashed;
           }
           if (
-            this.judgeRoadDirection(line + i, column, 'v') ||
-            this.judgeRoadDirection(line + i, column, 'n')
+            this.judgeRoadDirection(row + i, col, 'v') ||
+            this.judgeRoadDirection(row + i, col, 'n')
           ) {
             self.isRoadVertex = true;
           }
         }
       }
     } else if (selfDir === 'v') {
-      if (this.judgeRoadDirection(line - 1, column, 'v')) {
+      if (this.judgeRoadDirection(row - 1, col, 'v')) {
         self.borderTStyle = BorderStyleType.None;
-      } else if (this.judgeRoadDirection(line - 1, column, 'h')) {
+      } else if (this.judgeRoadDirection(row - 1, col, 'h')) {
         self.borderTStyle = BorderStyleType.Dashed;
       } else {
         self.borderTStyle = BorderStyleType.Solid;
       }
-      if (this.judgeRoadDirection(line + 1, column, 'v')) {
+      if (this.judgeRoadDirection(row + 1, col, 'v')) {
         self.borderBStyle = BorderStyleType.None;
-      } else if (this.judgeRoadDirection(line + 1, column, 'h')) {
+      } else if (this.judgeRoadDirection(row + 1, col, 'h')) {
         self.borderBStyle = BorderStyleType.Dashed;
       } else {
         self.borderBStyle = BorderStyleType.Solid;
       }
     }
-    const records: string[] = self.isRoad ? [`${line}-${column}`] : [];
-    if (this.isRoad(line, column - 1)) {
+    const records: string[] = self.isRoad ? [`${row}-${col}`] : [];
+    if (this.isRoad(row, col - 1)) {
       self.borderLStyle = BorderStyleType.None;
-      records.push(`${line}-${column - 1}`);
+      records.push(`${row}-${col - 1}`);
     } else {
       self.borderLStyle = BorderStyleType.Solid;
     }
-    if (this.isRoad(line, column + 1)) {
+    if (this.isRoad(row, col + 1)) {
       self.borderRStyle = BorderStyleType.None;
-      records.push(`${line}-${column + 1}`);
+      records.push(`${row}-${col + 1}`);
     } else {
       self.borderRStyle = BorderStyleType.Solid;
     }
-    if (!this.isRoad(line - 1, column)) {
+    if (!this.isRoad(row - 1, col)) {
       self.borderTStyle = BorderStyleType.Solid;
     } else {
-      records.push(`${line - 1}-${column}`);
+      records.push(`${row - 1}-${col}`);
     }
-    if (!this.isRoad(line + 1, column)) {
+    if (!this.isRoad(row + 1, col)) {
       self.borderBStyle = BorderStyleType.Solid;
     } else {
-      records.push(`${line + 1}-${column}`);
+      records.push(`${row + 1}-${col}`);
     }
     return records;
   }
 
   public updateBuildingsMarker(keys: string[]) {
     for (const key of keys) {
-      const [li, co] = parseBuildingKey(key);
+      const [row, col] = parseBuildingKey(key);
       const target = this.getBuilding(key)!;
       const { w: width = 1, h: height = 1 } = target;
       let marker = 0;
-      for (let i = li; i < li + height; i++) {
-        for (let j = co; j < co + width; j++) {
+      for (let i = row; i < row + height; i++) {
+        for (let j = col; j < col + width; j++) {
           marker = Math.max(marker, this.getProtectionNum(i, j));
         }
       }
@@ -624,21 +624,21 @@ export class MapCore {
   }
 
   public selectBuildingInBlock(
-    initLi: number,
-    initCo: number,
-    curLi: number,
-    curCo: number,
+    initRow: number,
+    initCol: number,
+    curRow: number,
+    curCol: number,
   ) {
     this.selectCache.clear();
-    const deltaLi = curLi - initLi;
-    const deltaCo = curCo - initCo;
-    const w = deltaCo > 0 ? deltaCo + 1 : Math.abs(deltaCo - 1);
-    const h = deltaLi > 0 ? deltaLi + 1 : Math.abs(deltaLi - 1);
-    const realInitLi = deltaLi < 0 ? initLi + deltaLi : initLi;
-    const realInitCo = deltaCo < 0 ? initCo + deltaCo : initCo;
-    for (let li = realInitLi; li < realInitLi + h; li++) {
-      for (let co = realInitCo; co < realInitCo + w; co++) {
-        const { occupied } = this.cells[li][co];
+    const deltaRow = curRow - initRow;
+    const deltaCol = curCol - initCol;
+    const w = deltaCol > 0 ? deltaCol + 1 : Math.abs(deltaCol - 1);
+    const h = deltaRow > 0 ? deltaRow + 1 : Math.abs(deltaRow - 1);
+    const realInitRow = deltaRow < 0 ? initRow + deltaRow : initRow;
+    const realInitCol = deltaCol < 0 ? initCol + deltaCol : initCol;
+    for (let row = realInitRow; row < realInitRow + h; row++) {
+      for (let col = realInitCol; col < realInitCol + w; col++) {
+        const { occupied } = this.cells[row][col];
         if (!occupied) continue;
         if (this.buildings[occupied].isFixed) continue;
         this.selectCache.add(occupied);
@@ -668,60 +668,57 @@ export class MapCore {
     this.counterUpdater(this.counter);
   }
 
-  public getBuilding(keyOrLine: string | number, column?: number) {
-    let [li, co] = [0, 0];
-    if (typeof keyOrLine === 'string') {
-      [li, co] = parseBuildingKey(keyOrLine);
+  public getBuilding(keyOrRow: string | number, col?: number) {
+    let [r, c] = [0, 0];
+    if (typeof keyOrRow === 'string') {
+      [r, c] = parseBuildingKey(keyOrRow);
     } else {
-      li = keyOrLine;
-      co = column || 0;
+      r = keyOrRow;
+      c = col || 0;
     }
-    const { occupied } = this.cells[li][co];
+    const { occupied } = this.cells[r][c];
     if (!occupied) {
       return null;
     }
     return this.buildings[occupied];
   }
 
-  public getProtectionNum(line: number, column: number) {
-    return Object.entries(this.cells[line][column].protection)
+  public getProtectionNum(row: number, col: number) {
+    return Object.entries(this.cells[row][col].protection)
       .map(([, v]) => v)
       .filter(v => v.length).length;
   }
 
-  public isRoad(line: number, column: number) {
-    return Boolean(this.getBuilding(line, column)?.isRoad);
+  public isRoad(row: number, col: number) {
+    return Boolean(this.getBuilding(row, col)?.isRoad);
   }
 
-  public getRoadDir(line: number, column: number) {
-    if (this.isRoad(line, column - 1)) {
+  public getRoadDir(row: number, col: number) {
+    if (this.isRoad(row, col - 1)) {
       return 'h';
     }
-    if (this.isRoad(line, column + 1)) {
+    if (this.isRoad(row, col + 1)) {
       return 'h';
     }
     if (
-      this.isRoad(line - 1, column) &&
-      !this.isRoad(line - 1, column - 1) &&
-      !this.isRoad(line - 1, column + 1)
+      this.isRoad(row - 1, col) &&
+      !this.isRoad(row - 1, col - 1) &&
+      !this.isRoad(row - 1, col + 1)
     ) {
       return 'v';
     }
     if (
-      this.isRoad(line + 1, column) &&
-      !this.isRoad(line + 1, column - 1) &&
-      !this.isRoad(line + 1, column + 1)
+      this.isRoad(row + 1, col) &&
+      !this.isRoad(row + 1, col - 1) &&
+      !this.isRoad(row + 1, col + 1)
     ) {
       return 'v';
     }
     return 'n';
   }
 
-  public judgeRoadDirection(line: number, column: number, direction: string) {
-    if (
-      this.isRoad(line, column) &&
-      this.getRoadDir(line, column) === direction
-    ) {
+  public judgeRoadDirection(row: number, col: number, direction: string) {
+    if (this.isRoad(row, col) && this.getRoadDir(row, col) === direction) {
       return true;
     }
     return false;
