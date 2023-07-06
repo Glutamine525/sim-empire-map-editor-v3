@@ -26,6 +26,8 @@
 .selected-building {
   z-index: 20;
 
+  pointer-events: none;
+
   border: 0px solid transparent;
   background: transparent;
   box-shadow: inset 0 0 16px 2px rgb(var(--danger-3));
