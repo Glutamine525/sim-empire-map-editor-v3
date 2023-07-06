@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Button, Menu, Tooltip } from '@arco-design/web-react';
 import SiderComponent from '@arco-design/web-react/es/Layout/sider';
 import { IconMenuFold, IconMenuUnfold } from '@arco-design/web-react/icon';
-import { useKeyPress } from 'ahooks';
+import { useKeyPress, useLocalStorageState } from 'ahooks';
 import classcat from 'classcat';
 import Image from 'next/image';
 import PerfectScrollbar from 'perfect-scrollbar';
@@ -80,9 +80,9 @@ const LeftMenu = () => {
     shallow,
   );
 
-  const [menuWidth, setMenuWidth] = useState(
-    EDITOR_PAGE_UI_SETTING.leftMenuWidth,
-  );
+  const [menuWidth, setMenuWidth] = useLocalStorageState('left-menu-width', {
+    defaultValue: EDITOR_PAGE_UI_SETTING.leftMenuWidth,
+  });
   const [subMenuContent, setSubMenuContent] = useState<{
     [key in CatalogType]: SimpleBuildingConfig[];
   }>({
@@ -347,7 +347,7 @@ const LeftMenu = () => {
       <div
         className={styles['collapse-button-container']}
         style={{
-          left: menuWidth - 20,
+          left: (menuWidth || EDITOR_PAGE_UI_SETTING.leftMenuWidth) - 20,
         }}
       >
         <Button
