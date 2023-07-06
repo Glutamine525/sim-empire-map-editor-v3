@@ -211,6 +211,11 @@ const LeftMenu = () => {
       case CatalogType.Cancel:
         changeOperation(OperationType.Empty);
         return;
+      case CatalogType.Move:
+        changeOperation(OperationType.MoveBuilding);
+      case CatalogType.Delete:
+        changeOperation(OperationType.DeleteBuilding);
+        return;
       case CatalogType.ImportExport:
         return;
       default:

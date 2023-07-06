@@ -7,6 +7,7 @@ import { isAllInRange, parseBuildingKey } from '@/utils/coordinate';
 import useMapCore from '../../_hooks/use-map-core';
 import { useMapConfig } from '../../_store/map-config';
 import Building from '../building';
+import DeleteArea from '../delete-area';
 import { mapContainer } from '../map';
 import Range from '../range';
 import RoadHelper from '../road-helper';
@@ -122,7 +123,6 @@ const InteractLayer = () => {
         margin: BLOCK_PX,
       }}
       onMouseDown={e => {
-        setIsMouseDown(true);
         const {
           nativeEvent: { offsetX, offsetY },
           clientX,
@@ -131,7 +131,7 @@ const InteractLayer = () => {
 
         const row = Math.ceil(offsetY / BLOCK_PX);
         const col = Math.ceil(offsetX / BLOCK_PX);
-
+        setIsMouseDown(true);
         setOriginMousePos({
           x: mapContainer.current!.scrollLeft + clientX,
           y: mapContainer.current!.scrollTop + clientY,
@@ -242,6 +242,14 @@ const InteractLayer = () => {
       />
       <RoadHelper
         isHidden={operation !== OperationType.PlaceBuilding || !brush?.isRoad}
+        initRow={originMousePos.row}
+        initCol={originMousePos.col}
+        curRow={mouseCoord.row}
+        curCol={mouseCoord.col}
+      />
+      {/* functional block */}
+      <DeleteArea
+        isHidden={operation !== OperationType.DeleteBuilding}
         initRow={originMousePos.row}
         initCol={originMousePos.col}
         curRow={mouseCoord.row}

@@ -25,12 +25,12 @@ const Block: FC<BlockProps> = ({
   col = 0,
   w = 1,
   h = 1,
-  color = '#000000',
-  bg = 'var(--color-bg-5)',
-  borderTStyle = BorderStyleType.Solid,
-  borderRStyle = BorderStyleType.Solid,
-  borderBStyle = BorderStyleType.Solid,
-  borderLStyle = BorderStyleType.Solid,
+  color,
+  bg,
+  borderTStyle,
+  borderRStyle,
+  borderBStyle,
+  borderLStyle,
   style,
   className = '',
   children,
@@ -41,10 +41,7 @@ const Block: FC<BlockProps> = ({
 
   return (
     <div
-      className={classcat({
-        [styles.container]: true,
-        [className]: true,
-      })}
+      className={classcat([styles.container, className])}
       style={{
         top: (row - 1) * BLOCK_PX,
         left: (col - 1) * BLOCK_PX,

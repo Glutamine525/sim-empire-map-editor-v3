@@ -13,7 +13,7 @@ interface RoadHelperProps {
 const RoadHelper: FC<RoadHelperProps> = props => {
   const { initRow, initCol, curRow, curCol, isHidden } = props;
 
-  const helper = useMemo(() => {
+  const config = useMemo(() => {
     if (!initRow || !initCol) {
       return { show: false };
     } else if (initRow === curRow && initCol === curCol) {
@@ -37,7 +37,7 @@ const RoadHelper: FC<RoadHelperProps> = props => {
       {initRow > 0 && initCol > 0 && (
         <Block className={styles.start} row={initRow} col={initCol} />
       )}
-      {helper.show && <Block className={styles.container} {...helper} />}
+      {config.show && <Block className={styles.container} {...config} />}
     </div>
   );
 };
