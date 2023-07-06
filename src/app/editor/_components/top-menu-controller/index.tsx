@@ -1,25 +1,53 @@
 import React, { memo } from 'react';
-import { Button, Dropdown, Menu, Switch } from '@arco-design/web-react';
+import { Button, Dropdown, Menu, Modal, Switch } from '@arco-design/web-react';
 import { shallow } from 'zustand/shallow';
-import { CivilType, CivilTypeLabel, MapType } from '@/map-core/type';
-import useMapCore from '../../_hooks/use-map-core';
+import { MapCore } from '@/map-core';
+import { BarrierType, BuildingFixed } from '@/map-core/building/fixed';
+import {
+  CivilType,
+  CivilTypeLabel,
+  MapType,
+  OperationType,
+} from '@/map-core/type';
+import { parseBuildingKey } from '@/utils/coordinate';
 import { useMapConfig } from '../../_store/map-config';
 import styles from './index.module.css';
+
+const mapCore = MapCore.getInstance();
 
 const MapTypeDropList = () => {
   console.log('MapTypeDropList render');
 
-  const [mapType, changeMapType] = useMapConfig(
-    state => [state.mapType, state.changeMapType],
+  const [mapType, changeMapType, changeOperation] = useMapConfig(
+    state => [state.mapType, state.changeMapType, state.changeOperation],
     shallow,
   );
 
   return (
     <Menu
-      onClickMenuItem={data => {
+      onClickMenuItem={async data => {
         if (mapType === Number(data)) {
           return;
         }
+        if (mapCore.hasPlacedBuilding()) {
+          const isConfirm = await new Promise<boolean>(resolve => {
+            Modal.confirm({
+              title: '提示',
+              content:
+                '更改地图类型后会清空所有已放置的建筑，是否确认当前操作？',
+              onOk: () => {
+                resolve(true);
+              },
+              onCancel: () => {
+                resolve(false);
+              },
+            });
+          });
+          if (!isConfirm) {
+            return;
+          }
+        }
+        changeOperation(OperationType.Empty);
         changeMapType(Number(data));
       }}
     >
@@ -36,17 +64,35 @@ const MapTypeDropList = () => {
 const CivilDropList = () => {
   console.log('CivilDropList render');
 
-  const [civil, changeCivil] = useMapConfig(
-    state => [state.civil, state.changeCivil],
+  const [civil, changeCivil, changeOperation] = useMapConfig(
+    state => [state.civil, state.changeCivil, state.changeOperation],
     shallow,
   );
 
   return (
     <Menu
-      onClickMenuItem={data => {
+      onClickMenuItem={async data => {
         if (civil === data) {
           return;
         }
+        if (mapCore.hasPlacedBuilding()) {
+          const isConfirm = await new Promise<boolean>(resolve => {
+            Modal.confirm({
+              title: '提示',
+              content: '更改文明后会清空所有已放置的建筑，是否确认当前操作？',
+              onOk: () => {
+                resolve(true);
+              },
+              onCancel: () => {
+                resolve(false);
+              },
+            });
+          });
+          if (!isConfirm) {
+            return;
+          }
+        }
+        changeOperation(OperationType.Empty);
         changeCivil(data as CivilType);
       }}
     >
@@ -64,7 +110,6 @@ const CivilDropList = () => {
 const TopMenuController = () => {
   console.log('TopMenuController render');
 
-  const mapCore = useMapCore();
   const [mapType, civil, noTree, rotated, changeNoTree, changeRotated] =
     useMapConfig(
       state => [
@@ -100,7 +145,40 @@ const TopMenuController = () => {
         <div>无木:</div>
         <Switch
           checked={noTree}
-          onChange={noTree => {
+          onChange={async noTree => {
+            if (!noTree) {
+              const keys = BuildingFixed[BarrierType.Tree][mapType - 3];
+              let hasOccupied = false;
+              for (const key of keys) {
+                const [row, col] = parseBuildingKey(key);
+                if (mapCore.cells[row][col].occupied) {
+                  hasOccupied = true;
+                  break;
+                }
+              }
+              if (hasOccupied) {
+                const isConfirm = await new Promise<boolean>(resolve => {
+                  Modal.confirm({
+                    title: '提示',
+                    content:
+                      '检测到有建筑占用了树木的位置，关闭无木之地后，这些建筑会被强制删除，操作历史会被清空，是否确认当前操作？',
+                    onOk: () => {
+                      resolve(true);
+                    },
+                    onCancel: () => {
+                      resolve(false);
+                    },
+                  });
+                });
+                if (!isConfirm) {
+                  return;
+                }
+                for (const key of keys) {
+                  const [row, col] = parseBuildingKey(key);
+                  mapCore.deleteBuilding(row, col);
+                }
+              }
+            }
             changeNoTree(noTree);
             mapCore.toggleNoTree(noTree);
           }}
