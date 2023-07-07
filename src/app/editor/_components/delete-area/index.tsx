@@ -4,6 +4,7 @@ import { IconDelete } from '@arco-design/web-react/icon';
 import { parseBuildingKey } from '@/utils/coordinate';
 import { BLOCK_PX } from '../../_config';
 import useMapCore from '../../_hooks/use-map-core';
+import { useMapConfig } from '../../_store/map-config';
 import Block from '../block';
 import styles from './index.module.css';
 
@@ -19,6 +20,8 @@ const DeleteArea: FC<DeleteAreaProps> = props => {
   const { isHidden, initRow, initCol, curRow, curCol } = props;
 
   const mapCore = useMapCore();
+
+  const noTree = useMapConfig(state => state.noTree);
 
   const button = useRef<HTMLButtonElement>();
 
@@ -55,6 +58,10 @@ const DeleteArea: FC<DeleteAreaProps> = props => {
       setFixedConfig({ show: false });
     }
   }, [isHidden]);
+
+  useEffect(() => {
+    setFixedConfig({ show: false });
+  }, [noTree]);
 
   if (isHidden) {
     return null;
