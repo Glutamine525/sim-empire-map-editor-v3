@@ -26,11 +26,11 @@ const DeleteArea: FC<DeleteAreaProps> = props => {
   const button = useRef<HTMLButtonElement>();
 
   const [fixedConfig, setFixedConfig] = useState<{
+    show: boolean;
     w?: number;
     h?: number;
     row?: number;
     col?: number;
-    show: boolean;
   }>({ show: false });
 
   const [selectedKeys, setSelectedKeys] = useState([] as string[]);
@@ -119,6 +119,21 @@ const DeleteArea: FC<DeleteAreaProps> = props => {
       )}
       {fixedConfig.show && (
         <>
+          {selectedKeys.map(key => {
+            const [row, col] = parseBuildingKey(key);
+            const { w, h } = mapCore.buildings[key];
+            return (
+              <Block
+                key={key}
+                row={row}
+                col={col}
+                w={w}
+                h={h}
+                className={styles['selected-building']}
+              />
+            );
+          })}
+          <Block className={styles.area} {...fixedConfig} />
           <Button
             ref={button}
             shape="circle"
@@ -136,21 +151,6 @@ const DeleteArea: FC<DeleteAreaProps> = props => {
               setFixedConfig({ show: false });
             }}
           />
-          <Block className={styles.area} {...fixedConfig} />
-          {selectedKeys.map(key => {
-            const [row, col] = parseBuildingKey(key);
-            const { w, h } = mapCore.buildings[key];
-            return (
-              <Block
-                key={key}
-                row={row}
-                col={col}
-                w={w}
-                h={h}
-                className={styles['selected-building']}
-              />
-            );
-          })}
         </>
       )}
     </div>

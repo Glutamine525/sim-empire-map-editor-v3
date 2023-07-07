@@ -9,6 +9,7 @@ import { useMapConfig } from '../../_store/map-config';
 import Building from '../building';
 import DeleteArea from '../delete-area';
 import { mapContainer } from '../map';
+import MoveArea from '../move-area';
 import Range from '../range';
 import RoadHelper from '../road-helper';
 import styles from './index.module.css';
@@ -247,7 +248,14 @@ const InteractLayer = () => {
         curRow={mouseCoord.row}
         curCol={mouseCoord.col}
       />
-      {/* functional block */}
+      {/* functional */}
+      <MoveArea
+        isHidden={operation !== OperationType.MoveBuilding}
+        initRow={originMousePos.row}
+        initCol={originMousePos.col}
+        curRow={mouseCoord.row}
+        curCol={mouseCoord.col}
+      />
       <DeleteArea
         isHidden={operation !== OperationType.DeleteBuilding}
         initRow={originMousePos.row}

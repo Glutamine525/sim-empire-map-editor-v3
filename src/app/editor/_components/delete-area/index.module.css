@@ -17,6 +17,8 @@
 .button {
   position: absolute;
   z-index: 21;
+
+  transition: none;
 }
 
 .button svg {

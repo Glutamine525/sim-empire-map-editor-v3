@@ -213,6 +213,7 @@ const LeftMenu = () => {
         return;
       case CatalogType.Move:
         changeOperation(OperationType.MoveBuilding);
+        return;
       case CatalogType.Delete:
         changeOperation(OperationType.DeleteBuilding);
         return;
