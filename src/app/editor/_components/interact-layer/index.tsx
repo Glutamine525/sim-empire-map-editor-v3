@@ -288,11 +288,7 @@ const InteractLayer = () => {
         curRow={mouseCoord.row}
         curCol={mouseCoord.col}
       />
-      <MiniMap
-        onMouseEnter={() => {
-          resetState();
-        }}
-      />
+      <MiniMap onMouseEnter={() => resetState()} />
       <SpecialBuildingModal />
     </div>
   );

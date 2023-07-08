@@ -15,7 +15,7 @@
 }
 
 .dropdown-button {
-  padding: 0 8px;
+  padding: 0 8px !important;
 
-  font-weight: bold;
+  font-weight: bold !important;
 }

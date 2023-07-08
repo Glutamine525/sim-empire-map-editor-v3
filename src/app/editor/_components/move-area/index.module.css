@@ -25,10 +25,10 @@
 }
 
 .button {
-  position: absolute;
-  z-index: 20;
+  position: absolute !important;
+  z-index: 20 !important;
 
-  transition: none;
+  transition: none !important;
 
   box-shadow: 0 0 4px rgb(var(--gray-3));
 }

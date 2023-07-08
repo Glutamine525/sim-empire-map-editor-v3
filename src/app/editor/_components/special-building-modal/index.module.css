@@ -1,5 +1,5 @@
 .wrapper {
-  width: fit-content;
+  width: fit-content !important;
   max-width: 762px;
 }
 
