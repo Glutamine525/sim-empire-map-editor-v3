@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+import { IconPushpin } from '@arco-design/web-react/icon';
 import classcat from 'classcat';
 import { useBuildingData } from '@/app/editor/_store/building-data';
 import { MapCore } from '@/map-core';
@@ -41,6 +42,11 @@ const BasicBuilding: FC<BasicBuildingProps> = ({ row, col }) => {
             />
           )}
         </>
+      )}
+      {data.isFixed && !data.isBarrier && (
+        <div className={styles.fixed}>
+          <IconPushpin />
+        </div>
       )}
       {data.text}
       {process.env.NODE_ENV === 'development' && !data.isBarrier && (
