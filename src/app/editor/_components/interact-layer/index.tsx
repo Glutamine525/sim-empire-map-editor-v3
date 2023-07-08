@@ -9,6 +9,7 @@ import { useMapConfig } from '../../_store/map-config';
 import Building from '../building';
 import DeleteArea from '../delete-area';
 import { mapContainer } from '../map';
+import MiniMap from '../mini-map';
 import MoveArea from '../move-area';
 import Range from '../range';
 import RoadHelper from '../road-helper';
@@ -216,6 +217,11 @@ const InteractLayer = () => {
           // add operation history
         }
       }}
+      onMouseLeave={() => {
+        setIsMouseDown(false);
+        setOriginMousePos({ x: 0, y: 0, row: 0, col: 0 });
+        setMouseCoord({ row: 0, col: 0 });
+      }}
     >
       {/* hover building */}
       <Building isHidden={!hoverBuilding} isHovered={true} {...hoverBuilding} />
@@ -262,6 +268,13 @@ const InteractLayer = () => {
         initCol={originMousePos.col}
         curRow={mouseCoord.row}
         curCol={mouseCoord.col}
+      />
+      <MiniMap
+        onMouseEnter={() => {
+          setIsMouseDown(false);
+          setOriginMousePos({ x: 0, y: 0, row: 0, col: 0 });
+          setMouseCoord({ row: 0, col: 0 });
+        }}
       />
     </div>
   );

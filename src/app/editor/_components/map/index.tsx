@@ -34,7 +34,7 @@ const Map = () => {
       buildingData[key].set({ ...b });
     };
     mapCore.counterUpdater = changeCounter;
-  });
+  }, []);
 
   useEffect(() => {
     const scrollbar = new PerfectScrollbar(mapContainer.current!, {
