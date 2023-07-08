@@ -31,7 +31,7 @@
     "zustand": "^4.3.8"
   },
   "devDependencies": {
-    "@arco-plugins/webpack-react": "^1.4.9-beta.2",
-    "@types/md5": "^2.3.2"
+    "@types/md5": "^2.3.2",
+    "babel-plugin-import": "^1.13.6"
   }
 }

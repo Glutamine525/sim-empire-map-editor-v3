@@ -1,5 +1,4 @@
 import { FC, PropsWithChildren } from 'react';
-import '@arco-design/web-react/dist/css/arco.css';
 import './globals.css';
 
 export const metadata = {

@@ -1,5 +1,5 @@
 import React from 'react';
-import HeaderComponent from '@arco-design/web-react/es/Layout/header';
+import { Layout } from '@arco-design/web-react';
 import { EDITOR_PAGE_UI_SETTING } from '@/app/editor/_config';
 import TopMenuButton from '../top-menu-button';
 import TopMenuController from '../top-menu-controller';
@@ -7,11 +7,13 @@ import TopMenuCounter from '../top-menu-counter';
 import TopMenuOperation from '../top-menu-operation';
 import styles from './index.module.css';
 
+const Header = Layout.Header;
+
 const TopMenu = () => {
   console.log('TopMenu render');
 
   return (
-    <HeaderComponent
+    <Header
       className={styles.container}
       style={{
         height: EDITOR_PAGE_UI_SETTING.topMenuHeight,
@@ -22,7 +24,7 @@ const TopMenu = () => {
       <TopMenuOperation />
       <TopMenuCounter />
       <TopMenuButton />
-    </HeaderComponent>
+    </Header>
   );
 };
 

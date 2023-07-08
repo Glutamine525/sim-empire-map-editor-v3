@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import LayoutComponent from '@arco-design/web-react/es/Layout';
+import { Layout } from '@arco-design/web-react';
 import { EDITOR_PAGE_UI_SETTING } from '@/app/editor/_config';
 import withNoSSR from '@/utils/no-ssr';
 import LeftMenu from './_components/left-menu';
@@ -18,9 +18,9 @@ const Page = () => {
   }, []);
 
   return (
-    <LayoutComponent className={styles.container}>
+    <Layout className={styles.container}>
       <TopMenu />
-      <LayoutComponent
+      <Layout
         hasSider={true}
         className={styles['content-container']}
         style={{
@@ -29,8 +29,8 @@ const Page = () => {
       >
         <LeftMenu />
         <Map />
-      </LayoutComponent>
-    </LayoutComponent>
+      </Layout>
+    </Layout>
   );
 };
 

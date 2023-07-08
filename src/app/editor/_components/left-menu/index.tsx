@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Menu, Message, Tooltip } from '@arco-design/web-react';
-import SiderComponent from '@arco-design/web-react/es/Layout/sider';
+import { Button, Layout, Menu, Message, Tooltip } from '@arco-design/web-react';
 import { IconMenuFold, IconMenuUnfold } from '@arco-design/web-react/icon';
 import { useKeyPress, useLocalStorageState } from 'ahooks';
 import classcat from 'classcat';
@@ -37,6 +36,7 @@ import { useMapConfig } from '../../_store/map-config';
 import { useSpecialBuilding } from '../../_store/special-building';
 import styles from './index.module.css';
 
+const Sider = Layout.Sider;
 const MenuItem = Menu.Item;
 const SubMenu = Menu.SubMenu;
 
@@ -281,11 +281,7 @@ const LeftMenu = () => {
   };
 
   return (
-    <SiderComponent
-      ref={container}
-      className={styles.container}
-      width={menuWidth}
-    >
+    <Sider ref={container} className={styles.container} width={menuWidth}>
       <Menu
         accordion={true}
         className={classcat({
@@ -438,7 +434,7 @@ const LeftMenu = () => {
           }}
         />
       </div>
-    </SiderComponent>
+    </Sider>
   );
 };
 
