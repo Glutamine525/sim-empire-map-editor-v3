@@ -29,6 +29,8 @@
   z-index: 20;
 
   transition: none;
+
+  box-shadow: 0 0 4px rgb(var(--gray-3));
 }
 
 .button svg {
@@ -37,4 +39,8 @@
 
 .free-move {
   z-index: 100 !important;
+}
+
+.free-move:not(button) {
+  opacity: 0.6;
 }

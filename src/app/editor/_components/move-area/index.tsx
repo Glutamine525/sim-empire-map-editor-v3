@@ -6,16 +6,10 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { Button } from '@arco-design/web-react';
-import {
-  IconArrowDown,
-  IconArrowLeft,
-  IconArrowRight,
-  IconArrowUp,
-  IconCheck,
-  IconDragArrow,
-} from '@arco-design/web-react/icon';
+import { Button, Message } from '@arco-design/web-react';
+import { IconCheck, IconDragArrow } from '@arco-design/web-react/icon';
 import classcat from 'classcat';
+import { BuildingConfig } from '@/map-core/building';
 import { parseBuildingKey } from '@/utils/coordinate';
 import { BLOCK_PX } from '../../_config';
 import useMapCore from '../../_hooks/use-map-core';
@@ -34,19 +28,11 @@ interface MoveAreaProps {
 }
 
 enum ButtonType {
-  Top = 'Top',
-  Right = 'Right',
-  Bottom = 'Bottom',
-  Left = 'Left',
   FreeMove = 'FreeMove',
   Confirm = 'Confirm',
 }
 
 const buttonIcon = {
-  [ButtonType.Top]: <IconArrowUp />,
-  [ButtonType.Right]: <IconArrowRight />,
-  [ButtonType.Bottom]: <IconArrowDown />,
-  [ButtonType.Left]: <IconArrowLeft />,
   [ButtonType.FreeMove]: <IconDragArrow />,
   [ButtonType.Confirm]: <IconCheck />,
 };
@@ -77,7 +63,7 @@ const MoveArea: FC<MoveAreaProps> = props => {
     col?: number;
     offsetRow?: number;
     offsetCol?: number;
-    color?: string;
+    color?: 'warning' | 'danger' | 'success' | 'default';
   }>({ show: false });
   const [selectedKeys, setSelectedKeys] = useState([] as string[]);
 
@@ -95,35 +81,15 @@ const MoveArea: FC<MoveAreaProps> = props => {
   const buttonStyle = useMemo(() => {
     const { w = 1, h = 1 } = fixedConfig;
     const buttonSize = 32;
-    const padding = 8;
-    const centerX = (w / 2) * BLOCK_PX;
-    const centerY = (h / 2) * BLOCK_PX;
-    const offsetX = (w / 2) * BLOCK_PX;
-    const offsetY = (h / 2) * BLOCK_PX;
+    const offset = (buttonSize - BLOCK_PX) / 2;
     return {
-      [ButtonType.Top]: {
-        top: centerY - offsetY - buttonSize - padding,
-        left: centerX - buttonSize / 2,
-      },
-      [ButtonType.Right]: {
-        top: centerY - buttonSize / 2,
-        left: centerX + offsetX + padding,
-      },
-      [ButtonType.Bottom]: {
-        top: centerY + offsetY + padding,
-        left: centerX - buttonSize / 2,
-      },
-      [ButtonType.Left]: {
-        top: centerY - buttonSize / 2,
-        left: centerX - offsetX - buttonSize - padding,
-      },
       [ButtonType.FreeMove]: {
-        top: (Math.ceil(h / 2) - 1) * BLOCK_PX - 1,
-        left: (Math.ceil(w / 2) - 1) * BLOCK_PX - 1,
+        top: (Math.ceil(h / 2) - 1) * BLOCK_PX - offset,
+        left: (Math.ceil(w / 2) - 1) * BLOCK_PX - offset,
       },
       [ButtonType.Confirm]: {
-        top: centerY + offsetY - 1,
-        left: centerX + offsetX - 1,
+        top: h * BLOCK_PX - offset,
+        left: w * BLOCK_PX - offset,
       },
     };
   }, [fixedConfig]);
@@ -164,6 +130,28 @@ const MoveArea: FC<MoveAreaProps> = props => {
     setFixedConfig({ w, h, row, col, show: true });
   };
 
+  const deleteAndPlace = (rowDiff: number, colDiff: number) => {
+    // 先全部删除，再重新放置
+    const cache = [] as { b: BuildingConfig; row: number; col: number }[];
+    for (const key of selectedKeys) {
+      const [row, col] = parseBuildingKey(key);
+      const b = mapCore.deleteBuilding(row, col)!;
+      cache.push({ b, row, col });
+    }
+    for (const v of cache) {
+      const { b, row: li, col: co } = v;
+      mapCore.placeBuilding(b, li + rowDiff, co + colDiff);
+    }
+    mapCore.roadCache.clear();
+    const { w = 1, h = 1, row = 0, col = 0 } = fixedConfig;
+    selectBuilding(w, h, row + rowDiff, col + colDiff);
+  };
+
+  const getFreeMoveColor = () => {
+    const { color } = freeMoveConfig;
+    return typeof color === 'undefined' ? 'gray' : color;
+  };
+
   if (isHidden) {
     return null;
   }
@@ -187,36 +175,54 @@ const MoveArea: FC<MoveAreaProps> = props => {
         if (!isFreeMoving.current) {
           return;
         }
-
         const {
           nativeEvent: { pageX, pageY },
         } = e;
-
         const { scrollLeft, scrollTop } = mapContainer.current!;
         const { left, top } = mapContainer.current!.getBoundingClientRect();
-
         const curRow = Math.ceil(
           (scrollTop + pageY - top - BLOCK_PX) / BLOCK_PX,
         );
         const curCol = Math.ceil(
           (scrollLeft + pageX - left - BLOCK_PX) / BLOCK_PX,
         );
-
         const { w = 1, h = 1, row = 0, col = 0 } = fixedConfig;
         setFreeMoveConfig({
           ...fixedConfig,
-          color: '',
           offsetRow: curRow - Math.ceil(h / 2) + 1 - row,
           offsetCol: curCol - Math.ceil(w / 2) + 1 - col,
         });
       }}
       onMouseUpCapture={e => {
-        const { target } = e;
-        if (
-          isFreeMoving.current ||
-          buttons.current.includes(target as HTMLButtonElement)
-        ) {
+        if (isFreeMoving.current) {
           isFreeMoving.current = false;
+          const { offsetRow = 0, offsetCol = 0 } = freeMoveConfig;
+          if (!offsetRow && !offsetCol) {
+            setFreeMoveConfig({ show: false });
+            return;
+          }
+          for (const key of selectedKeys) {
+            const [row, col] = parseBuildingKey(key);
+            const { w = 1, h = 1 } = mapCore.buildings[key];
+            for (let i = row + offsetRow; i < row + offsetRow + h; i++) {
+              for (let j = col + offsetCol; j < col + offsetCol + w; j++) {
+                const { isInRange, occupied } = mapCore.cells[i][j];
+                if (!isInRange) {
+                  setFreeMoveConfig({ show: false });
+                  return;
+                }
+                if (occupied && !selectedKeys.includes(occupied)) {
+                  setFreeMoveConfig(state => ({ ...state, color: 'danger' }));
+                  return;
+                }
+              }
+            }
+          }
+          setFreeMoveConfig(state => ({ ...state, color: 'success' }));
+          return;
+        }
+        const { target } = e;
+        if (buttons.current.includes(target as HTMLButtonElement)) {
           e.stopPropagation();
           return;
         }
@@ -271,9 +277,6 @@ const MoveArea: FC<MoveAreaProps> = props => {
                   left:
                     (fixedConfig.col! - 1) * BLOCK_PX + buttonStyle[type].left,
                 }}
-                onClickCapture={() => {
-                  console.log(type);
-                }}
               />
             );
           })}
@@ -302,6 +305,9 @@ const MoveArea: FC<MoveAreaProps> = props => {
                       styles['selected-building'],
                       styles['free-move'],
                     ])}
+                    style={{
+                      boxShadow: `inset 0 0 16px 2px rgb(var(--${getFreeMoveColor()}-3))`,
+                    }}
                   />
                 </Fragment>
               );
@@ -311,11 +317,12 @@ const MoveArea: FC<MoveAreaProps> = props => {
               {...freeMoveConfig}
               row={freeMoveConfig.row! + freeMoveConfig.offsetRow!}
               col={freeMoveConfig.col! + freeMoveConfig.offsetCol!}
+              style={{
+                borderColor: `rgb(var(--${getFreeMoveColor()}-7))`,
+                background: `rgba(var(--${getFreeMoveColor()}-5), 0.4)`,
+              }}
             />
             {Object.values(ButtonType).map(type => {
-              if (type !== ButtonType.Confirm && type !== ButtonType.FreeMove) {
-                return null;
-              }
               return (
                 <Button
                   ref={dom => {
@@ -326,10 +333,11 @@ const MoveArea: FC<MoveAreaProps> = props => {
                   }}
                   key={type}
                   shape="circle"
-                  type="primary"
+                  type="secondary"
                   icon={buttonIcon[type]}
                   className={classcat([styles.button, styles['free-move']])}
                   style={{
+                    background: `rgb(var(--${getFreeMoveColor()}-5))`,
                     top:
                       (freeMoveConfig.row! + freeMoveConfig.offsetRow! - 1) *
                         BLOCK_PX +
@@ -340,7 +348,16 @@ const MoveArea: FC<MoveAreaProps> = props => {
                       buttonStyle[type].left,
                   }}
                   onClickCapture={() => {
-                    console.log(type);
+                    if (type !== ButtonType.Confirm) {
+                      return;
+                    }
+                    if (freeMoveConfig.color !== 'success') {
+                      Message.error('该预览位置上有障碍物，无法移动！');
+                      return;
+                    }
+                    const { offsetRow = 0, offsetCol = 0 } = freeMoveConfig;
+                    deleteAndPlace(offsetRow, offsetCol);
+                    setFreeMoveConfig({ show: false });
                   }}
                 />
               );
