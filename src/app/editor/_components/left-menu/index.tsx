@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Menu, Tooltip } from '@arco-design/web-react';
+import { Button, Menu, Message, Tooltip } from '@arco-design/web-react';
 import SiderComponent from '@arco-design/web-react/es/Layout/sider';
 import { IconMenuFold, IconMenuUnfold } from '@arco-design/web-react/icon';
 import { useKeyPress, useLocalStorageState } from 'ahooks';
@@ -34,6 +34,7 @@ import {
   shortcutIdxCap,
 } from '../../_config/shortcut';
 import { useMapConfig } from '../../_store/map-config';
+import { useSpecialBuilding } from '../../_store/special-building';
 import styles from './index.module.css';
 
 const MenuItem = Menu.Item;
@@ -77,6 +78,14 @@ const LeftMenu = () => {
 
   const [civil, changeOperation, changeBrush] = useMapConfig(
     state => [state.civil, state.changeOperation, state.changeBrush],
+    shallow,
+  );
+  const [
+    showSpecialBuildingModal,
+    setShowSpecialBuildingModal,
+    specialBuildings,
+  ] = useSpecialBuilding(
+    state => [state.show, state.setShow, state.buildings],
     shallow,
   );
 
@@ -126,12 +135,21 @@ const LeftMenu = () => {
   useKeyPress(
     Object.keys(mapShortcutToMenu),
     e => {
+      if (showSpecialBuildingModal) {
+        return;
+      }
       const key = e.key === ' ' ? e.code : e.key.toUpperCase();
       if (key === 'Space') {
         e.preventDefault();
       }
       const catalog = mapShortcutToMenu[key] as CatalogType;
       resetSubMenuOpened();
+      if (catalog === CatalogType.Special && subMenuOpened[catalog]) {
+        // 连按两次F，打开特殊建筑编辑窗口
+        setShowSpecialBuildingModal(true);
+        resetSubMenuOpened();
+        return;
+      }
       if (subMenuContent[catalog].length === 0) {
         openedSubMenu.current = undefined;
         onClickMenuItem(catalog);
@@ -144,6 +162,9 @@ const LeftMenu = () => {
   );
 
   useKeyPress(ahooksIdxKeyFilter, e => {
+    if (showSpecialBuildingModal) {
+      return;
+    }
     if (!openedSubMenu.current) {
       return;
     }
@@ -151,6 +172,9 @@ const LeftMenu = () => {
   });
 
   useKeyPress(protectionShortcut, e => {
+    if (showSpecialBuildingModal) {
+      return;
+    }
     const key = e.key.toUpperCase();
     const index = mapProtectionShortcutToIdx[key];
     if (index >= CivilBuilding[civil]['防护'].length) {
@@ -194,6 +218,15 @@ const LeftMenu = () => {
     }));
   }, [civil]);
 
+  useEffect(() => {
+    setSubMenuContent(state => ({
+      ...state,
+      [CatalogType.Special]: Object.keys(specialBuildings).map(
+        v => ({ name: v } as SimpleBuildingConfig),
+      ),
+    }));
+  }, [specialBuildings]);
+
   const onClickMenuItem = (key: string) => {
     resetSubMenuOpened();
     const [catalog, _index] = key.split('-') as [CatalogType, string];
@@ -207,6 +240,19 @@ const LeftMenu = () => {
       case CatalogType.General:
         changeOperation(OperationType.PlaceBuilding);
         changeBrush(getGeneralBuilding(index + 2));
+        return;
+      case CatalogType.Special:
+        if (subMenuContent[CatalogType.Special].length === 0) {
+          changeOperation(OperationType.Empty);
+          Message.error('当前特殊建筑数据为空，请在编辑窗口中添加！');
+          setShowSpecialBuildingModal(true);
+          return;
+        }
+        changeBrush({
+          ...specialBuildings[subMenuContent[CatalogType.Special][index].name],
+          catalog: CatalogType.Special,
+        });
+        changeOperation(OperationType.PlaceBuilding);
         return;
       case CatalogType.Cancel:
         changeOperation(OperationType.Empty);
@@ -346,6 +392,28 @@ const LeftMenu = () => {
                   )}
                 </MenuItem>
               ))}
+              {catalog === CatalogType.Special && (
+                <div
+                  className={classcat([
+                    styles['pop-sub-menu-item'],
+                    styles['pop-sub-menu-container'],
+                  ])}
+                  onClick={() => {
+                    setShowSpecialBuildingModal(true);
+                  }}
+                >
+                  <div>编辑</div>
+                  <div className={styles['key-container']}>
+                    <div className={styles['key-shortcut']}>
+                      {mapMenuToShortcut[catalog]}
+                    </div>
+                    +
+                    <div className={styles['key-shortcut']}>
+                      {mapMenuToShortcut[catalog]}
+                    </div>
+                  </div>
+                </div>
+              )}
             </SubMenu>
           );
         })}

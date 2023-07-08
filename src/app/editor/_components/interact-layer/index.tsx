@@ -6,6 +6,7 @@ import { canHover } from '@/utils/building';
 import { isAllInRange, parseBuildingKey } from '@/utils/coordinate';
 import useMapCore from '../../_hooks/use-map-core';
 import { useMapConfig } from '../../_store/map-config';
+import { useSpecialBuilding } from '../../_store/special-building';
 import Building from '../building';
 import DeleteArea from '../delete-area';
 import { mapContainer } from '../map';
@@ -13,6 +14,7 @@ import MiniMap from '../mini-map';
 import MoveArea from '../move-area';
 import Range from '../range';
 import RoadHelper from '../road-helper';
+import SpecialBuildingModal from '../special-building-modal';
 import styles from './index.module.css';
 
 const InteractLayer = () => {
@@ -23,6 +25,7 @@ const InteractLayer = () => {
     state => [state.operation, state.brush],
     shallow,
   );
+  const showSpecialBuildingModal = useSpecialBuilding(state => state.show);
 
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [originMousePos, setOriginMousePos] = useState({
@@ -116,6 +119,12 @@ const InteractLayer = () => {
     return { ...b, row: r, col: c };
   }, [operation, mouseCoord]);
 
+  const resetState = () => {
+    setIsMouseDown(false);
+    setOriginMousePos({ x: 0, y: 0, row: 0, col: 0 });
+    setMouseCoord({ row: 0, col: 0 });
+  };
+
   return (
     <div
       className={styles.container}
@@ -125,6 +134,10 @@ const InteractLayer = () => {
         margin: BLOCK_PX,
       }}
       onMouseDown={e => {
+        if (showSpecialBuildingModal) {
+          return;
+        }
+
         const {
           nativeEvent: { offsetX, offsetY },
           clientX,
@@ -156,6 +169,10 @@ const InteractLayer = () => {
         }
       }}
       onMouseMove={e => {
+        if (showSpecialBuildingModal) {
+          return;
+        }
+
         const {
           nativeEvent: { offsetX, offsetY },
           clientX,
@@ -193,6 +210,10 @@ const InteractLayer = () => {
         }
       }}
       onMouseUp={() => {
+        if (showSpecialBuildingModal) {
+          return;
+        }
+
         setIsMouseDown(false);
         if (operation === OperationType.PlaceBuilding) {
           if (brush?.isRoad) {
@@ -207,7 +228,7 @@ const InteractLayer = () => {
         setOriginMousePos({ x: 0, y: 0, row: 0, col: 0 });
       }}
       onDoubleClick={() => {
-        if (operation !== OperationType.Empty) {
+        if (showSpecialBuildingModal || operation !== OperationType.Empty) {
           return;
         }
         const { row, col } = mouseCoord;
@@ -218,9 +239,7 @@ const InteractLayer = () => {
         }
       }}
       onMouseLeave={() => {
-        setIsMouseDown(false);
-        setOriginMousePos({ x: 0, y: 0, row: 0, col: 0 });
-        setMouseCoord({ row: 0, col: 0 });
+        resetState();
       }}
     >
       {/* hover building */}
@@ -271,11 +290,10 @@ const InteractLayer = () => {
       />
       <MiniMap
         onMouseEnter={() => {
-          setIsMouseDown(false);
-          setOriginMousePos({ x: 0, y: 0, row: 0, col: 0 });
-          setMouseCoord({ row: 0, col: 0 });
+          resetState();
         }}
       />
+      <SpecialBuildingModal />
     </div>
   );
 };
