@@ -8,7 +8,6 @@ import {
   isAllInRange,
   parseBuildingKey,
 } from '@/utils/coordinate';
-import { CommandAltType } from '../../_command';
 import DeleteBuildingCommand from '../../_command/delete-buildings';
 import PlaceBuildingCommand from '../../_command/place-buildings';
 import useMapCore from '../../_hooks/use-map-core';
@@ -170,8 +169,8 @@ const InteractLayer = () => {
           if (previewConfig.canPlace) {
             mapCore.placeBuilding(brush!, previewConfig.row, previewConfig.col);
             placeCommand.current.push({
-              type: CommandAltType.Place,
-              key: getBuildingKey(row, col),
+              type: 'place',
+              key: getBuildingKey(previewConfig.row, previewConfig.col),
               building: brush!,
             });
             setMouseCoord({ row, col });
@@ -182,8 +181,8 @@ const InteractLayer = () => {
               previewConfig.col,
             );
             placeCommand.current.push({
-              type: CommandAltType.Replace,
-              key: getBuildingKey(row, col),
+              type: 'replace',
+              key: getBuildingKey(previewConfig.row, previewConfig.col),
               building: brush!,
             });
             setMouseCoord({ row, col });
@@ -221,7 +220,7 @@ const InteractLayer = () => {
           if (previewConfig.canPlace) {
             mapCore.placeBuilding(brush!, previewConfig.row, previewConfig.col);
             placeCommand.current?.push({
-              type: CommandAltType.Place,
+              type: 'place',
               key: getBuildingKey(previewConfig.row, previewConfig.col),
               building: brush!,
             });
@@ -233,7 +232,7 @@ const InteractLayer = () => {
               previewConfig.col,
             );
             placeCommand.current?.push({
-              type: CommandAltType.Replace,
+              type: 'replace',
               key: getBuildingKey(previewConfig.row, previewConfig.col),
               building: brush!,
             });
@@ -259,7 +258,7 @@ const InteractLayer = () => {
               placeCommand.current?.reset();
               keys.map(key =>
                 placeCommand.current?.push({
-                  type: CommandAltType.Place,
+                  type: 'place',
                   key,
                   building: brush,
                 }),

@@ -2,12 +2,12 @@ import { getGeneralBuilding } from '@/utils/building';
 import { parseBuildingKey } from '@/utils/coordinate';
 import MapCore from '../_map-core';
 import { BuildingConfig } from '../_map-core/building/type';
-import Command, { CommandAltType } from './';
+import Command from './';
 
 const mapCore = MapCore.getInstance();
 
 interface PlaceBuildingData {
-  type: CommandAltType.Place | CommandAltType.Replace;
+  type: 'place' | 'replace';
   key: string;
   building: BuildingConfig;
 }
@@ -35,10 +35,10 @@ export default class PlaceBuildingCommand implements Command {
     for (const v of this.data) {
       const [row, col] = parseBuildingKey(v.key);
       switch (v.type) {
-        case CommandAltType.Place:
+        case 'place':
           mapCore.placeBuilding(v.building, row, col);
           break;
-        case CommandAltType.Replace:
+        case 'replace':
           mapCore.replaceBuilding(v.building, row, col);
           break;
         default:
@@ -57,10 +57,10 @@ export default class PlaceBuildingCommand implements Command {
       }
       const [row, col] = parseBuildingKey(v.key);
       switch (v.type) {
-        case CommandAltType.Place:
+        case 'place':
           mapCore.deleteBuilding(row, col);
           break;
-        case CommandAltType.Replace:
+        case 'replace':
           mapCore.deleteBuilding(row, col);
           mapCore.placeBuilding(getGeneralBuilding(v.building.w!), row, col);
           break;
