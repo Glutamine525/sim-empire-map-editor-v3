@@ -1,7 +1,7 @@
 import { produce } from 'immer';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { BuildingConfig } from '@/map-core/building';
+import { BuildingConfig } from '@/map-core/building/type';
 
 interface SpecialBuildingState {
   show: boolean;

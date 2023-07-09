@@ -5,7 +5,7 @@ import {
   BuildingType,
   CatalogType,
   CivilBuilding,
-} from '@/map-core/building';
+} from '@/map-core/building/type';
 import {
   CivilType,
   mapCivilLabelToType,

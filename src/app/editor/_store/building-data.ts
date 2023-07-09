@@ -1,4 +1,4 @@
-import { BuildingConfig } from '@/map-core/building';
+import { BuildingConfig } from '@/map-core/building/type';
 import { MapLength } from '@/map-core/type';
 import { isInRange } from '@/utils/coordinate';
 import createSubscribeStore, {

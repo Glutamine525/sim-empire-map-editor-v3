@@ -1,4 +1,4 @@
-import { CatalogType } from '.';
+import { CatalogType } from './type';
 
 export const BuildingFixed = {
   water: [

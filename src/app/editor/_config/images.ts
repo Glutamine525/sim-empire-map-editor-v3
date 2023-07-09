@@ -18,7 +18,7 @@ import imageDecoration from '@/assets/images/美化.png';
 import imageGeneral from '@/assets/images/通用.png';
 import imageRoad from '@/assets/images/道路.png';
 import imageRedo from '@/assets/images/重做.png';
-import { CatalogType } from '@/map-core/building';
+import { CatalogType } from '@/map-core/building/type';
 
 export const catalogImageMap = {
   [CatalogType.Road]: imageRoad,

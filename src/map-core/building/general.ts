@@ -1,5 +1,5 @@
-import { SimpleBuildingConfig } from '.';
 import { BuildingColor } from './color';
+import { SimpleBuildingConfig } from './type';
 
 export const GeneralBuilding: SimpleBuildingConfig[] = [
   {

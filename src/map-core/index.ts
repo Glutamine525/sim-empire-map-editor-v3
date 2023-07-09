@@ -6,12 +6,6 @@ import {
   parseBuildingKey,
 } from '@/utils/coordinate';
 import {
-  BorderStyleType,
-  BuildingConfig,
-  CatalogType,
-  CivilBuilding,
-} from './building';
-import {
   BarrierColor,
   BarrierType,
   BuildingFixed,
@@ -21,6 +15,12 @@ import {
   FixedBuildingText,
   FixedBuildingType,
 } from './building/fixed';
+import {
+  BorderStyleType,
+  BuildingConfig,
+  CatalogType,
+  CivilBuilding,
+} from './building/type';
 import {
   Cell,
   CivilType,

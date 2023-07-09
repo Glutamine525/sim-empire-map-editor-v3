@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import classcat from 'classcat';
 import { MapCore } from '@/map-core';
-import { BuildingConfig } from '@/map-core/building';
+import { BuildingConfig } from '@/map-core/building/type';
 import { showMarker } from '@/utils/building';
 import Block, { BlockProps } from '../block';
 import styles from './index.module.css';

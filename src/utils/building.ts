@@ -1,15 +1,15 @@
 import {
+  FixedBuildingColor,
+  FixedBuildingType,
+} from '@/map-core/building/fixed';
+import { GeneralBuilding } from '@/map-core/building/general';
+import {
   BuildingConfig,
   BuildingType,
   CatalogType,
   CivilBuilding,
   SimpleBuildingConfig,
-} from '@/map-core/building';
-import {
-  FixedBuildingColor,
-  FixedBuildingType,
-} from '@/map-core/building/fixed';
-import { GeneralBuilding } from '@/map-core/building/general';
+} from '@/map-core/building/type';
 import { CivilType } from '@/map-core/type';
 
 export function showMarker(b: BuildingConfig) {

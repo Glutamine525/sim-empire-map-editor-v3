@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { BuildingConfig } from '@/map-core/building';
+import { BuildingConfig } from '@/map-core/building/type';
 import {
   CivilType,
   MapCounter,
