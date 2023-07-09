@@ -26,7 +26,7 @@ export default class ChangeNoTreeCommand implements Command {
 
   execute() {
     useMapConfig.setState({ noTree: this.noTree });
-    if (this.noTree) {
+    if (!this.noTree) {
       for (const v of this.data) {
         const [row, col] = parseBuildingKey(v.key);
         mapCore.deleteBuilding(row, col);
