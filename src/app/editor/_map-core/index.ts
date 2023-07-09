@@ -40,7 +40,7 @@ const EMPTY_CELL: BuildingConfig = {
   isEmpty: true,
 };
 
-export class MapCore {
+export default class MapCore {
   public static instance: MapCore;
 
   public static getInstance() {
@@ -376,12 +376,12 @@ export class MapCore {
     curRow: number,
     curCol: number,
   ) {
-    const coords = Array.from(this.roadCache);
+    let keys = Array.from(this.roadCache);
     if (initRow !== curRow && initCol !== curCol) {
       this.roadCache.clear();
-      return coords;
+      return keys;
     }
-    for (const key of coords) {
+    for (const key of keys) {
       const [row, col] = parseBuildingKey(key);
       this.deleteBuilding(row, col);
     }
@@ -400,8 +400,9 @@ export class MapCore {
         this.placeBuilding(road, i, j);
       }
     }
+    keys = Array.from(this.roadCache);
     this.roadCache.clear();
-    return coords;
+    return keys;
   }
 
   public updateRoadCount(row: number, col: number) {

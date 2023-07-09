@@ -30,7 +30,7 @@ export const useSpecialBuilding = create<SpecialBuildingState>()(
           return false;
         }
         set(
-          produce(state => {
+          produce<SpecialBuildingState>(state => {
             state.buildings[name] = b;
           }),
         );
@@ -41,7 +41,7 @@ export const useSpecialBuilding = create<SpecialBuildingState>()(
           return;
         }
         set(
-          produce(state => {
+          produce<SpecialBuildingState>(state => {
             delete state.buildings[name];
           }),
         );

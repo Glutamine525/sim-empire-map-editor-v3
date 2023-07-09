@@ -1,4 +1,4 @@
-import { MapCore } from '@/app/editor/_map-core';
+import MapCore from '@/app/editor/_map-core';
 import { CivilTypeLabel } from '@/app/editor/_map-core/type';
 
 export function stringToBase64(str: string) {

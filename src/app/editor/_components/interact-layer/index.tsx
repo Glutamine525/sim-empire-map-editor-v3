@@ -1,10 +1,18 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { shallow } from 'zustand/shallow';
 import { BLOCK_PX } from '@/app/editor/_config';
 import { MapLength, OperationType } from '@/app/editor/_map-core/type';
 import { canHover } from '@/utils/building';
-import { isAllInRange, parseBuildingKey } from '@/utils/coordinate';
+import {
+  getBuildingKey,
+  isAllInRange,
+  parseBuildingKey,
+} from '@/utils/coordinate';
+import { CommandAltType } from '../../_command';
+import DeleteBuildingCommand from '../../_command/delete-buildings';
+import PlaceBuildingCommand from '../../_command/place-buildings';
 import useMapCore from '../../_hooks/use-map-core';
+import { useCommand } from '../../_store/command';
 import { useMapConfig } from '../../_store/map-config';
 import { useSpecialBuilding } from '../../_store/special-building';
 import Building from '../building';
@@ -26,6 +34,7 @@ const InteractLayer = () => {
     shallow,
   );
   const showSpecialBuildingModal = useSpecialBuilding(state => state.show);
+  const addCommand = useCommand(state => state.add);
 
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [originMousePos, setOriginMousePos] = useState({
@@ -42,6 +51,8 @@ const InteractLayer = () => {
     marker: 0,
     canReplace: false,
   });
+
+  const placeCommand = useRef<PlaceBuildingCommand>();
 
   const previewBuilding = useMemo(() => {
     const { row, col } = mouseCoord;
@@ -155,8 +166,14 @@ const InteractLayer = () => {
         });
 
         if (operation === OperationType.PlaceBuilding) {
+          placeCommand.current = new PlaceBuildingCommand();
           if (previewConfig.canPlace) {
             mapCore.placeBuilding(brush!, previewConfig.row, previewConfig.col);
+            placeCommand.current.push({
+              type: CommandAltType.Place,
+              key: getBuildingKey(row, col),
+              building: brush!,
+            });
             setMouseCoord({ row, col });
           } else if (previewConfig.canReplace) {
             mapCore.replaceBuilding(
@@ -164,6 +181,11 @@ const InteractLayer = () => {
               previewConfig.row,
               previewConfig.col,
             );
+            placeCommand.current.push({
+              type: CommandAltType.Replace,
+              key: getBuildingKey(row, col),
+              building: brush!,
+            });
             setMouseCoord({ row, col });
           }
         }
@@ -198,6 +220,11 @@ const InteractLayer = () => {
         } else if (operation === OperationType.PlaceBuilding) {
           if (previewConfig.canPlace) {
             mapCore.placeBuilding(brush!, previewConfig.row, previewConfig.col);
+            placeCommand.current?.push({
+              type: CommandAltType.Place,
+              key: getBuildingKey(previewConfig.row, previewConfig.col),
+              building: brush!,
+            });
             setMouseCoord({ row, col });
           } else if (previewConfig.canReplace) {
             mapCore.replaceBuilding(
@@ -205,6 +232,11 @@ const InteractLayer = () => {
               previewConfig.row,
               previewConfig.col,
             );
+            placeCommand.current?.push({
+              type: CommandAltType.Replace,
+              key: getBuildingKey(previewConfig.row, previewConfig.col),
+              building: brush!,
+            });
             setMouseCoord({ row, col });
           }
         }
@@ -217,12 +249,25 @@ const InteractLayer = () => {
         setIsMouseDown(false);
         if (operation === OperationType.PlaceBuilding) {
           if (brush?.isRoad) {
-            mapCore.placeStraightRoad(
+            const keys = mapCore.placeStraightRoad(
               originMousePos.row,
               originMousePos.col,
               mouseCoord.row,
               mouseCoord.col,
             );
+            if (keys.length) {
+              placeCommand.current?.reset();
+              keys.map(key =>
+                placeCommand.current?.push({
+                  type: CommandAltType.Place,
+                  key,
+                  building: brush,
+                }),
+              );
+            }
+          }
+          if (placeCommand.current?.len()) {
+            addCommand(placeCommand.current);
           }
         }
         setOriginMousePos({ x: 0, y: 0, row: 0, col: 0 });
@@ -235,7 +280,15 @@ const InteractLayer = () => {
         const deletedBuilding = mapCore.deleteBuilding(row, col);
         if (deletedBuilding) {
           setMouseCoord({ row, col });
-          // add operation history
+          const c = new DeleteBuildingCommand();
+          c.push({
+            building: deletedBuilding,
+            key: getBuildingKey(
+              deletedBuilding.originRow,
+              deletedBuilding.originCol,
+            ),
+          });
+          addCommand(c);
         }
       }}
       onMouseLeave={() => {

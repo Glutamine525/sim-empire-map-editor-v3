@@ -1,5 +1,5 @@
 import md5 from 'md5';
-import { MapCore } from '@/app/editor/_map-core';
+import MapCore from '@/app/editor/_map-core';
 import {
   BuildingConfig,
   BuildingType,

@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { IconPushpin } from '@arco-design/web-react/icon';
 import classcat from 'classcat';
-import { MapCore } from '@/app/editor/_map-core';
+import MapCore from '@/app/editor/_map-core';
 import { BuildingConfig } from '@/app/editor/_map-core/building/type';
 import { showMarker } from '@/utils/building';
 import Block, { BlockProps } from '../block';

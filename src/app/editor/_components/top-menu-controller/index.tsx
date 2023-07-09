@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { Button, Dropdown, Menu, Modal, Switch } from '@arco-design/web-react';
 import { shallow } from 'zustand/shallow';
-import { MapCore } from '@/app/editor/_map-core';
+import MapCore from '@/app/editor/_map-core';
 import {
   BarrierType,
   BuildingFixed,

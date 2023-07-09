@@ -32,6 +32,7 @@ import {
   protectionShortcut,
   shortcutIdxCap,
 } from '../../_config/shortcut';
+import { useCommand } from '../../_store/command';
 import { useMapConfig } from '../../_store/map-config';
 import { useSpecialBuilding } from '../../_store/special-building';
 import styles from './index.module.css';
@@ -86,6 +87,10 @@ const LeftMenu = () => {
     specialBuildings,
   ] = useSpecialBuilding(
     state => [state.show, state.setShow, state.buildings],
+    shallow,
+  );
+  const [commands, undoCommands, undo, redo] = useCommand(
+    state => [state.commands, state.undoCommands, state.undo, state.redo],
     shallow,
   );
 
@@ -263,6 +268,12 @@ const LeftMenu = () => {
       case CatalogType.Delete:
         changeOperation(OperationType.DeleteBuilding);
         return;
+      case CatalogType.Undo:
+        undo();
+        return;
+      case CatalogType.Redo:
+        redo();
+        return;
       case CatalogType.ImportExport:
         return;
       default:
@@ -298,7 +309,14 @@ const LeftMenu = () => {
           const catalog = _catalog as CatalogType;
           if (subMenu.length === 0) {
             return (
-              <MenuItem key={catalog}>
+              <MenuItem
+                key={catalog}
+                disabled={
+                  catalog === CatalogType.WatermarkMode ||
+                  (catalog === CatalogType.Undo && !commands.length) ||
+                  (catalog === CatalogType.Redo && !undoCommands.length)
+                }
+              >
                 <Tooltip
                   content={isCollapsed ? catalog : null}
                   position="right"
