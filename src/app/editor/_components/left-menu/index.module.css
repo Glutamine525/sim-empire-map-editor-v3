@@ -48,6 +48,10 @@
   text-align: center;
 }
 
+:global(.arco-menu-disabled) .main-menu-container img {
+  filter: grayscale(1);
+}
+
 .pop-sub-menu-container :global(.arco-dropdown-menu) {
   max-height: 600px;
 }

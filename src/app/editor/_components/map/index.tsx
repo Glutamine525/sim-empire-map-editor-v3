@@ -1,8 +1,12 @@
 import React, { createRef, useEffect, useLayoutEffect, useMemo } from 'react';
+import { Message } from '@arco-design/web-react';
 import Content from '@arco-design/web-react/es/Layout/content';
 import PerfectScrollbar from 'perfect-scrollbar';
 import { shallow } from 'zustand/shallow';
+import { importMapData } from '@/utils/import-export';
+import { AUTO_SAVE_INTERVAL } from '../../_config';
 import useMapCore from '../../_hooks/use-map-core';
+import { useAutoSave } from '../../_store/auto-save';
 import { buildingData, resetBuildingData } from '../../_store/building-data';
 import { useMapConfig } from '../../_store/map-config';
 import BuildingLayer from '../building-layer';
@@ -14,17 +18,37 @@ export const mapContainer = createRef<HTMLDivElement>();
 const Map = () => {
   console.log('Chessboard render');
 
-  const [mapType, civil, noTree, changeCounter, changeEmptyCells] =
-    useMapConfig(
-      state => [
-        state.mapType,
-        state.civil,
-        state.noTree,
-        state.changeCounter,
-        state.changeEmptyCells,
-      ],
-      shallow,
-    );
+  const [
+    mapType,
+    civil,
+    noTree,
+    changeCounter,
+    changeEmptyCells,
+    changeMapType,
+    changeCivil,
+    changeNoTree,
+  ] = useMapConfig(
+    state => [
+      state.mapType,
+      state.civil,
+      state.noTree,
+      state.changeCounter,
+      state.changeEmptyCells,
+      state.changeMapType,
+      state.changeCivil,
+      state.changeNoTree,
+    ],
+    shallow,
+  );
+  const [mapData, trigger, initImport, changeInitImport] = useAutoSave(
+    state => [
+      state.mapDataStr,
+      state.trigger,
+      state.initImport,
+      state.changeInitImport,
+    ],
+    shallow,
+  );
 
   const mapCore = useMapCore();
   const buildings = useMemo(() => <BuildingLayer />, []);
@@ -47,12 +71,38 @@ const Map = () => {
       (scrollHeight - clientHeight) / 2,
     );
 
+    if (mapData) {
+      try {
+        importMapData(mapData, (mapType, civil, noTree) => {
+          changeMapType(mapType);
+          changeCivil(civil);
+          mapCore.toggleNoTree(noTree);
+          changeNoTree(noTree);
+        });
+        trigger();
+        setTimeout(() => {
+          changeInitImport(false);
+        }, 0);
+      } catch {
+        Message.error('存档已损坏');
+      }
+    }
+
+    setInterval(() => {
+      if (trigger()) {
+        Message.success('自动存档');
+      }
+    }, AUTO_SAVE_INTERVAL);
+
     return () => {
       scrollbar.destroy();
     };
   }, []);
 
   useEffect(() => {
+    if (initImport) {
+      return;
+    }
     resetBuildingData();
     mapCore.init(mapType, civil, noTree);
   }, [mapType, civil]);

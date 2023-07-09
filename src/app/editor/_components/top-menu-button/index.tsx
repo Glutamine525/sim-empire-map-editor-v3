@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useState } from 'react';
 import { Button } from '@arco-design/web-react';
 import {
   IconDelete,
@@ -8,10 +8,15 @@ import {
   IconSunFill,
 } from '@arco-design/web-react/icon';
 import useColorTheme, { ThemeType } from '@/hooks/use-color-theme';
+import { useAutoSave } from '../../_store/auto-save';
+import AutoSaveDrawer from '../auto-save-drawer';
 import styles from './index.module.css';
 
 const TopMenuButton = () => {
   const [theme, toggleTheme] = useColorTheme();
+  const trigger = useAutoSave(state => state.trigger);
+
+  const [showAutoSaveDrawer, setShowAutoSaveDrawer] = useState(false);
 
   return (
     <div className={styles.container}>
@@ -28,7 +33,10 @@ const TopMenuButton = () => {
         type="text"
         iconOnly={true}
         icon={<IconSave />}
-        disabled={true}
+        onClick={() => {
+          trigger();
+          setShowAutoSaveDrawer(true);
+        }}
       />
       <Button
         shape="square"
@@ -50,6 +58,10 @@ const TopMenuButton = () => {
       <Button type="text" disabled={true}>
         登录
       </Button>
+      <AutoSaveDrawer
+        visible={showAutoSaveDrawer}
+        setVisible={setShowAutoSaveDrawer}
+      />
     </div>
   );
 };
