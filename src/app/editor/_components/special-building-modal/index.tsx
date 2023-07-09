@@ -6,26 +6,21 @@ import styles from './index.module.css';
 
 interface SpecialBuildingModalProps {}
 
-const SpecialBuildingModal: FC<SpecialBuildingModalProps> = props => {
-  const {
-    show,
-    buildings,
-    setShow,
-    isNameValid,
-    insertBuilding,
-    deleteBuilding,
-  } = useSpecialBuilding();
+const SpecialBuildingModal: FC<SpecialBuildingModalProps> = () => {
+  const { show, buildings, setShow, isNameValid, insert, remove } =
+    useSpecialBuilding();
 
   return (
     <Modal
       visible={show}
       footer={null}
+      focusLock={false}
       className={styles.wrapper}
       onCancel={() => {
         setShow(false);
       }}
     >
-      <SpecialBuildingEditor isNameValid={isNameValid} insert={insertBuilding}>
+      <SpecialBuildingEditor isNameValid={isNameValid} insert={insert}>
         <div className={styles.tags}>
           {Object.values(buildings).map(v => (
             <Tooltip
@@ -59,7 +54,7 @@ const SpecialBuildingModal: FC<SpecialBuildingModalProps> = props => {
                 closable={true}
                 style={{ color: v.color }}
                 onClose={() => {
-                  deleteBuilding(v.name);
+                  remove(v.name);
                 }}
               >
                 {v.name}

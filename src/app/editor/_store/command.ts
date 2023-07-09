@@ -13,7 +13,7 @@ interface CommandState {
   redo: () => void;
 }
 
-export const useCommand = create<CommandState>()((set, get) => ({
+export const useCommand = create<CommandState>()(set => ({
   commands: [],
   undoCommands: [],
   reset: () => {

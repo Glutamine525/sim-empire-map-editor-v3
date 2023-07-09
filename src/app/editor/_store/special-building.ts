@@ -8,8 +8,8 @@ interface SpecialBuildingState {
   buildings: { [key: string]: BuildingConfig };
   setShow: (show: boolean) => void;
   isNameValid: (name: string) => boolean;
-  insertBuilding: (b: BuildingConfig) => boolean;
-  deleteBuilding: (name?: string) => void;
+  insert: (b: BuildingConfig) => boolean;
+  remove: (name?: string) => void;
 }
 
 export const useSpecialBuilding = create<SpecialBuildingState>()(
@@ -24,7 +24,7 @@ export const useSpecialBuilding = create<SpecialBuildingState>()(
         }
         return true;
       },
-      insertBuilding: b => {
+      insert: b => {
         const name = b.name;
         if (!name || !get().isNameValid(name)) {
           return false;
@@ -36,7 +36,7 @@ export const useSpecialBuilding = create<SpecialBuildingState>()(
         );
         return true;
       },
-      deleteBuilding: (name = '') => {
+      remove: (name = '') => {
         if (!(name in get().buildings)) {
           return;
         }
