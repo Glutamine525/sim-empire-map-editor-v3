@@ -12,7 +12,9 @@ import {
   MapType,
   OperationType,
 } from '@/app/editor/_map-core/type';
-import { parseBuildingKey } from '@/utils/coordinate';
+import { getBuildingKey, parseBuildingKey } from '@/utils/coordinate';
+import ChangeNoTreeCommand from '../../_command/change-no-tree';
+import { useCommand } from '../../_store/command';
 import { useMapConfig } from '../../_store/map-config';
 import styles from './index.module.css';
 
@@ -125,6 +127,7 @@ const TopMenuController = () => {
       ],
       shallow,
     );
+  const addCommand = useCommand(state => state.add);
 
   return (
     <div className={styles.container}>
@@ -149,6 +152,7 @@ const TopMenuController = () => {
         <Switch
           checked={noTree}
           onChange={async noTree => {
+            const command = new ChangeNoTreeCommand(noTree);
             if (!noTree) {
               const keys = BuildingFixed[BarrierType.Tree][mapType - 3];
               let hasOccupied = false;
@@ -164,7 +168,7 @@ const TopMenuController = () => {
                   Modal.confirm({
                     title: '提示',
                     content:
-                      '检测到有建筑占用了树木的位置，关闭无木之地后，这些建筑会被强制删除，操作历史会被清空，是否确认当前操作？',
+                      '检测到有建筑占用了树木的位置，关闭无木之地后，这些建筑会被强制删除，是否确认当前操作？',
                     onOk: () => {
                       resolve(true);
                     },
@@ -178,10 +182,20 @@ const TopMenuController = () => {
                 }
                 for (const key of keys) {
                   const [row, col] = parseBuildingKey(key);
-                  mapCore.deleteBuilding(row, col);
+                  const building = mapCore.deleteBuilding(row, col);
+                  if (building) {
+                    command.push({
+                      building,
+                      key: getBuildingKey(
+                        building.originRow,
+                        building.originCol,
+                      ),
+                    });
+                  }
                 }
               }
             }
+            addCommand(command);
             changeNoTree(noTree);
             mapCore.toggleNoTree(noTree);
           }}
