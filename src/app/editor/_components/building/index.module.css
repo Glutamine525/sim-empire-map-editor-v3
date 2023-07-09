@@ -105,8 +105,8 @@
   transform: scale(0.8);
   transform-origin: top right;
 
-  text-shadow: 0 0 1px white, 0 0 1px white, 0 0 1px white, 0 0 1px white;
+  font-size: 14px;
+  font-weight: bold;
 
-  font-size: 12px;
-  font-weight: 900;
+  filter: drop-shadow(0 0 1px white) drop-shadow(0 0 1px white);
 }

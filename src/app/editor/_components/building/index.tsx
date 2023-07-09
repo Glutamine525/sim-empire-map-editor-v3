@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+import { IconPushpin } from '@arco-design/web-react/icon';
 import classcat from 'classcat';
 import { MapCore } from '@/app/editor/_map-core';
 import { BuildingConfig } from '@/app/editor/_map-core/building/type';
@@ -19,6 +20,8 @@ const Building: FC<BuildingProps> = props => {
   const {
     w = 1,
     h = 1,
+    isFixed,
+    isBarrier,
     text,
     isRoad,
     isHovered,
@@ -48,6 +51,11 @@ const Building: FC<BuildingProps> = props => {
               props.marker === core.protection.length,
           })}
         />
+      )}
+      {isFixed && !isBarrier && (
+        <div className={styles.fixed}>
+          <IconPushpin />
+        </div>
       )}
       {text}
     </Block>
