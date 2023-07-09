@@ -1,4 +1,4 @@
-import { MapLength } from '../map-core/type';
+import { MapLength } from '../app/editor/_map-core/type';
 
 export function parseBuildingKey(key: string) {
   const data = key.split('-').map(v => Number(v));

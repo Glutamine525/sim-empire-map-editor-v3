@@ -1,6 +1,6 @@
 import React, { FC, memo } from 'react';
 import { shallow } from 'zustand/shallow';
-import { MapCounterType } from '@/map-core/type';
+import { MapCounterType } from '@/app/editor/_map-core/type';
 import { useMapConfig } from '../../_store/map-config';
 import styles from './index.module.css';
 

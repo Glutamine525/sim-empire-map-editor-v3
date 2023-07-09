@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { BLOCK_PX } from '@/app/editor/_config';
-import { MapLength } from '@/map-core/type';
+import { MapLength } from '@/app/editor/_map-core/type';
 import { isInRange } from '@/utils/coordinate';
 import BasicBuilding from '../basic-building';
 import styles from './index.module.css';

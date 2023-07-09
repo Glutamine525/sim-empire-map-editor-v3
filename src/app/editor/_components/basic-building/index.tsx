@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
 import { IconPushpin } from '@arco-design/web-react/icon';
 import classcat from 'classcat';
+import { MapCore } from '@/app/editor/_map-core';
 import { useBuildingData } from '@/app/editor/_store/building-data';
-import { MapCore } from '@/map-core';
 import { showMarker } from '@/utils/building';
 import Block from '../block';
 import styles from './index.module.css';

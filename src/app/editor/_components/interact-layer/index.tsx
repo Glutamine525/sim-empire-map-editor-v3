@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { shallow } from 'zustand/shallow';
 import { BLOCK_PX } from '@/app/editor/_config';
-import { MapLength, OperationType } from '@/map-core/type';
+import { MapLength, OperationType } from '@/app/editor/_map-core/type';
 import { canHover } from '@/utils/building';
 import { isAllInRange, parseBuildingKey } from '@/utils/coordinate';
 import useMapCore from '../../_hooks/use-map-core';

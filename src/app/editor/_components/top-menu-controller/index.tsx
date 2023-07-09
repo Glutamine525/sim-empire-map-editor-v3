@@ -1,14 +1,17 @@
 import React, { memo } from 'react';
 import { Button, Dropdown, Menu, Modal, Switch } from '@arco-design/web-react';
 import { shallow } from 'zustand/shallow';
-import { MapCore } from '@/map-core';
-import { BarrierType, BuildingFixed } from '@/map-core/building/fixed';
+import { MapCore } from '@/app/editor/_map-core';
+import {
+  BarrierType,
+  BuildingFixed,
+} from '@/app/editor/_map-core/building/fixed';
 import {
   CivilType,
   CivilTypeLabel,
   MapType,
   OperationType,
-} from '@/map-core/type';
+} from '@/app/editor/_map-core/type';
 import { parseBuildingKey } from '@/utils/coordinate';
 import { useMapConfig } from '../../_store/map-config';
 import styles from './index.module.css';

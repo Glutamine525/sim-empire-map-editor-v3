@@ -7,15 +7,15 @@ import Image from 'next/image';
 import PerfectScrollbar from 'perfect-scrollbar';
 import { shallow } from 'zustand/shallow';
 import { EDITOR_PAGE_UI_SETTING } from '@/app/editor/_config';
-import { GeneralBuilding } from '@/map-core/building/general';
+import { GeneralBuilding } from '@/app/editor/_map-core/building/general';
 import {
   BuildingType,
   CatalogType,
   CivilBuilding,
   ImportExportSubmenu,
   SimpleBuildingConfig,
-} from '@/map-core/building/type';
-import { OperationType } from '@/map-core/type';
+} from '@/app/editor/_map-core/building/type';
+import { OperationType } from '@/app/editor/_map-core/type';
 import {
   getGeneralBuilding,
   getRoadBuilding,

@@ -1,12 +1,12 @@
 import { create } from 'zustand';
-import { BuildingConfig } from '@/map-core/building/type';
+import { BuildingConfig } from '@/app/editor/_map-core/building/type';
 import {
   CivilType,
   MapCounter,
   MapCounterType,
   MapType,
   OperationType,
-} from '@/map-core/type';
+} from '@/app/editor/_map-core/type';
 
 interface MapConfigState {
   mapType: MapType;

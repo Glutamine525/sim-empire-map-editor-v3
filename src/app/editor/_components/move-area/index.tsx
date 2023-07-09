@@ -9,7 +9,7 @@ import React, {
 import { Button, Message } from '@arco-design/web-react';
 import { IconCheck, IconDragArrow } from '@arco-design/web-react/icon';
 import classcat from 'classcat';
-import { BuildingConfig } from '@/map-core/building/type';
+import { BuildingConfig } from '@/app/editor/_map-core/building/type';
 import { parseBuildingKey } from '@/utils/coordinate';
 import { BLOCK_PX } from '../../_config';
 import useMapCore from '../../_hooks/use-map-core';

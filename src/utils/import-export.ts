@@ -1,17 +1,17 @@
 import md5 from 'md5';
-import { MapCore } from '@/map-core';
+import { MapCore } from '@/app/editor/_map-core';
 import {
   BuildingConfig,
   BuildingType,
   CatalogType,
   CivilBuilding,
-} from '@/map-core/building/type';
+} from '@/app/editor/_map-core/building/type';
 import {
   CivilType,
   mapCivilLabelToType,
   MapLength,
   MapType,
-} from '@/map-core/type';
+} from '@/app/editor/_map-core/type';
 import {
   getGeneralBuilding,
   getRoadBuilding,

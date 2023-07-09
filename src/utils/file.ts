@@ -1,5 +1,5 @@
-import { MapCore } from '@/map-core';
-import { CivilTypeLabel } from '@/map-core/type';
+import { MapCore } from '@/app/editor/_map-core';
+import { CivilTypeLabel } from '@/app/editor/_map-core/type';
 
 export function stringToBase64(str: string) {
   const encode = encodeURI(str);

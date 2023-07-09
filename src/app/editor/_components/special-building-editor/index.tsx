@@ -7,7 +7,7 @@ import {
   InputNumber,
   Switch,
 } from '@arco-design/web-react';
-import { BuildingConfig } from '@/map-core/building/type';
+import { BuildingConfig } from '@/app/editor/_map-core/building/type';
 import { BLOCK_PX } from '../../_config';
 import useMapCore from '../../_hooks/use-map-core';
 import Block from '../block';

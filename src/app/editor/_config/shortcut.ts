@@ -1,4 +1,4 @@
-import { CatalogType } from '@/map-core/building/type';
+import { CatalogType } from '@/app/editor/_map-core/building/type';
 
 export const mapShortcutToMenu: { [key: string]: CatalogType } = {
   A: CatalogType.Road,

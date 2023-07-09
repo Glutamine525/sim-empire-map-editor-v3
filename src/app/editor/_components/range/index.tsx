@@ -1,5 +1,5 @@
 import React, { FC, memo, useMemo } from 'react';
-import { BorderStyleType as BST } from '@/map-core/building/type';
+import { BorderStyleType as BST } from '@/app/editor/_map-core/building/type';
 import { hexToRgb } from '@/utils/color';
 import { isInBuildingRange } from '@/utils/coordinate';
 import Block from '../block';

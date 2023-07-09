@@ -7,7 +7,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { MapLength } from '@/map-core/type';
+import { MapLength } from '@/app/editor/_map-core/type';
 import { isBoundary, parseBuildingKey } from '@/utils/coordinate';
 import { BLOCK_PX } from '../../_config';
 import useMapCore from '../../_hooks/use-map-core';

@@ -1,16 +1,16 @@
 import {
   FixedBuildingColor,
   FixedBuildingType,
-} from '@/map-core/building/fixed';
-import { GeneralBuilding } from '@/map-core/building/general';
+} from '@/app/editor/_map-core/building/fixed';
+import { GeneralBuilding } from '@/app/editor/_map-core/building/general';
 import {
   BuildingConfig,
   BuildingType,
   CatalogType,
   CivilBuilding,
   SimpleBuildingConfig,
-} from '@/map-core/building/type';
-import { CivilType } from '@/map-core/type';
+} from '@/app/editor/_map-core/building/type';
+import { CivilType } from '@/app/editor/_map-core/type';
 
 export function showMarker(b: BuildingConfig) {
   if (b?.isRoad) {

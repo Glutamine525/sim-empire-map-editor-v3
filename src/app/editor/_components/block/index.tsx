@@ -1,7 +1,7 @@
 import React, { CSSProperties, FC, ReactNode } from 'react';
 import classcat from 'classcat';
 import { BLOCK_PX } from '@/app/editor/_config';
-import { BorderStyleType } from '@/map-core/building/type';
+import { BorderStyleType } from '@/app/editor/_map-core/building/type';
 import styles from './index.module.css';
 
 export interface BlockProps {
