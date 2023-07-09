@@ -10,9 +10,11 @@ import { Button, Message } from '@arco-design/web-react';
 import { IconCheck, IconDragArrow } from '@arco-design/web-react/icon';
 import classcat from 'classcat';
 import { BuildingConfig } from '@/app/editor/_map-core/building/type';
-import { parseBuildingKey } from '@/utils/coordinate';
+import { getBuildingKey, parseBuildingKey } from '@/utils/coordinate';
+import MoveBuildingCommand from '../../_command/move-buildings';
 import { BLOCK_PX } from '../../_config';
 import useMapCore from '../../_hooks/use-map-core';
+import { useCommand } from '../../_store/command';
 import { useMapConfig } from '../../_store/map-config';
 import Block from '../block';
 import Building from '../building';
@@ -43,6 +45,7 @@ const MoveArea: FC<MoveAreaProps> = props => {
   const mapCore = useMapCore();
 
   const noTree = useMapConfig(state => state.noTree);
+  const addCommand = useCommand(state => state.add);
 
   const buttons = useRef<HTMLButtonElement[]>([]);
   const freeMoveButtons = useRef<HTMLButtonElement[]>([]);
@@ -133,16 +136,23 @@ const MoveArea: FC<MoveAreaProps> = props => {
   const deleteAndPlace = (rowDiff: number, colDiff: number) => {
     // 先全部删除，再重新放置
     const cache = [] as { b: BuildingConfig; row: number; col: number }[];
+    const command = new MoveBuildingCommand();
     for (const key of selectedKeys) {
       const [row, col] = parseBuildingKey(key);
       const b = mapCore.deleteBuilding(row, col)!;
       cache.push({ b, row, col });
     }
     for (const v of cache) {
-      const { b, row: li, col: co } = v;
-      mapCore.placeBuilding(b, li + rowDiff, co + colDiff);
+      const { b, row, col } = v;
+      mapCore.placeBuilding(b, row + rowDiff, col + colDiff);
+      command.push({
+        building: b,
+        key: getBuildingKey(row + rowDiff, col + colDiff),
+        oldKey: getBuildingKey(row, col),
+      });
     }
     mapCore.roadCache.clear();
+    addCommand(command);
     const { w = 1, h = 1, row = 0, col = 0 } = fixedConfig;
     selectBuilding(w, h, row + rowDiff, col + colDiff);
   };

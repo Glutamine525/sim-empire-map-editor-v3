@@ -1,9 +1,11 @@
 import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
 import { Button } from '@arco-design/web-react';
 import { IconDelete } from '@arco-design/web-react/icon';
-import { parseBuildingKey } from '@/utils/coordinate';
+import { getBuildingKey, parseBuildingKey } from '@/utils/coordinate';
+import DeleteBuildingCommand from '../../_command/delete-buildings';
 import { BLOCK_PX } from '../../_config';
 import useMapCore from '../../_hooks/use-map-core';
+import { useCommand } from '../../_store/command';
 import { useMapConfig } from '../../_store/map-config';
 import Block from '../block';
 import styles from './index.module.css';
@@ -20,6 +22,7 @@ const DeleteArea: FC<DeleteAreaProps> = props => {
   const { isHidden, initRow, initCol, curRow, curCol } = props;
 
   const mapCore = useMapCore();
+  const addCommand = useCommand(state => state.add);
 
   const noTree = useMapConfig(state => state.noTree);
 
@@ -143,10 +146,19 @@ const DeleteArea: FC<DeleteAreaProps> = props => {
             className={styles.button}
             style={buttonStyle}
             onClickCapture={() => {
+              const command = new DeleteBuildingCommand();
               for (const key of selectedKeys) {
                 const [row, col] = parseBuildingKey(key);
-                mapCore.deleteBuilding(row, col);
+                const building = mapCore.deleteBuilding(row, col);
+                if (!building) {
+                  continue;
+                }
+                command.push({
+                  building,
+                  key: getBuildingKey(building.originRow, building.originCol),
+                });
               }
+              addCommand(command);
               setSelectedKeys([]);
               setFixedConfig({ show: false });
             }}
