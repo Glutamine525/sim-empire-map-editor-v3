@@ -15,6 +15,7 @@ interface AutoSaveState {
   mapDataStr?: string;
   snapshots: FinalMapData[];
   trigger: () => boolean;
+  moveSelectedToFirst: (index: number) => void;
 }
 
 const LIMIT = 50;
@@ -42,6 +43,14 @@ export const useAutoSave = create<AutoSaveState>()(
           }),
         );
         return true;
+      },
+      moveSelectedToFirst: index => {
+        set(
+          produce<AutoSaveState>(state => {
+            const selected = state.snapshots.splice(index, 1);
+            state.snapshots.unshift(...selected);
+          }),
+        );
       },
     }),
     {

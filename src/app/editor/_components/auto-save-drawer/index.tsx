@@ -33,18 +33,12 @@ const AutoSaveDrawer: FC<AutoSaveDrawerProps> = props => {
 
   const resetCommand = useCommand(state => state.reset);
   const mapCore = useMapCore();
-  const [changeMapType, changeCivil, changeNoTree, triggerMapRedraw] =
-    useMapConfig(
-      state => [
-        state.changeMapType,
-        state.changeCivil,
-        state.changeNoTree,
-        state.triggerMapRedraw,
-      ],
-      shallow,
-    );
-  const [mapDataStr, snapshots] = useAutoSave(
-    state => [state.mapDataStr, state.snapshots],
+  const [changeMapType, changeCivil, changeNoTree] = useMapConfig(
+    state => [state.changeMapType, state.changeCivil, state.changeNoTree],
+    shallow,
+  );
+  const [mapDataStr, snapshots, moveSelectedToFirst] = useAutoSave(
+    state => [state.mapDataStr, state.snapshots, state.moveSelectedToFirst],
     shallow,
   );
 
@@ -76,7 +70,7 @@ const AutoSaveDrawer: FC<AutoSaveDrawerProps> = props => {
     {
       title: '操作',
       dataIndex: 'operation',
-      render: (_, { imgSrc, originData }) => (
+      render: (_, { imgSrc, originData }, index) => (
         <Tooltip
           position="br"
           color="var(--color-bg-5)"
@@ -84,8 +78,8 @@ const AutoSaveDrawer: FC<AutoSaveDrawerProps> = props => {
             <Image
               alt="缩略图"
               src={imgSrc}
-              width={160}
-              height={160}
+              width={320}
+              height={320}
               style={{ display: 'block' }}
             />
           }
@@ -116,6 +110,7 @@ const AutoSaveDrawer: FC<AutoSaveDrawerProps> = props => {
               }
               const { imgSrc: _, ...data } = originData;
               console.log(data);
+              moveSelectedToFirst(index);
               resetBuildingData();
               importMapData(encodeMapData(data), (mapType, civil, noTree) => {
                 changeMapType(mapType);

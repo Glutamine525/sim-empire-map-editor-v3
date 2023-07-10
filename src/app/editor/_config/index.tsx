@@ -6,4 +6,4 @@ export const EDITOR_PAGE_UI_SETTING = {
   leftMenuWidthCollapsed: 48,
 };
 
-export const AUTO_SAVE_INTERVAL = 1 * 1000;
+export const AUTO_SAVE_INTERVAL = 30 * 1000;
