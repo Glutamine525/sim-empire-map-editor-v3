@@ -23,10 +23,16 @@ const mapCore = MapCore.getInstance();
 const MapTypeDropList = () => {
   console.log('MapTypeDropList render');
 
-  const [mapType, changeMapType, changeOperation] = useMapConfig(
-    state => [state.mapType, state.changeMapType, state.changeOperation],
-    shallow,
-  );
+  const [mapType, changeMapType, changeOperation, triggerMapRedraw] =
+    useMapConfig(
+      state => [
+        state.mapType,
+        state.changeMapType,
+        state.changeOperation,
+        state.triggerMapRedraw,
+      ],
+      shallow,
+    );
 
   return (
     <Menu
@@ -54,6 +60,7 @@ const MapTypeDropList = () => {
         }
         changeOperation(OperationType.Empty);
         changeMapType(Number(data));
+        triggerMapRedraw();
       }}
     >
       {Object.values(MapType).map(type => {
@@ -69,8 +76,13 @@ const MapTypeDropList = () => {
 const CivilDropList = () => {
   console.log('CivilDropList render');
 
-  const [civil, changeCivil, changeOperation] = useMapConfig(
-    state => [state.civil, state.changeCivil, state.changeOperation],
+  const [civil, changeCivil, changeOperation, triggerMapRedraw] = useMapConfig(
+    state => [
+      state.civil,
+      state.changeCivil,
+      state.changeOperation,
+      state.triggerMapRedraw,
+    ],
     shallow,
   );
 
@@ -99,6 +111,7 @@ const CivilDropList = () => {
         }
         changeOperation(OperationType.Empty);
         changeCivil(data as CivilType);
+        triggerMapRedraw();
       }}
     >
       {Object.entries(CivilTypeLabel).map(entry => {

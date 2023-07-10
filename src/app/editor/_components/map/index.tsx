@@ -16,12 +16,13 @@ import styles from './index.module.css';
 export const mapContainer = createRef<HTMLDivElement>();
 
 const Map = () => {
-  console.log('Chessboard render');
+  console.log('Map render');
 
   const [
     mapType,
     civil,
     noTree,
+    mapRedraw,
     changeCounter,
     changeEmptyCells,
     changeMapType,
@@ -32,21 +33,18 @@ const Map = () => {
       state.mapType,
       state.civil,
       state.noTree,
+      state.mapRedraw,
       state.changeCounter,
       state.changeEmptyCells,
       state.changeMapType,
       state.changeCivil,
       state.changeNoTree,
+      state.triggerMapRedraw,
     ],
     shallow,
   );
-  const [mapData, trigger, initImport, changeInitImport] = useAutoSave(
-    state => [
-      state.mapDataStr,
-      state.trigger,
-      state.initImport,
-      state.changeInitImport,
-    ],
+  const [mapData, trigger] = useAutoSave(
+    state => [state.mapDataStr, state.trigger],
     shallow,
   );
 
@@ -72,20 +70,20 @@ const Map = () => {
     );
 
     if (mapData) {
-      try {
-        importMapData(mapData, (mapType, civil, noTree) => {
-          changeMapType(mapType);
-          changeCivil(civil);
-          mapCore.toggleNoTree(noTree);
-          changeNoTree(noTree);
-        });
-        trigger();
-        setTimeout(() => {
-          changeInitImport(false);
-        }, 0);
-      } catch {
-        Message.error('存档已损坏');
-      }
+      // 用宏任务载入存档，避免被首次mapRedraw重置地图
+      setTimeout(() => {
+        try {
+          importMapData(mapData, (mapType, civil, noTree) => {
+            changeMapType(mapType);
+            changeCivil(civil);
+            mapCore.toggleNoTree(noTree);
+            changeNoTree(noTree);
+          });
+          trigger();
+        } catch {
+          Message.error('存档已损坏');
+        }
+      }, 0);
     }
 
     setInterval(() => {
@@ -100,12 +98,9 @@ const Map = () => {
   }, []);
 
   useEffect(() => {
-    if (initImport) {
-      return;
-    }
     resetBuildingData();
     mapCore.init(mapType, civil, noTree);
-  }, [mapType, civil]);
+  }, [mapRedraw]);
 
   useEffect(() => {
     changeEmptyCells(mapCore.emptyCells);

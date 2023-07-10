@@ -10,7 +10,7 @@ import TopMenu from './_components/top-menu';
 import 'perfect-scrollbar/css/perfect-scrollbar.css';
 import styles from './index.module.css';
 
-const Page = () => {
+const EditorPage = () => {
   console.log('Page render');
 
   useEffect(() => {
@@ -34,4 +34,4 @@ const Page = () => {
   );
 };
 
-export default withNoSSR(Page);
+export default withNoSSR(EditorPage);

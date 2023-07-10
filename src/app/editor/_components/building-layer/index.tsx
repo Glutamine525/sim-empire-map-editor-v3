@@ -17,6 +17,8 @@ const Border = () => (
 );
 
 const BuildingLayer = () => {
+  console.log('BuildingLayer render');
+
   return (
     <div
       className={styles.wrapper}

@@ -17,6 +17,7 @@ interface MapConfigState {
   brush: BuildingConfig | undefined;
   counter: MapCounter;
   emptyCells: number;
+  mapRedraw: number;
   changeMapType: (mapType: MapType) => void;
   changeCivil: (civil: CivilType) => void;
   changeNoTree: (noTree: boolean) => void;
@@ -25,6 +26,7 @@ interface MapConfigState {
   changeBrush: (brush: BuildingConfig | undefined) => void;
   changeCounter: (counter: MapCounter) => void;
   changeEmptyCells: (emptyCells: number) => void;
+  triggerMapRedraw: () => void;
 }
 
 export const useMapConfig = create<MapConfigState>()(set => ({
@@ -45,6 +47,7 @@ export const useMapConfig = create<MapConfigState>()(set => ({
     [MapCounterType.Coverage]: 0,
   },
   emptyCells: 0,
+  mapRedraw: 0,
   changeMapType: mapType => set({ mapType }),
   changeCivil: civil => set({ civil }),
   changeNoTree: noTree => set({ noTree }),
@@ -53,4 +56,6 @@ export const useMapConfig = create<MapConfigState>()(set => ({
   changeBrush: brush => set({ brush }),
   changeCounter: counter => set({ counter }),
   changeEmptyCells: emptyCells => set({ emptyCells }),
+  triggerMapRedraw: () =>
+    set(state => ({ mapRedraw: (state.mapRedraw + 1) % 10 })),
 }));

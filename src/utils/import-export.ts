@@ -165,8 +165,8 @@ export function exportMapData() {
   download(blob, getMapDataName());
 }
 
-export function decodeMapData(dataStr: string) {
-  return JSON.parse(base64ToString(dataStr));
+export function decodeMapData(dataStr?: string) {
+  return JSON.parse(base64ToString(dataStr || '')) as MapData;
 }
 
 export function importMapData(
@@ -189,8 +189,8 @@ export function importMapData(
     buildings,
     specialBuildings,
   } = data;
-  delete data.md5;
-  delete data.createAt;
+  delete (data as any).md5;
+  delete (data as any).createAt;
   if (dataMd5 != md5(JSON.stringify(data))) {
     return false;
   }
