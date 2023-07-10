@@ -61,8 +61,8 @@ const MiniMap: FC<MiniMapProps> = props => {
         ctx.clearRect(
           (col - 1) * RATIO,
           (row - 1) * RATIO,
-          b.h! * RATIO,
           b.w! * RATIO,
+          b.h! * RATIO,
         );
         return;
       }
@@ -70,8 +70,8 @@ const MiniMap: FC<MiniMapProps> = props => {
       ctx.fillRect(
         (col - 1) * RATIO,
         (row - 1) * RATIO,
-        b.h! * RATIO,
         b.w! * RATIO,
+        b.h! * RATIO,
       );
     };
   }, []);
