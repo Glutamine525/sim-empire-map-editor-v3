@@ -41,7 +41,7 @@ const MapTypeDropList = () => {
           return;
         }
         if (mapCore.hasPlacedBuilding()) {
-          const isConfirm = await new Promise<boolean>(resolve => {
+          const isOk = await new Promise<boolean>(resolve => {
             Modal.confirm({
               title: '提示',
               content:
@@ -54,7 +54,7 @@ const MapTypeDropList = () => {
               },
             });
           });
-          if (!isConfirm) {
+          if (!isOk) {
             return;
           }
         }
@@ -93,7 +93,7 @@ const CivilDropList = () => {
           return;
         }
         if (mapCore.hasPlacedBuilding()) {
-          const isConfirm = await new Promise<boolean>(resolve => {
+          const isOk = await new Promise<boolean>(resolve => {
             Modal.confirm({
               title: '提示',
               content: '更改文明后会清空所有已放置的建筑，是否确认当前操作？',
@@ -105,7 +105,7 @@ const CivilDropList = () => {
               },
             });
           });
-          if (!isConfirm) {
+          if (!isOk) {
             return;
           }
         }
@@ -177,7 +177,7 @@ const TopMenuController = () => {
                 }
               }
               if (hasOccupied) {
-                const isConfirm = await new Promise<boolean>(resolve => {
+                const isOk = await new Promise<boolean>(resolve => {
                   Modal.confirm({
                     title: '提示',
                     content:
@@ -190,7 +190,7 @@ const TopMenuController = () => {
                     },
                   });
                 });
-                if (!isConfirm) {
+                if (!isOk) {
                   return;
                 }
                 for (const key of keys) {

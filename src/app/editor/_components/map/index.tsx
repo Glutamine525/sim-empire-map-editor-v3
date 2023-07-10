@@ -39,7 +39,6 @@ const Map = () => {
       state.changeMapType,
       state.changeCivil,
       state.changeNoTree,
-      state.triggerMapRedraw,
     ],
     shallow,
   );
