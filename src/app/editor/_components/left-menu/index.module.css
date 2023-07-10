@@ -72,6 +72,18 @@
   align-items: center;
 }
 
+.pop-sub-menu-container :global(.arco-dropdown-menu-item) > * + * {
+  margin-left: 8px;
+}
+
+.pop-sub-menu-container .building-info {
+  transform: scale(0.75);
+  text-align: right;
+
+  font-size: 12px;
+  line-height: 14px;
+}
+
 .pop-sub-menu-title {
   padding: 0 12px;
 
@@ -107,6 +119,11 @@
 
 .icon {
   object-fit: cover;
+}
+
+.key-container {
+  display: flex;
+  align-items: center;
 }
 
 .key-shortcut {

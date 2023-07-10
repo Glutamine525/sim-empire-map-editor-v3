@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { Modal, Tag, Tooltip } from '@arco-design/web-react';
 import { useSpecialBuilding } from '../../_store/special-building';
-import SpecialBuildingEditor from '../special-building-editor';
+import CustomBuildingEditor from '../custom-building-editor';
 import styles from './index.module.css';
 
 interface SpecialBuildingModalProps {}
@@ -20,7 +20,7 @@ const SpecialBuildingModal: FC<SpecialBuildingModalProps> = () => {
         setShow(false);
       }}
     >
-      <SpecialBuildingEditor isNameValid={isNameValid} insert={insert}>
+      <CustomBuildingEditor isNameValid={isNameValid} insert={insert}>
         <div className={styles.tags}>
           {Object.values(buildings).map(v => (
             <Tooltip
@@ -62,7 +62,7 @@ const SpecialBuildingModal: FC<SpecialBuildingModalProps> = () => {
             </Tooltip>
           ))}
         </div>
-      </SpecialBuildingEditor>
+      </CustomBuildingEditor>
     </Modal>
   );
 };

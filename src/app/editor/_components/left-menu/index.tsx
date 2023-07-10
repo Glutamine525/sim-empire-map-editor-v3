@@ -389,21 +389,49 @@ const LeftMenu = () => {
                 </div>
               )}
               {subMenu.map((v, i) => (
-                <MenuItem key={catalog + '-' + i}>
+                <MenuItem
+                  key={catalog + '-' + i}
+                  disabled={
+                    catalog === CatalogType.ImportExport &&
+                    v.name === ImportExportSubmenu.ImportNewCivil
+                  }
+                >
                   <div>
                     {i + 1}. {v.name}
                   </div>
-                  {i < shortcutIdxCap && (
-                    <div className={styles['key-container']}>
-                      <div className={styles['key-shortcut']}>
-                        {mapMenuToShortcut[catalog]}
-                      </div>
-                      +
-                      <div className={styles['key-shortcut']}>
-                        {mapIdxToShortcut[i]}
-                      </div>
+                  <div>
+                    <div className={styles['building-info']}>
+                      {catalog !== CatalogType.Special ? (
+                        <>
+                          {v.range > 0 && <div>范围: {v.range}</div>}
+                          <div>
+                            大小: {v.size}x{v.size}
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          {(specialBuildings[v.name].range || 0) > 0 && (
+                            <div>范围: {specialBuildings[v.name].range}</div>
+                          )}
+                          <div>
+                            大小: {specialBuildings[v.name].w}x
+                            {specialBuildings[v.name].h}
+                          </div>
+                        </>
+                      )}
                     </div>
-                  )}
+                    {i < shortcutIdxCap && (
+                      <div className={styles['key-container']}>
+                        <div className={styles['key-shortcut']}>
+                          {mapMenuToShortcut[catalog]}
+                        </div>
+                        +
+                        <div className={styles['key-shortcut']}>
+                          {mapIdxToShortcut[i]}
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </MenuItem>
               ))}
               {catalog === CatalogType.Special && (

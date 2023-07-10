@@ -17,13 +17,13 @@ import styles from './index.module.css';
 
 const FormItem = Form.Item;
 
-interface SpecialBuildingEditorProps {
+interface CustomBuildingEditorProps {
   isNameValid: (name: string) => boolean;
   insert: (b: BuildingConfig) => void;
   children?: ReactNode;
 }
 
-const SpecialBuildingEditor: FC<SpecialBuildingEditorProps> = props => {
+const CustomBuildingEditor: FC<CustomBuildingEditorProps> = props => {
   const { isNameValid, insert, children } = props;
 
   const mapCore = useMapCore();
@@ -209,6 +209,18 @@ const SpecialBuildingEditor: FC<SpecialBuildingEditorProps> = props => {
               labelCol={{ span: 10 }}
               wrapperCol={{ span: 14 }}
               initialValue={0}
+              rules={[
+                {
+                  validator: (v, cb) => {
+                    if (!v) {
+                      return;
+                    }
+                    if (v > 0 && v < 4) {
+                      cb('范围必须=0或者≥4');
+                    }
+                  },
+                },
+              ]}
             >
               <InputNumber mode="button" min={0} max={20} />
             </Form.Item>
@@ -236,4 +248,4 @@ const SpecialBuildingEditor: FC<SpecialBuildingEditorProps> = props => {
   );
 };
 
-export default SpecialBuildingEditor;
+export default CustomBuildingEditor;
