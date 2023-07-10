@@ -72,6 +72,7 @@ const Map = () => {
       // 用宏任务载入存档，避免被首次mapRedraw重置地图
       setTimeout(() => {
         try {
+          resetBuildingData();
           importMapData(mapData, (mapType, civil, noTree) => {
             changeMapType(mapType);
             changeCivil(civil);

@@ -195,8 +195,8 @@ export function importMapData(
     return false;
   }
   const core = MapCore.getInstance();
-  changeMapConfig(mapType, civil, noTree);
   core.init(mapType, civil, noTree);
+  changeMapConfig(mapType, civil, noTree);
   const roadBuilding = getRoadBuilding();
   roads.forEach((coord: string) => {
     const [row, col] = parseBuildingKey(coord);
