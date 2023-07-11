@@ -112,15 +112,10 @@ const AutoSaveDrawer: FC<AutoSaveDrawerProps> = props => {
               console.log(data);
               moveSelectedToFirst(index);
               resetBuildingData();
-              importMapData(encodeMapData(data), (mapType, civil, noTree) => {
-                changeMapType(mapType);
-                changeCivil(civil);
-                mapCore.toggleNoTree(noTree);
-                changeNoTree(noTree);
-                resetCommand();
-                Message.success('成功载入该存档！');
-                setVisible(false);
-              });
+              importMapData(encodeMapData(data));
+              resetCommand();
+              Message.success('成功载入该存档！');
+              setVisible(false);
             }}
           >
             载入

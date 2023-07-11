@@ -12,6 +12,7 @@ import {
   MapLength,
   MapType,
 } from '@/app/editor/_map-core/type';
+import { useMapConfig } from '@/app/editor/_store/map-config';
 import {
   getGeneralBuilding,
   getRoadBuilding,
@@ -24,12 +25,6 @@ import {
   getMapDataName,
   stringToBase64,
 } from './file';
-
-type ChangeMapConfig = (
-  mapType: MapType,
-  civil: CivilType,
-  noTree: boolean,
-) => void;
 
 export interface MapData {
   md5: string;
@@ -46,7 +41,12 @@ export interface MapData {
   };
 }
 
-export function importOldMapData(data: any, changeMapConfig: ChangeMapConfig) {
+function changeMapConfig(mapType: MapType, civil: CivilType, noTree: boolean) {
+  useMapConfig.setState({ mapType, civil, noTree });
+  MapCore.getInstance().toggleNoTree(noTree);
+}
+
+export function importOldMapData(data: any) {
   const {
     md5: dataMd5,
     woodNum,
@@ -86,17 +86,30 @@ export function importOldMapData(data: any, changeMapConfig: ChangeMapConfig) {
       v: BuildingConfig & {
         line: number;
         column: number;
+        width: number;
+        height: number;
         isMiracle: boolean;
         catagory: string;
         background: string;
         color: string;
       },
     ) => {
-      const { line, column, background, color, isMiracle, catagory, ...rest } =
-        v;
+      const {
+        line,
+        column,
+        background,
+        color,
+        isMiracle,
+        catagory,
+        width,
+        height,
+        ...rest
+      } = v;
       core.placeBuilding(
         {
           ...rest,
+          w: width,
+          h: height,
           bg: background,
           color: color,
           catalog: catagory as CatalogType,
@@ -169,16 +182,13 @@ export function decodeMapData(dataStr?: string) {
   return JSON.parse(base64ToString(dataStr || '')) as MapData;
 }
 
-export function importMapData(
-  dataStr: string,
-  changeMapConfig: ChangeMapConfig,
-) {
+export function importMapData(dataStr: string) {
   const data = decodeMapData(dataStr);
   if (!data) {
     return false;
   }
   if ('woodNum' in data) {
-    return importOldMapData(data, changeMapConfig);
+    return importOldMapData(data);
   }
   const {
     md5: dataMd5,

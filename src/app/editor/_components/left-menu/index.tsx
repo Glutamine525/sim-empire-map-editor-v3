@@ -21,6 +21,7 @@ import {
   getRoadBuilding,
   getSelectedBuilding,
 } from '@/utils/building';
+import { exportMapData } from '@/utils/import-export';
 import { getScreenshot } from '@/utils/screenshot';
 import { catalogImageMap } from '../../_config/images';
 import {
@@ -36,6 +37,7 @@ import {
 import { useCommand } from '../../_store/command';
 import { useMapConfig } from '../../_store/map-config';
 import { useSpecialBuilding } from '../../_store/special-building';
+import ImportDataModal, { ImportDataModalType } from '../import-data-modal';
 import styles from './index.module.css';
 
 const Sider = Layout.Sider;
@@ -95,6 +97,9 @@ const LeftMenu = () => {
     shallow,
   );
 
+  const [importDataModalType, setImportDataModalType] = useState(
+    ImportDataModalType.None,
+  );
   const [menuWidth, setMenuWidth] = useLocalStorageState('left-menu-width', {
     defaultValue: EDITOR_PAGE_UI_SETTING.leftMenuWidth,
   });
@@ -280,7 +285,9 @@ const LeftMenu = () => {
         if (name === ImportExportSubmenu.Screenshot) {
           getScreenshot(document.getElementById('building-layer')!);
         } else if (name === ImportExportSubmenu.ImportMapData) {
+          setImportDataModalType(ImportDataModalType.Map);
         } else if (name === ImportExportSubmenu.ExportMapData) {
+          exportMapData();
         } else if (name === ImportExportSubmenu.ImportNewCivil) {
         }
         return;
@@ -491,6 +498,10 @@ const LeftMenu = () => {
           }}
         />
       </div>
+      <ImportDataModal
+        type={importDataModalType}
+        setType={setImportDataModalType}
+      />
     </Sider>
   );
 };

@@ -73,12 +73,7 @@ const Map = () => {
       setTimeout(() => {
         try {
           resetBuildingData();
-          importMapData(mapData, (mapType, civil, noTree) => {
-            changeMapType(mapType);
-            changeCivil(civil);
-            mapCore.toggleNoTree(noTree);
-            changeNoTree(noTree);
-          });
+          importMapData(mapData);
           trigger();
         } catch {
           Message.error('存档已损坏');
