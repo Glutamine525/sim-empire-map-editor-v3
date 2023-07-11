@@ -16,12 +16,10 @@ import {
   encodeMapData,
   importMapData,
 } from '@/utils/import-export';
-import useMapCore from '../../_hooks/use-map-core';
 import { CivilTypeLabel } from '../../_map-core/type';
 import { useAutoSave } from '../../_store/auto-save';
 import { resetBuildingData } from '../../_store/building-data';
 import { useCommand } from '../../_store/command';
-import { useMapConfig } from '../../_store/map-config';
 
 interface AutoSaveDrawerProps {
   visible: boolean;
@@ -32,11 +30,6 @@ const AutoSaveDrawer: FC<AutoSaveDrawerProps> = props => {
   const { visible, setVisible } = props;
 
   const resetCommand = useCommand(state => state.reset);
-  const mapCore = useMapCore();
-  const [changeMapType, changeCivil, changeNoTree] = useMapConfig(
-    state => [state.changeMapType, state.changeCivil, state.changeNoTree],
-    shallow,
-  );
   const [mapDataStr, snapshots, moveSelectedToFirst] = useAutoSave(
     state => [state.mapDataStr, state.snapshots, state.moveSelectedToFirst],
     shallow,

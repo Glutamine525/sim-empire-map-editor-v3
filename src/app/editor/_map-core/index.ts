@@ -164,6 +164,9 @@ export default class MapCore {
   }
 
   public toggleNoTree(noTree: boolean) {
+    if (this.noTree === noTree) {
+      return;
+    }
     this.noTree = noTree;
     if (!noTree) {
       this.placeBarrier(BarrierType.Tree);

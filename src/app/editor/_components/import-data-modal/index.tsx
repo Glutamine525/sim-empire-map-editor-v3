@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import { Message, Modal, Upload } from '@arco-design/web-react';
 import { importMapData } from '@/utils/import-export';
+import useMapCore from '../../_hooks/use-map-core';
 import { useAutoSave } from '../../_store/auto-save';
 import { resetBuildingData } from '../../_store/building-data';
 import { useCommand } from '../../_store/command';
@@ -22,6 +23,7 @@ interface ImportDataModalProps {
 const ImportDataModal: FC<ImportDataModalProps> = props => {
   const { type, setType } = props;
 
+  const mapCore = useMapCore();
   const resetCommand = useCommand(state => state.reset);
   const trigger = useAutoSave(state => state.trigger);
 
@@ -32,20 +34,22 @@ const ImportDataModal: FC<ImportDataModalProps> = props => {
       Message.error('不接受的文件类型，请重新上传指定文件类型~');
       return;
     }
-    const isOk = await new Promise<boolean>(resolve => {
-      Modal.confirm({
-        title: '提示',
-        content: '加载完成后，所有历史操作将被清空，是否确认载入该存档？',
-        onOk: () => {
-          resolve(true);
-        },
-        onCancel: () => {
-          resolve(false);
-        },
+    if (mapCore.hasPlacedBuilding()) {
+      const isOk = await new Promise<boolean>(resolve => {
+        Modal.confirm({
+          title: '提示',
+          content: '加载完成后，所有历史操作将被清空，是否确认载入该存档？',
+          onOk: () => {
+            resolve(true);
+          },
+          onCancel: () => {
+            resolve(false);
+          },
+        });
       });
-    });
-    if (!isOk) {
-      return;
+      if (!isOk) {
+        return;
+      }
     }
     const data = await new Promise<string>(resolve => {
       const reader = new FileReader();

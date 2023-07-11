@@ -18,30 +18,21 @@ export const mapContainer = createRef<HTMLDivElement>();
 const Map = () => {
   console.log('Map render');
 
-  const [
-    mapType,
-    civil,
-    noTree,
-    mapRedraw,
-    changeCounter,
-    changeEmptyCells,
-    changeMapType,
-    changeCivil,
-    changeNoTree,
-  ] = useMapConfig(
-    state => [
-      state.mapType,
-      state.civil,
-      state.noTree,
-      state.mapRedraw,
-      state.changeCounter,
-      state.changeEmptyCells,
-      state.changeMapType,
-      state.changeCivil,
-      state.changeNoTree,
-    ],
-    shallow,
-  );
+  const [mapType, civil, noTree, mapRedraw, changeCounter, changeEmptyCells] =
+    useMapConfig(
+      state => [
+        state.mapType,
+        state.civil,
+        state.noTree,
+        state.mapRedraw,
+        state.changeCounter,
+        state.changeEmptyCells,
+        state.changeMapType,
+        state.changeCivil,
+        state.changeNoTree,
+      ],
+      shallow,
+    );
   const [mapData, trigger] = useAutoSave(
     state => [state.mapDataStr, state.trigger],
     shallow,
