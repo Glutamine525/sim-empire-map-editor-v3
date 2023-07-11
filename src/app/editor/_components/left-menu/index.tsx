@@ -21,6 +21,7 @@ import {
   getRoadBuilding,
   getSelectedBuilding,
 } from '@/utils/building';
+import { getScreenshot } from '@/utils/screenshot';
 import { catalogImageMap } from '../../_config/images';
 import {
   ahooksIdxKeyFilter,
@@ -275,6 +276,13 @@ const LeftMenu = () => {
         redo();
         return;
       case CatalogType.ImportExport:
+        const { name } = subMenuContent[catalog][index];
+        if (name === ImportExportSubmenu.Screenshot) {
+          getScreenshot(document.getElementById('building-layer')!);
+        } else if (name === ImportExportSubmenu.ImportMapData) {
+        } else if (name === ImportExportSubmenu.ExportMapData) {
+        } else if (name === ImportExportSubmenu.ImportNewCivil) {
+        }
         return;
       default:
         if (isNaN(index)) {
@@ -401,14 +409,17 @@ const LeftMenu = () => {
                   </div>
                   <div>
                     <div className={styles['building-info']}>
-                      {catalog !== CatalogType.Special ? (
+                      {(Object.values(BuildingType) as CatalogType[])
+                        .concat(CatalogType.General)
+                        .includes(catalog) && (
                         <>
                           {v.range > 0 && <div>范围: {v.range}</div>}
                           <div>
                             大小: {v.size}x{v.size}
                           </div>
                         </>
-                      ) : (
+                      )}
+                      {catalog === CatalogType.Special && (
                         <>
                           {(specialBuildings[v.name].range || 0) > 0 && (
                             <div>范围: {specialBuildings[v.name].range}</div>

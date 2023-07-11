@@ -21,6 +21,7 @@ const BuildingLayer = () => {
 
   return (
     <div
+      id="building-layer"
       className={styles.wrapper}
       style={{
         width: (MapLength + 2) * BLOCK_PX,
