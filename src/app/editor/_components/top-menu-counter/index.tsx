@@ -25,7 +25,7 @@ const Item: FC<ItemProps> = ({ type, value }) => {
     <div className={styles.item}>
       <div className={styles.type}>{type}:</div>
       <div className={styles.value}>{value}</div>
-      <div className={styles.postfix}>{postfixMap[type]}</div>
+      <div>{postfixMap[type]}</div>
     </div>
   );
 };
