@@ -30,7 +30,7 @@ const Range: FC<RangeProps> = props => {
 
   const color = useMemo(() => {
     const { r, g, b } = hexToRgb(bg) || { r: 0, g: 0, b: 0 };
-    return `rgba(${r},${g},${b},0.4)`;
+    return `rgba(${r},${g},${b},0.6)`;
   }, [bg]);
 
   const cells = useMemo(() => {
