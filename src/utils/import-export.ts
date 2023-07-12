@@ -56,7 +56,7 @@ export function importOldMapData(data: any) {
     buildings,
   } = data;
   delete data.md5;
-  if (dataMd5 != md5(JSON.stringify(data))) {
+  if (dataMd5 !== md5(JSON.stringify(data))) {
     return false;
   }
   if (
@@ -201,7 +201,7 @@ export function importMapData(dataStr: string) {
   } = data;
   delete (data as any).md5;
   delete (data as any).createAt;
-  if (dataMd5 != md5(JSON.stringify(data))) {
+  if (dataMd5 !== md5(JSON.stringify(data))) {
     return false;
   }
   const core = MapCore.getInstance();
