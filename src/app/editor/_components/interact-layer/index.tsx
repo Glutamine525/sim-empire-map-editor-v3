@@ -2,7 +2,7 @@ import React, { useMemo, useRef, useState } from 'react';
 import { shallow } from 'zustand/shallow';
 import { BLOCK_PX } from '@/app/editor/_config';
 import { MapLength, OperationType } from '@/app/editor/_map-core/type';
-import { canHover } from '@/utils/building';
+import { canHover, showMarker } from '@/utils/building';
 import {
   getBuildingKey,
   isAllInRange,
@@ -19,6 +19,7 @@ import DeleteArea from '../delete-area';
 import { mapContainer } from '../map';
 import MiniMap from '../mini-map';
 import MoveArea from '../move-area';
+import ProtectionHighlight from '../protection-highlight';
 import Range from '../range';
 import RoadHelper from '../road-helper';
 import SpecialBuildingModal from '../special-building-modal';
@@ -49,6 +50,7 @@ const InteractLayer = () => {
     canPlace: true,
     marker: 0,
     canReplace: false,
+    protections: [] as string[],
   });
 
   const placeCommand = useRef<PlaceBuildingCommand>();
@@ -68,6 +70,8 @@ const InteractLayer = () => {
       return;
     }
     // 检测是否可以覆盖
+    const protections = new Set<string>();
+    const { cells, getProtectionNum } = mapCore;
     const building = mapCore.getBuilding(row, col);
     if (
       building?.isGeneral &&
@@ -76,12 +80,25 @@ const InteractLayer = () => {
       !brush.isGeneral
     ) {
       const [_row, _col] = parseBuildingKey(mapCore.cells[row][col].occupied);
+      if (showMarker(brush) && !brush.isRoad) {
+        for (let i = _row; i < _row + h; i++) {
+          for (let j = _col; j < _col + w; j++) {
+            const { protection } = cells[i][j];
+            for (const p in protection) {
+              for (const key of protection[p]) {
+                protections.add(key);
+              }
+            }
+          }
+        }
+      }
       setPreviewConfig({
         row: _row,
         col: _col,
         marker: building.marker || 0,
         canPlace: false,
         canReplace: true,
+        protections: Array.from(protections),
       });
       return brush;
     }
@@ -89,14 +106,22 @@ const InteractLayer = () => {
     const [offRow, offCol] = [row - offH, col - offW];
     let canPlace = true;
     let marker = 0;
-    const { cells, getProtectionNum } = mapCore;
     for (let i = offRow; i < offRow + h; i++) {
       for (let j = offCol; j < offCol + w; j++) {
-        if (cells[i][j].occupied) {
+        const { protection, occupied } = cells[i][j];
+        if (occupied) {
           canPlace = false;
           break;
         }
         marker = Math.max(marker, getProtectionNum(i, j));
+        if (!showMarker(brush) || brush.isRoad) {
+          continue;
+        }
+        for (const p in protection) {
+          for (const key of protection[p]) {
+            protections.add(key);
+          }
+        }
       }
       if (!canPlace) {
         break;
@@ -108,6 +133,7 @@ const InteractLayer = () => {
       marker,
       canPlace,
       canReplace: false,
+      protections: Array.from(protections),
     });
     return brush;
   }, [operation, brush, mouseCoord]);
@@ -125,8 +151,22 @@ const InteractLayer = () => {
     if (!canHover(b)) {
       return;
     }
+    const { w = 1, h = 1 } = b;
     const [r, c] = parseBuildingKey(occupied);
-    return { ...b, row: r, col: c };
+    const protections = new Set<string>();
+    if (showMarker(b)) {
+      for (let i = r; i < r + h; i++) {
+        for (let j = c; j < c + w; j++) {
+          const { protection } = mapCore.cells[i][j];
+          for (const p in protection) {
+            for (const key of protection[p]) {
+              protections.add(key);
+            }
+          }
+        }
+      }
+    }
+    return { ...b, row: r, col: c, protections: Array.from(protections) };
   }, [operation, mouseCoord]);
 
   const resetState = () => {
@@ -300,6 +340,11 @@ const InteractLayer = () => {
         isHidden={!hoverBuilding || !hoverBuilding.range}
         {...hoverBuilding}
       />
+      {hoverBuilding?.protections.map(key => {
+        const { w = 1, h = 1 } = mapCore.buildings[key];
+        const [r, c] = parseBuildingKey(key);
+        return <ProtectionHighlight key={key} w={w} h={h} row={r} col={c} />;
+      })}
       {/* preview building */}
       <Building
         isHidden={!previewBuilding}
@@ -318,6 +363,12 @@ const InteractLayer = () => {
         {...previewConfig}
         {...previewBuilding}
       />
+      {Boolean(previewBuilding) &&
+        previewConfig?.protections.map(key => {
+          const { w = 1, h = 1 } = mapCore.buildings[key];
+          const [r, c] = parseBuildingKey(key);
+          return <ProtectionHighlight key={key} w={w} h={h} row={r} col={c} />;
+        })}
       <RoadHelper
         isHidden={operation !== OperationType.PlaceBuilding || !brush?.isRoad}
         initRow={originMousePos.row}

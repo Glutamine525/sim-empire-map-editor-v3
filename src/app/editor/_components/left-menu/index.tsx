@@ -428,12 +428,12 @@ const LeftMenu = () => {
                       )}
                       {catalog === CatalogType.Special && (
                         <>
-                          {(specialBuildings[v.name].range || 0) > 0 && (
-                            <div>范围: {specialBuildings[v.name].range}</div>
+                          {(specialBuildings[v.name]?.range || 0) > 0 && (
+                            <div>范围: {specialBuildings[v.name]?.range}</div>
                           )}
                           <div>
-                            大小: {specialBuildings[v.name].w}x
-                            {specialBuildings[v.name].h}
+                            大小: {specialBuildings[v.name]?.w}x
+                            {specialBuildings[v.name]?.h}
                           </div>
                         </>
                       )}

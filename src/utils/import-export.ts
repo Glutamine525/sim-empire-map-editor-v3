@@ -160,7 +160,7 @@ export function getMapData(): MapData {
         buildings[key].push(coord);
         continue;
       }
-      specialBuildings[b.name!] = b;
+      specialBuildings[b.name!] = { ...b };
       buildings[key] = [coord];
     }
   }
@@ -216,7 +216,7 @@ export function importMapData(dataStr: string) {
     const [catalog, name] = key.split('-');
     const b =
       catalog === CatalogType.Special
-        ? specialBuildings[name]
+        ? { ...specialBuildings[name] }
         : catalog === CatalogType.General
         ? getGeneralBuilding(parseInt(name.split('x')[0]))
         : getSelectedBuilding(

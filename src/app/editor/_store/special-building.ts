@@ -31,7 +31,7 @@ export const useSpecialBuilding = create<SpecialBuildingState>()(
         }
         set(
           produce<SpecialBuildingState>(state => {
-            state.buildings[name] = b;
+            state.buildings[name] = { ...b };
           }),
         );
         return true;
