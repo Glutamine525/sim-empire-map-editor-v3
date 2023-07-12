@@ -357,6 +357,7 @@ const InteractLayer = () => {
           return;
         }
         Notification.info({
+          id: 'residence-requirement',
           title: '住宅需求查询',
           content: <ResidenceRequirement {...hoverBuilding} />,
         });
