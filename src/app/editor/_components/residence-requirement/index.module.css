@@ -1,0 +1,22 @@
+.container {
+}
+
+.catalog {
+  margin-top: 16px;
+
+  font-weight: bold;
+}
+
+.item-container {
+  display: grid;
+
+  grid-template-columns: auto auto;
+}
+
+.item-container:last-child {
+  margin: 0;
+}
+
+.item {
+  cursor: pointer;
+}

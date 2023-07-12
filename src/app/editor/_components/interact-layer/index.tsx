@@ -1,4 +1,5 @@
 import React, { useMemo, useRef, useState } from 'react';
+import { Notification } from '@arco-design/web-react';
 import { shallow } from 'zustand/shallow';
 import { BLOCK_PX } from '@/app/editor/_config';
 import { MapLength, OperationType } from '@/app/editor/_map-core/type';
@@ -11,6 +12,7 @@ import {
 import DeleteBuildingCommand from '../../_command/delete-buildings';
 import PlaceBuildingCommand from '../../_command/place-buildings';
 import useMapCore from '../../_hooks/use-map-core';
+import { CatalogType } from '../../_map-core/building/type';
 import { useCommand } from '../../_store/command';
 import { useMapConfig } from '../../_store/map-config';
 import { useSpecialBuilding } from '../../_store/special-building';
@@ -21,6 +23,7 @@ import MiniMap from '../mini-map';
 import MoveArea from '../move-area';
 import ProtectionHighlight from '../protection-highlight';
 import Range from '../range';
+import ResidenceRequirement from '../residence-requirement';
 import RoadHelper from '../road-helper';
 import SpecialBuildingModal from '../special-building-modal';
 import styles from './index.module.css';
@@ -184,6 +187,10 @@ const InteractLayer = () => {
         margin: BLOCK_PX,
       }}
       onMouseDown={e => {
+        if (e.button !== 0) {
+          return;
+        }
+
         if (showSpecialBuildingModal) {
           return;
         }
@@ -230,6 +237,10 @@ const InteractLayer = () => {
         }
       }}
       onMouseMove={e => {
+        if (e.button !== 0) {
+          return;
+        }
+
         if (showSpecialBuildingModal) {
           return;
         }
@@ -280,7 +291,11 @@ const InteractLayer = () => {
           }
         }
       }}
-      onMouseUp={() => {
+      onMouseUp={e => {
+        if (e.button !== 0) {
+          return;
+        }
+
         if (showSpecialBuildingModal) {
           return;
         }
@@ -332,6 +347,19 @@ const InteractLayer = () => {
       }}
       onMouseLeave={() => {
         resetState();
+      }}
+      onContextMenu={e => {
+        e.preventDefault();
+        if (operation !== OperationType.Empty) {
+          return;
+        }
+        if (hoverBuilding?.catalog !== CatalogType.Residence) {
+          return;
+        }
+        Notification.info({
+          title: '住宅需求查询',
+          content: <ResidenceRequirement {...hoverBuilding} />,
+        });
       }}
     >
       {/* hover building */}
