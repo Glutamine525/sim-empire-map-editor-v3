@@ -183,7 +183,7 @@ const LeftMenu = () => {
   });
 
   useKeyPress(protectionShortcut, e => {
-    if (showSpecialBuildingModal) {
+    if (showSpecialBuildingModal || e.ctrlKey) {
       return;
     }
     const key = e.key.toUpperCase();
@@ -255,7 +255,7 @@ const LeftMenu = () => {
       case CatalogType.Special:
         if (subMenuContent[CatalogType.Special].length === 0) {
           changeOperation(OperationType.Empty);
-          Message.error('当前特殊建筑数据为空，请在编辑窗口中添加！');
+          Message.warning('当前特殊建筑数据为空，请在编辑窗口中添加！');
           setShowSpecialBuildingModal(true);
           return;
         }

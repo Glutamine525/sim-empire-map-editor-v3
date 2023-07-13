@@ -6,7 +6,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { Button, Message } from '@arco-design/web-react';
+import { Button } from '@arco-design/web-react';
 import { IconCheck, IconDragArrow } from '@arco-design/web-react/icon';
 import classcat from 'classcat';
 import { BuildingConfig } from '@/app/editor/_map-core/building/type';
@@ -333,6 +333,13 @@ const MoveArea: FC<MoveAreaProps> = props => {
               }}
             />
             {Object.values(ButtonType).map(type => {
+              if (
+                freeMoveConfig.color !== 'success' &&
+                type === ButtonType.Confirm
+              ) {
+                return null;
+              }
+
               return (
                 <Button
                   ref={dom => {
@@ -343,7 +350,7 @@ const MoveArea: FC<MoveAreaProps> = props => {
                   }}
                   key={type}
                   shape="circle"
-                  type="secondary"
+                  type="primary"
                   icon={buttonIcon[type]}
                   className={classcat([styles.button, styles['free-move']])}
                   style={{
@@ -359,10 +366,6 @@ const MoveArea: FC<MoveAreaProps> = props => {
                   }}
                   onClickCapture={() => {
                     if (type !== ButtonType.Confirm) {
-                      return;
-                    }
-                    if (freeMoveConfig.color !== 'success') {
-                      Message.error('该预览位置上有障碍物，无法移动！');
                       return;
                     }
                     const { offsetRow = 0, offsetCol = 0 } = freeMoveConfig;

@@ -1,5 +1,6 @@
 import React, { useMemo, useRef, useState } from 'react';
-import { Notification } from '@arco-design/web-react';
+import { Message, Notification } from '@arco-design/web-react';
+import { useKeyPress } from 'ahooks';
 import { shallow } from 'zustand/shallow';
 import { BLOCK_PX } from '@/app/editor/_config';
 import { MapLength, OperationType } from '@/app/editor/_map-core/type';
@@ -32,8 +33,13 @@ const InteractLayer = () => {
   console.log('InteractLayer render');
 
   const mapCore = useMapCore();
-  const [operation, brush] = useMapConfig(
-    state => [state.operation, state.brush],
+  const [operation, brush, changeOperation, changeBrush] = useMapConfig(
+    state => [
+      state.operation,
+      state.brush,
+      state.changeOperation,
+      state.changeBrush,
+    ],
     shallow,
   );
   const showSpecialBuildingModal = useSpecialBuilding(state => state.show);
@@ -181,6 +187,20 @@ const InteractLayer = () => {
     }
     return { ...b, row: r, col: c, protections: Array.from(protections) };
   }, [operation, mouseCoord]);
+
+  // copy building
+  useKeyPress('c', e => {
+    if (!e.ctrlKey || !hoverBuilding) {
+      return;
+    }
+    if (hoverBuilding.isFixed) {
+      Message.warning({ content: '固定建筑不允许复制~', id: 'copy-message' });
+      return;
+    }
+    const { row: _r, col: _c, ...b } = hoverBuilding;
+    changeOperation(OperationType.PlaceBuilding);
+    changeBrush(b);
+  });
 
   const resetState = () => {
     setIsMouseDown(false);
