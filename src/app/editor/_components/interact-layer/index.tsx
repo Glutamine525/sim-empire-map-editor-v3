@@ -16,12 +16,12 @@ import { CatalogType } from '../../_map-core/building/type';
 import { useCommand } from '../../_store/command';
 import { useMapConfig } from '../../_store/map-config';
 import { useSpecialBuilding } from '../../_store/special-building';
+import BlockHighlight, { HighlightType } from '../block-highlight';
 import Building from '../building';
 import DeleteArea from '../delete-area';
 import { mapContainer } from '../map';
 import MiniMap from '../mini-map';
 import MoveArea from '../move-area';
-import ProtectionHighlight from '../protection-highlight';
 import Range from '../range';
 import ResidenceRequirement from '../residence-requirement';
 import RoadHelper from '../road-helper';
@@ -54,6 +54,13 @@ const InteractLayer = () => {
     marker: 0,
     canReplace: false,
     protections: [] as string[],
+  });
+  const [requirementConfig, setRequirementConfig] = useState({
+    show: false,
+    row: 0,
+    col: 0,
+    w: 0,
+    h: 0,
   });
 
   const placeCommand = useRef<PlaceBuildingCommand>();
@@ -359,10 +366,20 @@ const InteractLayer = () => {
         if (hoverBuilding?.catalog !== CatalogType.Residence) {
           return;
         }
+        setRequirementConfig({
+          show: true,
+          row: hoverBuilding.row,
+          col: hoverBuilding.col,
+          w: hoverBuilding.w!,
+          h: hoverBuilding.h!,
+        });
         Notification.info({
           id: 'residence-requirement',
           title: '住宅需求查询',
           content: <ResidenceRequirement {...hoverBuilding} />,
+          onClose: () => {
+            setRequirementConfig({ show: false, row: 0, col: 0, w: 0, h: 0 });
+          },
         });
       }}
     >
@@ -375,7 +392,16 @@ const InteractLayer = () => {
       {hoverBuilding?.protections.map(key => {
         const { w = 1, h = 1 } = mapCore.buildings[key];
         const [r, c] = parseBuildingKey(key);
-        return <ProtectionHighlight key={key} w={w} h={h} row={r} col={c} />;
+        return (
+          <BlockHighlight
+            key={key}
+            type={HighlightType.Protection}
+            w={w}
+            h={h}
+            row={r}
+            col={c}
+          />
+        );
       })}
       {/* preview building */}
       <Building
@@ -399,7 +425,16 @@ const InteractLayer = () => {
         previewConfig?.protections.map(key => {
           const { w = 1, h = 1 } = mapCore.buildings[key];
           const [r, c] = parseBuildingKey(key);
-          return <ProtectionHighlight key={key} w={w} h={h} row={r} col={c} />;
+          return (
+            <BlockHighlight
+              key={key}
+              type={HighlightType.Protection}
+              w={w}
+              h={h}
+              row={r}
+              col={c}
+            />
+          );
         })}
       <RoadHelper
         isHidden={operation !== OperationType.PlaceBuilding || !brush?.isRoad}
@@ -409,6 +444,15 @@ const InteractLayer = () => {
         curCol={mouseCoord.col}
       />
       {/* functional */}
+      {requirementConfig.show && (
+        <BlockHighlight
+          type={HighlightType.Requirement}
+          w={requirementConfig.w}
+          h={requirementConfig.h}
+          row={requirementConfig.row}
+          col={requirementConfig.col}
+        />
+      )}
       <MoveArea
         isHidden={operation !== OperationType.MoveBuilding}
         initRow={originMousePos.row}
