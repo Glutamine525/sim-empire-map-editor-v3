@@ -19,6 +19,7 @@ import { useMapConfig } from '../../_store/map-config';
 import { useSpecialBuilding } from '../../_store/special-building';
 import BlockHighlight, { HighlightType } from '../block-highlight';
 import Building from '../building';
+import Copyright from '../copyright';
 import DeleteArea from '../delete-area';
 import { mapContainer } from '../map';
 import MiniMap from '../mini-map';
@@ -489,6 +490,7 @@ const InteractLayer = () => {
       />
       <MiniMap onMouseEnter={() => resetState()} />
       <SpecialBuildingModal />
+      <Copyright />
     </div>
   );
 };

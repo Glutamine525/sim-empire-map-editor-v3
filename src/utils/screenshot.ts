@@ -90,6 +90,7 @@ function htmlToText(node: Element | Text) {
         'transform-origin',
         'z-index',
         'border-radius',
+        'margin',
       ],
     );
   }

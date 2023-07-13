@@ -3,6 +3,7 @@ import { BLOCK_PX } from '@/app/editor/_config';
 import { MapLength } from '@/app/editor/_map-core/type';
 import { isInRange } from '@/utils/coordinate';
 import BasicBuilding from '../basic-building';
+import Copyright from '../copyright';
 import styles from './index.module.css';
 
 const Border = () => (
@@ -37,6 +38,7 @@ const BuildingLayer = () => {
         }}
       >
         <Border />
+        <Copyright />
         {Array.from(Array(MapLength), (_, _r) => {
           return (
             <Fragment key={_r + 1}>

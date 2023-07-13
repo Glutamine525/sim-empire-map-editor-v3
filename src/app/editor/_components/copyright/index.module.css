@@ -1,0 +1,51 @@
+.container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.title {
+  font-size: 100px;
+  font-weight: bold;
+}
+
+.title > * + * {
+  margin-left: 32px;
+}
+
+.civil {
+  color: rgb(var(--primary-5));
+}
+
+.map-type {
+  color: rgb(var(--danger-5));
+}
+
+.no-tree {
+  color: rgb(var(--success-5));
+}
+
+.map-layout {
+  color: var(--color-text-3);
+}
+
+.author,
+.web-link {
+  color: var(--color-text-3);
+
+  font-size: 30px;
+}
+
+.author > * + *,
+.web-link > div > * + * {
+  margin-left: 12px;
+}
+
+.author strong,
+.web-link strong {
+  color: var(--color-text-1);
+}
+
+.web-link strong {
+  cursor: pointer;
+}
