@@ -73,8 +73,8 @@ const InteractLayer = () => {
       return;
     }
     // 检测是否可以覆盖
-    const protections = new Set<string>();
-    const { cells, getProtectionNum } = mapCore;
+    const protectionKeys = new Set<string>();
+    const { cells, getProtections } = mapCore;
     const building = mapCore.getBuilding(row, col);
     if (
       building?.isGeneral &&
@@ -89,7 +89,7 @@ const InteractLayer = () => {
             const { protection } = cells[i][j];
             for (const p in protection) {
               for (const key of protection[p]) {
-                protections.add(key);
+                protectionKeys.add(key);
               }
             }
           }
@@ -101,14 +101,14 @@ const InteractLayer = () => {
         marker: building.marker || 0,
         canPlace: false,
         canReplace: true,
-        protections: Array.from(protections),
+        protections: Array.from(protectionKeys),
       });
       return brush;
     }
     // 检测是否可以放置
     const [offRow, offCol] = [row - offH, col - offW];
     let canPlace = true;
-    let marker = 0;
+    const protections = new Set<string>();
     for (let i = offRow; i < offRow + h; i++) {
       for (let j = offCol; j < offCol + w; j++) {
         const { protection, occupied } = cells[i][j];
@@ -116,13 +116,16 @@ const InteractLayer = () => {
           canPlace = false;
           break;
         }
-        marker = Math.max(marker, getProtectionNum(i, j));
         if (!showMarker(brush) || brush.isRoad) {
           continue;
         }
+        const p = getProtections(i, j);
+        for (const v of p) {
+          protections.add(v);
+        }
         for (const p in protection) {
           for (const key of protection[p]) {
-            protections.add(key);
+            protectionKeys.add(key);
           }
         }
       }
@@ -133,10 +136,10 @@ const InteractLayer = () => {
     setPreviewConfig({
       row: offRow,
       col: offCol,
-      marker,
+      marker: protections.size,
       canPlace,
       canReplace: false,
-      protections: Array.from(protections),
+      protections: Array.from(protectionKeys),
     });
     return brush;
   }, [operation, brush, mouseCoord]);

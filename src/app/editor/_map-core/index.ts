@@ -82,7 +82,7 @@ export default class MapCore {
   public miniMapUpdater!: (key: string, b: BuildingConfig) => void;
 
   public constructor() {
-    this.getProtectionNum = this.getProtectionNum.bind(this);
+    this.getProtections = this.getProtections.bind(this);
     this.init(MapType._5, CivilType.China, false);
   }
 
@@ -265,14 +265,21 @@ export default class MapCore {
       isProtection,
       isRoad,
     } = b;
-    let marker = 0;
+    const protections = new Set<string>();
     for (let i = row; i < row + h; i++) {
       for (let j = col; j < col + w; j++) {
         this.cells[i][j].occupied = key;
-        marker = Math.max(marker, this.getProtectionNum(i, j));
+        const p = this.getProtections(i, j);
+        for (const v of p) {
+          protections.add(v);
+        }
       }
     }
-    this.buildings[key] = { ...b, marker: isRoad ? 1 : marker, isEmpty: false };
+    this.buildings[key] = {
+      ...b,
+      marker: isRoad ? 1 : protections.size,
+      isEmpty: false,
+    };
     this.mapUpdater(key, this.buildings[key]);
     this.miniMapUpdater?.(key, this.buildings[key]);
     this.updateCounter(b, 1);
@@ -350,6 +357,8 @@ export default class MapCore {
           records.add(o);
         }
       }
+      console.log(Array.from(records));
+
       this.updateBuildingsMarker(Array.from(records));
     }
     for (let i = row; i < row + h; i++) {
@@ -607,13 +616,16 @@ export default class MapCore {
       const [row, col] = parseBuildingKey(key);
       const target = this.getBuilding(key)!;
       const { w: width = 1, h: height = 1 } = target;
-      let marker = 0;
+      const protections = new Set<string>();
       for (let i = row; i < row + height; i++) {
         for (let j = col; j < col + width; j++) {
-          marker = Math.max(marker, this.getProtectionNum(i, j));
+          const p = this.getProtections(i, j);
+          for (const v of p) {
+            protections.add(v);
+          }
         }
       }
-      this.buildings[key].marker = marker;
+      this.buildings[key].marker = protections.size;
       this.mapUpdater(key, this.buildings[key]);
     }
   }
@@ -678,10 +690,10 @@ export default class MapCore {
     return this.buildings[occupied];
   }
 
-  public getProtectionNum(row: number, col: number) {
+  public getProtections(row: number, col: number) {
     return Object.entries(this.cells[row][col].protection)
-      .map(([, v]) => v)
-      .filter(v => v.length).length;
+      .filter(([, v]) => v.length)
+      .map(([k]) => k);
   }
 
   public isRoad(row: number, col: number) {
