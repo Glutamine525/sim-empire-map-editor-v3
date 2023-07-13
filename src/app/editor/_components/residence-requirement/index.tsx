@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from 'react';
+import React, { FC, Fragment, useMemo } from 'react';
 import { shallow } from 'zustand/shallow';
 import { getSelectedBuilding } from '@/utils/building';
 import { isInBuildingRange, parseBuildingKey } from '@/utils/coordinate';
@@ -107,9 +107,9 @@ const ResidenceRequirement: FC<ResidenceRequirementProps> = props => {
       {Object.keys(result).map(_catalog => {
         const catalog = _catalog as BuildingType;
         return (
-          <>
+          <Fragment key={catalog}>
             <div className={styles.catalog}>{catalog}</div>
-            <div key={catalog} className={styles['item-container']}>
+            <div className={styles['item-container']}>
               {result[catalog]?.map(data => {
                 return (
                   <div key={data.name}>
@@ -143,7 +143,7 @@ const ResidenceRequirement: FC<ResidenceRequirementProps> = props => {
                 );
               })}
             </div>
-          </>
+          </Fragment>
         );
       })}
     </div>
