@@ -9,3 +9,8 @@ export const EDITOR_PAGE_UI_SETTING = {
 };
 
 export const AUTO_SAVE_INTERVAL = 30 * 1000;
+
+export const GITHUB_LINK =
+  'https://github.com/Glutamine525/sim-empire-map-editor-v3';
+
+export const WEB_LINK = 'https://www.simempire.fun';

@@ -16,6 +16,7 @@
     "ahooks": "^3.7.7",
     "autoprefixer": "10.4.14",
     "classcat": "^5.0.4",
+    "copy-to-clipboard": "^3.3.3",
     "dayjs": "^1.11.9",
     "eslint": "8.42.0",
     "eslint-config-next": "13.4.5",

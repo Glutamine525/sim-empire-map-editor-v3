@@ -1,6 +1,8 @@
 import React from 'react';
+import { Message } from '@arco-design/web-react';
+import copy from 'copy-to-clipboard';
 import { shallow } from 'zustand/shallow';
-import { VERSION } from '../../_config';
+import { GITHUB_LINK, VERSION, WEB_LINK } from '../../_config';
 import { CivilTypeLabel } from '../../_map-core/type';
 import { useMapConfig } from '../../_store/map-config';
 import styles from './index.module.css';
@@ -28,11 +30,26 @@ const Copyright = () => {
       <div className={styles['web-link']}>
         <div>
           <span>Github:</span>
-          <strong>Glutamine525/sim-empire-map-editor-v3</strong>
+          <strong
+            onClick={() => {
+              window.open(GITHUB_LINK);
+            }}>
+            Glutamine525/sim-empire-map-editor-v3
+          </strong>
         </div>
         <div>
           <span>网页链接:</span>
-          <strong>simempire.fun</strong>
+          <strong
+            onClick={() => {
+              const success = copy(WEB_LINK);
+              if (success) {
+                Message.success('成功复制到剪贴板');
+              } else {
+                Message.error('复制失败');
+              }
+            }}>
+            simempire.fun
+          </strong>
         </div>
       </div>
     </div>
