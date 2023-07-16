@@ -23,11 +23,11 @@ import { useCommand } from '../../_store/command';
 
 interface AutoSaveDrawerProps {
   visible: boolean;
-  setVisible: (v: boolean) => void;
+  close: () => void;
 }
 
 const AutoSaveDrawer: FC<AutoSaveDrawerProps> = props => {
-  const { visible, setVisible } = props;
+  const { visible, close } = props;
 
   const resetCommand = useCommand(state => state.reset);
   const [mapDataStr, snapshots, moveSelectedToFirst] = useAutoSave(
@@ -108,7 +108,7 @@ const AutoSaveDrawer: FC<AutoSaveDrawerProps> = props => {
               importMapData(encodeMapData(data));
               resetCommand();
               Message.success('成功载入该存档！');
-              setVisible(false);
+              close();
             }}
           >
             载入
@@ -121,13 +121,11 @@ const AutoSaveDrawer: FC<AutoSaveDrawerProps> = props => {
   return (
     <Drawer
       width={640}
-      title={<span>自动存档</span>}
+      title={<strong>自动存档</strong>}
       visible={visible}
-      onOk={() => {
-        setVisible(false);
-      }}
+      focusLock={false}
       onCancel={() => {
-        setVisible(false);
+        close();
       }}
       footer={null}
     >

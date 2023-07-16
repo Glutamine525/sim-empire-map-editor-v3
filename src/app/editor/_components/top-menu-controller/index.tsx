@@ -221,6 +221,7 @@ const TopMenuController = () => {
           onChange={rotated => {
             changeRotated(rotated);
           }}
+          disabled={true}
         />
       </div>
     </div>

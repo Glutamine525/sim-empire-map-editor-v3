@@ -153,7 +153,7 @@ const LeftMenu = () => {
   useKeyPress(
     Object.keys(mapShortcutToMenu),
     e => {
-      if (showModalType !== ModalType.None) {
+      if (showModalType !== ModalType.None || e.ctrlKey) {
         return;
       }
       const key = e.key === ' ' ? e.code : e.key.toUpperCase();
@@ -180,7 +180,7 @@ const LeftMenu = () => {
   );
 
   useKeyPress(ahooksIdxKeyFilter, e => {
-    if (showModalType !== ModalType.None) {
+    if (showModalType !== ModalType.None || e.ctrlKey) {
       return;
     }
     if (!openedSubMenu.current) {

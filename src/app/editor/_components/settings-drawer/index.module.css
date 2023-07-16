@@ -1,0 +1,13 @@
+.sub-title {
+  margin: 12px 0;
+
+  text-align: 16px;
+
+  color: var(--color-text-2);
+
+  font-weight: bold;
+}
+
+.sub-title:first-of-type {
+  margin-top: 4px;
+}
