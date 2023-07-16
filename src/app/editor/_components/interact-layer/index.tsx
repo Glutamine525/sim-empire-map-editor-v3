@@ -490,7 +490,7 @@ const InteractLayer = () => {
       />
       <MiniMap onMouseEnter={() => resetState()} />
       <SpecialBuildingModal />
-      <Copyright />
+      <Copyright isInteractLayer={true} />
     </div>
   );
 };

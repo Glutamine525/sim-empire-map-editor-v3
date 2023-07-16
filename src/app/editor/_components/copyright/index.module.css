@@ -4,6 +4,10 @@
   left: 0;
 }
 
+.container.interact-layer * {
+  color: transparent !important;
+}
+
 .title {
   font-size: 100px;
   font-weight: bold;
@@ -26,12 +30,12 @@
 }
 
 .map-layout {
-  color: var(--color-text-3);
+  color: var(--color-text-2);
 }
 
 .author,
 .web-link {
-  color: var(--color-text-3);
+  color: var(--color-text-2);
 
   font-size: 30px;
 }
