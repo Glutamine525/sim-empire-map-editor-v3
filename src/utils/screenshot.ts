@@ -33,7 +33,7 @@ export async function getScreenshot(el: HTMLElement) {
   canvas.height = height * 2;
   canvas.getContext('2d')?.drawImage(img, 0, 0, canvas.width, canvas.height);
   const blob = await new Promise<Blob>(resolve => {
-    canvas.toBlob(blob => resolve(blob!), 'image/jpeg', 1);
+    canvas.toBlob(blob => resolve(blob!), 'image/jpeg', 0.8);
   });
   download(blob, getMapImageName());
   console.timeEnd('getScreenshot');

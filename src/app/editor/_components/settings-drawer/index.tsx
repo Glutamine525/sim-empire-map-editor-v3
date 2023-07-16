@@ -78,7 +78,7 @@ const SettingsDrawer: FC<SettingsDrawerProps> = props => {
         <FormItem label="像素缩放" field="screenshotScale">
           <Slider />
         </FormItem>
-        <FormItem label="截图质量" field="screenshotQuality">
+        <FormItem label="图片质量" field="screenshotQuality">
           <Slider />
         </FormItem>
 
