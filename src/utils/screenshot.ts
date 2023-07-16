@@ -29,11 +29,11 @@ export async function getScreenshot(el: HTMLElement) {
   await new Promise<void>(resolve => {
     img.onload = () => resolve();
   });
-  canvas.width = width * 1.5;
-  canvas.height = height * 1.5;
+  canvas.width = width * 2;
+  canvas.height = height * 2;
   canvas.getContext('2d')?.drawImage(img, 0, 0, canvas.width, canvas.height);
   const blob = await new Promise<Blob>(resolve => {
-    canvas.toBlob(blob => resolve(blob!), 'image/jpeg');
+    canvas.toBlob(blob => resolve(blob!), 'image/jpeg', 1);
   });
   download(blob, getMapImageName());
   console.timeEnd('getScreenshot');
@@ -42,8 +42,11 @@ export async function getScreenshot(el: HTMLElement) {
 function htmlToText(node: Element | Text) {
   if (node.nodeName === '#text') return (node as Text).data;
   const nodeName = node.nodeName.toLowerCase();
+  const className = (node as Element)?.getAttribute('class');
   let attr: string;
-  if (nodeName === 'svg') {
+  if (className?.includes('debug')) {
+    return '';
+  } else if (nodeName === 'svg') {
     attr = getAttributeString(node as Element, [
       'xmlns',
       'width',
@@ -52,6 +55,12 @@ function htmlToText(node: Element | Text) {
     ]);
   } else if (nodeName === 'path') {
     attr = getAttributeString(node as Element, ['d', 'style'], ['fill']);
+  } else if (nodeName === 'img') {
+    attr = getAttributeString(
+      node as Element,
+      ['src', 'width', 'height', 'style'],
+      ['display'],
+    );
   } else {
     attr = getAttributeString(
       node as Element,
@@ -72,6 +81,8 @@ function htmlToText(node: Element | Text) {
         'color',
         'text-align',
         'text-shadow',
+        'box-shadow',
+        'filter',
         'background-color',
         'background-image',
         'border-top-color',

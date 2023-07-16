@@ -4,6 +4,7 @@ import MapCore from '@/app/editor/_map-core';
 import { useBuildingData } from '@/app/editor/_store/building-data';
 import { showMarker } from '@/utils/building';
 import Block from '../block';
+import FixedBuildingIcon from '../fixed-building-icon';
 import styles from './index.module.css';
 
 interface BasicBuildingProps {
@@ -42,10 +43,7 @@ const BasicBuilding: FC<BasicBuildingProps> = ({ row, col }) => {
           )}
         </>
       )}
-      {data.isFixed && !data.isBarrier && (
-        // <div className={styles.fixed}>📌</div>
-        <div className={styles.fixed}>〒</div>
-      )}
+      {data.isFixed && !data.isBarrier && <FixedBuildingIcon />}
       {data.text}
       {process.env.NODE_ENV === 'development' && !data.isBarrier && (
         <div className={styles['debug-coord']}>
