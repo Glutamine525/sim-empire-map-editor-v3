@@ -43,7 +43,8 @@ const BasicBuilding: FC<BasicBuildingProps> = ({ row, col }) => {
         </>
       )}
       {data.isFixed && !data.isBarrier && (
-        <div className={styles.fixed}>📌</div>
+        // <div className={styles.fixed}>📌</div>
+        <div className={styles.fixed}>〒</div>
       )}
       {data.text}
       {process.env.NODE_ENV === 'development' && !data.isBarrier && (

@@ -51,7 +51,7 @@ const Building: FC<BuildingProps> = props => {
           })}
         />
       )}
-      {isFixed && !isBarrier && <div className={styles.fixed}>📌</div>}
+      {isFixed && !isBarrier && <div className={styles.fixed}>〒</div>}
       {text}
     </Block>
   );
