@@ -7,11 +7,12 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { BLOCK_PX, UI_SETTING } from '../../_config';
+import useMapCore from '../../_hooks/use-map-core';
+import { useMapConfig } from '../../_store/map-config';
+import { mapContainer } from '../map';
 import { MapLength } from '@/app/editor/_map-core/type';
 import { isBoundary, parseBuildingKey } from '@/utils/coordinate';
-import { BLOCK_PX } from '../../_config';
-import useMapCore from '../../_hooks/use-map-core';
-import { mapContainer } from '../map';
 import styles from './index.module.css';
 
 export const miniMapCanvas = createRef<HTMLCanvasElement>();
@@ -26,6 +27,8 @@ const MiniMap: FC<MiniMapProps> = props => {
   const { onMouseEnter } = props;
 
   const mapCore = useMapCore();
+
+  const leftMenuWidth = useMapConfig(state => state.leftMenuWidth);
 
   const isMouseDown = useRef(false);
 
@@ -76,35 +79,41 @@ const MiniMap: FC<MiniMapProps> = props => {
     };
   }, []);
 
+  const resizer = (leftMenuWidth: number = UI_SETTING.leftMenuWidth) => {
+    const { innerWidth, innerHeight } = window;
+
+    setFocusConfig(state => ({
+      ...state,
+      w: (innerWidth - leftMenuWidth) / BLOCK_PX,
+      h: (innerHeight - UI_SETTING.topMenuHeight) / BLOCK_PX,
+    }));
+    scroller();
+  };
+
+  const scroller = () => {
+    const { scrollTop, scrollLeft } = mapContainer.current!;
+    setFocusConfig(state => ({
+      ...state,
+      top: scrollTop / BLOCK_PX,
+      left: scrollLeft / BLOCK_PX,
+    }));
+  };
+
   useEffect(() => {
-    const resizer = () => {
-      const { width, height } = mapContainer.current!.getBoundingClientRect();
-      setFocusConfig(state => ({
-        ...state,
-        w: width / BLOCK_PX,
-        h: height / BLOCK_PX,
-      }));
-      scroller();
-    };
-
-    const scroller = () => {
-      const { scrollTop, scrollLeft } = mapContainer.current!;
-      setFocusConfig(state => ({
-        ...state,
-        top: scrollTop / BLOCK_PX,
-        left: scrollLeft / BLOCK_PX,
-      }));
-    };
-
     resizer();
-    window.addEventListener('resize', resizer);
+    const wrappedResizer = () => resizer();
+    window.addEventListener('resize', wrappedResizer);
     mapContainer.current?.addEventListener('scroll', scroller);
 
     return () => {
-      window.removeEventListener('resize', resizer);
+      window.removeEventListener('resize', wrappedResizer);
       mapContainer.current?.removeEventListener('scroll', scroller);
     };
   }, []);
+
+  useEffect(() => {
+    resizer(leftMenuWidth);
+  }, [leftMenuWidth]);
 
   const dragFocus = (e: MouseEvent) => {
     const { pageX, pageY } = e;
@@ -145,8 +154,7 @@ const MiniMap: FC<MiniMapProps> = props => {
       onMouseEnter={onMouseEnter}
       onMouseLeave={() => {
         isMouseDown.current = false;
-      }}
-    >
+      }}>
       <canvas
         ref={miniMapCanvas}
         className={styles.container}

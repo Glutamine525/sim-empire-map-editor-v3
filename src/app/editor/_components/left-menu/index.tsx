@@ -1,12 +1,27 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Layout, Menu, Message, Tooltip } from '@arco-design/web-react';
 import { IconMenuFold, IconMenuUnfold } from '@arco-design/web-react/icon';
-import { useKeyPress, useLocalStorageState } from 'ahooks';
+import { useKeyPress } from 'ahooks';
 import classcat from 'classcat';
 import Image from 'next/image';
 import PerfectScrollbar from 'perfect-scrollbar';
 import { shallow } from 'zustand/shallow';
-import { EDITOR_PAGE_UI_SETTING } from '@/app/editor/_config';
+import { catalogImageMap } from '../../_config/images';
+import {
+  ahooksIdxKeyFilter,
+  mapIdxToShortcut,
+  mapMenuToShortcut,
+  mapProtectionShortcutToIdx,
+  mapShortcutToIdx,
+  mapShortcutToMenu,
+  protectionShortcut,
+  shortcutIdxCap,
+} from '../../_config/shortcut';
+import { useCommand } from '../../_store/command';
+import { useMapConfig } from '../../_store/map-config';
+import { useSpecialBuilding } from '../../_store/special-building';
+import ImportDataModal, { ImportDataModalType } from '../import-data-modal';
+import { UI_SETTING } from '@/app/editor/_config';
 import { GeneralBuilding } from '@/app/editor/_map-core/building/general';
 import {
   BuildingType,
@@ -23,21 +38,6 @@ import {
 } from '@/utils/building';
 import { exportMapData } from '@/utils/import-export';
 import { getScreenshot } from '@/utils/screenshot';
-import { catalogImageMap } from '../../_config/images';
-import {
-  ahooksIdxKeyFilter,
-  mapIdxToShortcut,
-  mapMenuToShortcut,
-  mapProtectionShortcutToIdx,
-  mapShortcutToIdx,
-  mapShortcutToMenu,
-  protectionShortcut,
-  shortcutIdxCap,
-} from '../../_config/shortcut';
-import { useCommand } from '../../_store/command';
-import { useMapConfig } from '../../_store/map-config';
-import { useSpecialBuilding } from '../../_store/special-building';
-import ImportDataModal, { ImportDataModalType } from '../import-data-modal';
 import styles from './index.module.css';
 
 const Sider = Layout.Sider;
@@ -80,8 +80,20 @@ const defaultSubMenuOpenedState = {
 const LeftMenu = () => {
   console.log('LeftMenu render');
 
-  const [civil, changeOperation, changeBrush] = useMapConfig(
-    state => [state.civil, state.changeOperation, state.changeBrush],
+  const [
+    civil,
+    leftMenuWidth,
+    changeOperation,
+    changeBrush,
+    changeLeftMenuWidth,
+  ] = useMapConfig(
+    state => [
+      state.civil,
+      state.leftMenuWidth,
+      state.changeOperation,
+      state.changeBrush,
+      state.changeLeftMenuWidth,
+    ],
     shallow,
   );
   const [
@@ -100,9 +112,6 @@ const LeftMenu = () => {
   const [importDataModalType, setImportDataModalType] = useState(
     ImportDataModalType.None,
   );
-  const [menuWidth, setMenuWidth] = useLocalStorageState('left-menu-width', {
-    defaultValue: EDITOR_PAGE_UI_SETTING.leftMenuWidth,
-  });
   const [subMenuContent, setSubMenuContent] = useState<{
     [key in CatalogType]: SimpleBuildingConfig[];
   }>({
@@ -140,8 +149,7 @@ const LeftMenu = () => {
     setSubMenuOpened(defaultSubMenuOpenedState);
   };
 
-  const isCollapsed =
-    menuWidth === EDITOR_PAGE_UI_SETTING.leftMenuWidthCollapsed;
+  const isCollapsed = leftMenuWidth === UI_SETTING.leftMenuWidthCollapsed;
 
   useKeyPress(
     Object.keys(mapShortcutToMenu),
@@ -307,7 +315,7 @@ const LeftMenu = () => {
   };
 
   return (
-    <Sider ref={container} className={styles.container} width={menuWidth}>
+    <Sider ref={container} className={styles.container} width={leftMenuWidth}>
       <Menu
         accordion={true}
         className={classcat({
@@ -318,8 +326,7 @@ const LeftMenu = () => {
         selectable={false}
         tooltipProps={{ content: null }}
         collapse={isCollapsed}
-        onClickMenuItem={onClickMenuItem}
-      >
+        onClickMenuItem={onClickMenuItem}>
         {Object.entries(subMenuContent).map(([_catalog, subMenu]) => {
           const catalog = _catalog as CatalogType;
           if (subMenu.length === 0) {
@@ -330,12 +337,10 @@ const LeftMenu = () => {
                   catalog === CatalogType.WatermarkMode ||
                   (catalog === CatalogType.Undo && !commands.length) ||
                   (catalog === CatalogType.Redo && !undoCommands.length)
-                }
-              >
+                }>
                 <Tooltip
                   content={isCollapsed ? catalog : null}
-                  position="right"
-                >
+                  position="right">
                   <div className={styles['main-menu-container']}>
                     <Icon catalog={catalog} />
                     <div className={styles.text}>{catalog}</div>
@@ -360,8 +365,7 @@ const LeftMenu = () => {
                     className={classcat([
                       styles['key-shortcut'],
                       styles['key-shortcut-arrow'],
-                    ])}
-                  >
+                    ])}>
                     {mapMenuToShortcut[catalog]}
                   </div>
                 </div>
@@ -396,8 +400,7 @@ const LeftMenu = () => {
                   resetSubMenuOpened();
                   openedSubMenu.current = undefined;
                 },
-              }}
-            >
+              }}>
               {isCollapsed && (
                 <div className={styles['pop-sub-menu-title']} key="title">
                   {catalog}
@@ -409,8 +412,7 @@ const LeftMenu = () => {
                   disabled={
                     catalog === CatalogType.ImportExport &&
                     v.name === ImportExportSubmenu.ImportNewCivil
-                  }
-                >
+                  }>
                   <div>
                     {i + 1}. {v.name}
                   </div>
@@ -460,8 +462,7 @@ const LeftMenu = () => {
                   ])}
                   onClick={() => {
                     setShowSpecialBuildingModal(true);
-                  }}
-                >
+                  }}>
                   <div>编辑</div>
                   <div className={styles['key-container']}>
                     <div className={styles['key-shortcut']}>
@@ -481,9 +482,8 @@ const LeftMenu = () => {
       <div
         className={styles['collapse-button-container']}
         style={{
-          left: (menuWidth || EDITOR_PAGE_UI_SETTING.leftMenuWidth) - 20,
-        }}
-      >
+          left: (leftMenuWidth || UI_SETTING.leftMenuWidth) - 20,
+        }}>
         <Button
           shape="circle"
           type="text"
@@ -491,10 +491,10 @@ const LeftMenu = () => {
           icon={isCollapsed ? <IconMenuUnfold /> : <IconMenuFold />}
           onClick={() => {
             if (isCollapsed) {
-              setMenuWidth(EDITOR_PAGE_UI_SETTING.leftMenuWidth);
+              changeLeftMenuWidth(UI_SETTING.leftMenuWidth);
               return;
             }
-            setMenuWidth(EDITOR_PAGE_UI_SETTING.leftMenuWidthCollapsed);
+            changeLeftMenuWidth(UI_SETTING.leftMenuWidthCollapsed);
           }}
         />
       </div>
