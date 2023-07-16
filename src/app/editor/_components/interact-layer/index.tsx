@@ -16,7 +16,6 @@ import useMapCore from '../../_hooks/use-map-core';
 import { CatalogType } from '../../_map-core/building/type';
 import { useCommand } from '../../_store/command';
 import { useMapConfig } from '../../_store/map-config';
-import { useSpecialBuilding } from '../../_store/special-building';
 import BlockHighlight, { HighlightType } from '../block-highlight';
 import Building from '../building';
 import Copyright from '../copyright';
@@ -27,7 +26,6 @@ import MoveArea from '../move-area';
 import Range from '../range';
 import ResidenceRequirement from '../residence-requirement';
 import RoadHelper from '../road-helper';
-import SpecialBuildingModal from '../special-building-modal';
 import styles from './index.module.css';
 
 const InteractLayer = () => {
@@ -43,7 +41,6 @@ const InteractLayer = () => {
     ],
     shallow,
   );
-  const showSpecialBuildingModal = useSpecialBuilding(state => state.show);
   const addCommand = useCommand(state => state.add);
 
   const [isMouseDown, setIsMouseDown] = useState(false);
@@ -222,10 +219,6 @@ const InteractLayer = () => {
           return;
         }
 
-        if (showSpecialBuildingModal) {
-          return;
-        }
-
         const {
           nativeEvent: { offsetX, offsetY },
           clientX,
@@ -269,10 +262,6 @@ const InteractLayer = () => {
       }}
       onMouseMove={e => {
         if (e.button !== 0) {
-          return;
-        }
-
-        if (showSpecialBuildingModal) {
           return;
         }
 
@@ -326,11 +315,6 @@ const InteractLayer = () => {
         if (e.button !== 0) {
           return;
         }
-
-        if (showSpecialBuildingModal) {
-          return;
-        }
-
         setIsMouseDown(false);
         if (operation === OperationType.PlaceBuilding) {
           if (brush?.isRoad) {
@@ -358,7 +342,7 @@ const InteractLayer = () => {
         setOriginMousePos({ x: 0, y: 0, row: 0, col: 0 });
       }}
       onDoubleClick={() => {
-        if (showSpecialBuildingModal || operation !== OperationType.Empty) {
+        if (operation !== OperationType.Empty) {
           return;
         }
         const { row, col } = mouseCoord;
@@ -489,7 +473,6 @@ const InteractLayer = () => {
         curCol={mouseCoord.col}
       />
       <MiniMap onMouseEnter={() => resetState()} />
-      <SpecialBuildingModal />
       <Copyright isInteractLayer={true} />
     </div>
   );

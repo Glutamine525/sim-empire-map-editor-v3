@@ -4,20 +4,23 @@ import { useSpecialBuilding } from '../../_store/special-building';
 import CustomBuildingEditor from '../custom-building-editor';
 import styles from './index.module.css';
 
-interface SpecialBuildingModalProps {}
+interface SpecialBuildingModalProps {
+  visible: boolean;
+  close: () => void;
+}
 
-const SpecialBuildingModal: FC<SpecialBuildingModalProps> = () => {
-  const { show, buildings, setShow, isNameValid, insert, remove } =
-    useSpecialBuilding();
+const SpecialBuildingModal: FC<SpecialBuildingModalProps> = props => {
+  const { visible, close } = props;
+  const { buildings, isNameValid, insert, remove } = useSpecialBuilding();
 
   return (
     <Modal
-      visible={show}
+      visible={visible}
       footer={null}
       focusLock={false}
       className={styles.wrapper}
       onCancel={() => {
-        setShow(false);
+        close();
       }}
     >
       <CustomBuildingEditor isNameValid={isNameValid} insert={insert}>

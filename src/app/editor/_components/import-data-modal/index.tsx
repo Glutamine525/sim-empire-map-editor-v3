@@ -5,23 +5,18 @@ import useMapCore from '../../_hooks/use-map-core';
 import { useAutoSave } from '../../_store/auto-save';
 import { resetBuildingData } from '../../_store/building-data';
 import { useCommand } from '../../_store/command';
+import { ModalType } from '../left-menu';
 import styles from './index.module.css';
 
 const ACCEPT = '.txt';
 
-export enum ImportDataModalType {
-  None,
-  Civil,
-  Map,
-}
-
 interface ImportDataModalProps {
-  type: ImportDataModalType;
-  setType: (v: ImportDataModalType) => void;
+  type: ModalType;
+  close: (v: ModalType) => void;
 }
 
 const ImportDataModal: FC<ImportDataModalProps> = props => {
-  const { type, setType } = props;
+  const { type, close } = props;
 
   const mapCore = useMapCore();
   const resetCommand = useCommand(state => state.reset);
@@ -58,7 +53,7 @@ const ImportDataModal: FC<ImportDataModalProps> = props => {
       };
       reader.readAsText(file);
     });
-    if (type === ImportDataModalType.Map) {
+    if (type === ModalType.ImportMap) {
       resetBuildingData();
       const succeed = importMapData(data);
       if (!succeed) {
@@ -68,19 +63,19 @@ const ImportDataModal: FC<ImportDataModalProps> = props => {
       Message.success('成功载入该存档！');
       resetCommand();
       trigger();
-      setType(ImportDataModalType.None);
+      close(ModalType.None);
     }
   };
 
   return (
     <Modal
-      visible={type !== ImportDataModalType.None}
+      visible={[ModalType.ImportMap, ModalType.ImportCivil].includes(type)}
       footer={null}
       closable={false}
       focusLock={false}
       className={styles.container}
       onCancel={() => {
-        setType(ImportDataModalType.None);
+        close(ModalType.None);
       }}
     >
       <Upload

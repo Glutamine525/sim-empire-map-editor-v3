@@ -4,9 +4,7 @@ import { persist } from 'zustand/middleware';
 import { BuildingConfig } from '@/app/editor/_map-core/building/type';
 
 interface SpecialBuildingState {
-  show: boolean;
   buildings: { [key: string]: BuildingConfig };
-  setShow: (show: boolean) => void;
   isNameValid: (name: string) => boolean;
   insert: (b: BuildingConfig) => boolean;
   remove: (name?: string) => void;
@@ -15,9 +13,7 @@ interface SpecialBuildingState {
 export const useSpecialBuilding = create<SpecialBuildingState>()(
   persist(
     (set, get) => ({
-      show: false,
       buildings: {},
-      setShow: show => set({ show }),
       isNameValid: name => {
         if (!name || name in get().buildings || name.includes('-')) {
           return false;

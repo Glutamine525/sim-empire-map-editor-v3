@@ -6,21 +6,6 @@ import classcat from 'classcat';
 import Image from 'next/image';
 import PerfectScrollbar from 'perfect-scrollbar';
 import { shallow } from 'zustand/shallow';
-import { catalogImageMap } from '../../_config/images';
-import {
-  ahooksIdxKeyFilter,
-  mapIdxToShortcut,
-  mapMenuToShortcut,
-  mapProtectionShortcutToIdx,
-  mapShortcutToIdx,
-  mapShortcutToMenu,
-  protectionShortcut,
-  shortcutIdxCap,
-} from '../../_config/shortcut';
-import { useCommand } from '../../_store/command';
-import { useMapConfig } from '../../_store/map-config';
-import { useSpecialBuilding } from '../../_store/special-building';
-import ImportDataModal, { ImportDataModalType } from '../import-data-modal';
 import { UI_SETTING } from '@/app/editor/_config';
 import { GeneralBuilding } from '@/app/editor/_map-core/building/general';
 import {
@@ -38,11 +23,34 @@ import {
 } from '@/utils/building';
 import { exportMapData } from '@/utils/import-export';
 import { getScreenshot } from '@/utils/screenshot';
+import { catalogImageMap } from '../../_config/images';
+import {
+  ahooksIdxKeyFilter,
+  mapIdxToShortcut,
+  mapMenuToShortcut,
+  mapProtectionShortcutToIdx,
+  mapShortcutToIdx,
+  mapShortcutToMenu,
+  protectionShortcut,
+  shortcutIdxCap,
+} from '../../_config/shortcut';
+import { useCommand } from '../../_store/command';
+import { useMapConfig } from '../../_store/map-config';
+import { useSpecialBuilding } from '../../_store/special-building';
+import ImportDataModal from '../import-data-modal';
+import SpecialBuildingModal from '../special-building-modal';
 import styles from './index.module.css';
 
 const Sider = Layout.Sider;
 const MenuItem = Menu.Item;
 const SubMenu = Menu.SubMenu;
+
+export enum ModalType {
+  None,
+  SpecialBuilding,
+  ImportMap,
+  ImportCivil,
+}
 
 const Icon = ({ catalog }: { catalog: CatalogType }) => (
   <Image
@@ -96,22 +104,13 @@ const LeftMenu = () => {
     ],
     shallow,
   );
-  const [
-    showSpecialBuildingModal,
-    setShowSpecialBuildingModal,
-    specialBuildings,
-  ] = useSpecialBuilding(
-    state => [state.show, state.setShow, state.buildings],
-    shallow,
-  );
+  const specialBuildings = useSpecialBuilding(state => state.buildings);
   const [commands, undoCommands, undo, redo] = useCommand(
     state => [state.commands, state.undoCommands, state.undo, state.redo],
     shallow,
   );
 
-  const [importDataModalType, setImportDataModalType] = useState(
-    ImportDataModalType.None,
-  );
+  const [showModalType, setShowModalType] = useState(ModalType.None);
   const [subMenuContent, setSubMenuContent] = useState<{
     [key in CatalogType]: SimpleBuildingConfig[];
   }>({
@@ -154,7 +153,7 @@ const LeftMenu = () => {
   useKeyPress(
     Object.keys(mapShortcutToMenu),
     e => {
-      if (showSpecialBuildingModal) {
+      if (showModalType !== ModalType.None) {
         return;
       }
       const key = e.key === ' ' ? e.code : e.key.toUpperCase();
@@ -165,7 +164,7 @@ const LeftMenu = () => {
       resetSubMenuOpened();
       if (catalog === CatalogType.Special && subMenuOpened[catalog]) {
         // 连按两次F，打开特殊建筑编辑窗口
-        setShowSpecialBuildingModal(true);
+        setShowModalType(ModalType.SpecialBuilding);
         resetSubMenuOpened();
         return;
       }
@@ -181,7 +180,7 @@ const LeftMenu = () => {
   );
 
   useKeyPress(ahooksIdxKeyFilter, e => {
-    if (showSpecialBuildingModal) {
+    if (showModalType !== ModalType.None) {
       return;
     }
     if (!openedSubMenu.current) {
@@ -191,7 +190,7 @@ const LeftMenu = () => {
   });
 
   useKeyPress(protectionShortcut, e => {
-    if (showSpecialBuildingModal || e.ctrlKey) {
+    if (showModalType !== ModalType.None || e.ctrlKey) {
       return;
     }
     const key = e.key.toUpperCase();
@@ -264,7 +263,7 @@ const LeftMenu = () => {
         if (subMenuContent[CatalogType.Special].length === 0) {
           changeOperation(OperationType.Empty);
           Message.warning('当前特殊建筑数据为空，请在编辑窗口中添加！');
-          setShowSpecialBuildingModal(true);
+          setShowModalType(ModalType.SpecialBuilding);
           return;
         }
         changeBrush({
@@ -293,7 +292,7 @@ const LeftMenu = () => {
         if (name === ImportExportSubmenu.Screenshot) {
           getScreenshot(document.getElementById('building-layer')!);
         } else if (name === ImportExportSubmenu.ImportMapData) {
-          setImportDataModalType(ImportDataModalType.Map);
+          setShowModalType(ModalType.ImportMap);
         } else if (name === ImportExportSubmenu.ExportMapData) {
           exportMapData();
         } else if (name === ImportExportSubmenu.ImportNewCivil) {
@@ -326,7 +325,8 @@ const LeftMenu = () => {
         selectable={false}
         tooltipProps={{ content: null }}
         collapse={isCollapsed}
-        onClickMenuItem={onClickMenuItem}>
+        onClickMenuItem={onClickMenuItem}
+      >
         {Object.entries(subMenuContent).map(([_catalog, subMenu]) => {
           const catalog = _catalog as CatalogType;
           if (subMenu.length === 0) {
@@ -337,10 +337,12 @@ const LeftMenu = () => {
                   catalog === CatalogType.WatermarkMode ||
                   (catalog === CatalogType.Undo && !commands.length) ||
                   (catalog === CatalogType.Redo && !undoCommands.length)
-                }>
+                }
+              >
                 <Tooltip
                   content={isCollapsed ? catalog : null}
-                  position="right">
+                  position="right"
+                >
                   <div className={styles['main-menu-container']}>
                     <Icon catalog={catalog} />
                     <div className={styles.text}>{catalog}</div>
@@ -365,7 +367,8 @@ const LeftMenu = () => {
                     className={classcat([
                       styles['key-shortcut'],
                       styles['key-shortcut-arrow'],
-                    ])}>
+                    ])}
+                  >
                     {mapMenuToShortcut[catalog]}
                   </div>
                 </div>
@@ -400,7 +403,8 @@ const LeftMenu = () => {
                   resetSubMenuOpened();
                   openedSubMenu.current = undefined;
                 },
-              }}>
+              }}
+            >
               {isCollapsed && (
                 <div className={styles['pop-sub-menu-title']} key="title">
                   {catalog}
@@ -412,7 +416,8 @@ const LeftMenu = () => {
                   disabled={
                     catalog === CatalogType.ImportExport &&
                     v.name === ImportExportSubmenu.ImportNewCivil
-                  }>
+                  }
+                >
                   <div>
                     {i + 1}. {v.name}
                   </div>
@@ -461,8 +466,9 @@ const LeftMenu = () => {
                     styles['pop-sub-menu-container'],
                   ])}
                   onClick={() => {
-                    setShowSpecialBuildingModal(true);
-                  }}>
+                    setShowModalType(ModalType.SpecialBuilding);
+                  }}
+                >
                   <div>编辑</div>
                   <div className={styles['key-container']}>
                     <div className={styles['key-shortcut']}>
@@ -483,7 +489,8 @@ const LeftMenu = () => {
         className={styles['collapse-button-container']}
         style={{
           left: (leftMenuWidth || UI_SETTING.leftMenuWidth) - 20,
-        }}>
+        }}
+      >
         <Button
           shape="circle"
           type="text"
@@ -498,9 +505,17 @@ const LeftMenu = () => {
           }}
         />
       </div>
+      <SpecialBuildingModal
+        visible={showModalType === ModalType.SpecialBuilding}
+        close={() => {
+          setShowModalType(ModalType.None);
+        }}
+      />
       <ImportDataModal
-        type={importDataModalType}
-        setType={setImportDataModalType}
+        type={showModalType}
+        close={() => {
+          setShowModalType(ModalType.None);
+        }}
       />
     </Sider>
   );
