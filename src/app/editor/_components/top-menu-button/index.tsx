@@ -79,12 +79,18 @@ const TopMenuButton = () => {
   };
 
   const onClickAutoSave = () => {
-    trigger();
-    setShowDrawerType(DrawerType.AutoSave);
+    if (showDrawerType === DrawerType.None) {
+      trigger();
+      setShowDrawerType(DrawerType.AutoSave);
+    } else {
+      setShowDrawerType(DrawerType.None);
+    }
   };
 
   const onClickSetting = () => {
-    setShowDrawerType(DrawerType.Setting);
+    setShowDrawerType(
+      showDrawerType === DrawerType.None ? DrawerType.Setting : DrawerType.None,
+    );
   };
 
   const onClickChangeTheme = () => {

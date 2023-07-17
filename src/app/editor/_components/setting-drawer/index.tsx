@@ -23,11 +23,9 @@ const SettingDrawer: FC<SettingDrawerProps> = props => {
       title={<strong>设置</strong>}
       visible={visible}
       focusLock={false}
-      onOk={() => {
-        setSetting(form.getFields());
-        close();
-      }}
+      footer={null}
       onCancel={() => {
+        setSetting(form.getFields());
         close();
       }}
     >
