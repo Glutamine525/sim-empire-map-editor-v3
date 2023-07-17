@@ -13,13 +13,13 @@ import useMapCore from '../../_hooks/use-map-core';
 import { useAutoSave } from '../../_store/auto-save';
 import { useMapConfig } from '../../_store/map-config';
 import AutoSaveDrawer from '../auto-save-drawer';
-import SettingsDrawer from '../settings-drawer';
+import SettingDrawer from '../setting-drawer';
 import styles from './index.module.css';
 
 enum DrawerType {
   None,
   AutoSave,
-  Settings,
+  Setting,
 }
 
 const TopMenuButton = () => {
@@ -48,7 +48,7 @@ const TopMenuButton = () => {
         onClickChangeTheme();
         break;
       case ',':
-        onClickSettings();
+        onClickSetting();
         break;
       default:
         return;
@@ -83,8 +83,8 @@ const TopMenuButton = () => {
     setShowDrawerType(DrawerType.AutoSave);
   };
 
-  const onClickSettings = () => {
-    setShowDrawerType(DrawerType.Settings);
+  const onClickSetting = () => {
+    setShowDrawerType(DrawerType.Setting);
   };
 
   const onClickChangeTheme = () => {
@@ -148,7 +148,7 @@ const TopMenuButton = () => {
           type="text"
           iconOnly={true}
           icon={<IconSettings />}
-          onClick={onClickSettings}
+          onClick={onClickSetting}
         />
       </Tooltip>
       <Tooltip
@@ -180,8 +180,8 @@ const TopMenuButton = () => {
           setShowDrawerType(DrawerType.None);
         }}
       />
-      <SettingsDrawer
-        visible={showDrawerType === DrawerType.Settings}
+      <SettingDrawer
+        visible={showDrawerType === DrawerType.Setting}
         close={() => {
           setShowDrawerType(DrawerType.None);
         }}

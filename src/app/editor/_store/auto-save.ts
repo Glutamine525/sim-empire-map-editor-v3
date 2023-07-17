@@ -18,7 +18,7 @@ interface AutoSaveState {
   moveSelectedToFirst: (index: number) => void;
 }
 
-const LIMIT = 50;
+const LIMIT = 20;
 
 export const useAutoSave = create<AutoSaveState>()(
   persist(

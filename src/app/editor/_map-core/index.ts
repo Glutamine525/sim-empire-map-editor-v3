@@ -53,6 +53,8 @@ export default class MapCore {
     return this.instance;
   }
 
+  public enableCityAndCivilMode = false;
+
   public mapType!: MapType;
 
   public civil!: CivilType;
@@ -729,5 +731,9 @@ export default class MapCore {
       return true;
     }
     return false;
+  }
+
+  public toggleCityAndCivilMode(enable: boolean) {
+    this.enableCityAndCivilMode = enable;
   }
 }
