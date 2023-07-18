@@ -9,6 +9,7 @@ import React, {
 import { Button } from '@arco-design/web-react';
 import { IconCheck, IconDragArrow } from '@arco-design/web-react/icon';
 import classcat from 'classcat';
+import { shallow } from 'zustand/shallow';
 import { BuildingConfig } from '@/app/editor/_map-core/building/type';
 import { getBuildingKey, parseBuildingKey } from '@/utils/coordinate';
 import MoveBuildingCommand from '../../_command/move-buildings';
@@ -44,7 +45,10 @@ const MoveArea: FC<MoveAreaProps> = props => {
 
   const mapCore = useMapCore();
 
-  const noTree = useMapConfig(state => state.noTree);
+  const [noTree, mapRedraw] = useMapConfig(
+    state => [state.noTree, state.mapRedraw],
+    shallow,
+  );
   const addCommand = useCommand(state => state.add);
 
   const buttons = useRef<HTMLButtonElement[]>([]);
@@ -107,7 +111,7 @@ const MoveArea: FC<MoveAreaProps> = props => {
   useEffect(() => {
     setFixedConfig({ show: false });
     setFreeMoveConfig({ show: false });
-  }, [noTree]);
+  }, [noTree, mapRedraw]);
 
   const selectBuilding = (w = 1, h = 1, row = 0, col = 0) => {
     const keys = new Set<string>();

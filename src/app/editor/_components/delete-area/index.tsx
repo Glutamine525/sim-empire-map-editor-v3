@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
 import { Button } from '@arco-design/web-react';
 import { IconDelete } from '@arco-design/web-react/icon';
+import { shallow } from 'zustand/shallow';
 import { getBuildingKey, parseBuildingKey } from '@/utils/coordinate';
 import DeleteBuildingCommand from '../../_command/delete-buildings';
 import { BLOCK_PX } from '../../_config';
@@ -24,7 +25,10 @@ const DeleteArea: FC<DeleteAreaProps> = props => {
   const mapCore = useMapCore();
   const addCommand = useCommand(state => state.add);
 
-  const noTree = useMapConfig(state => state.noTree);
+  const [noTree, mapRedraw] = useMapConfig(
+    state => [state.noTree, state.mapRedraw],
+    shallow,
+  );
 
   const button = useRef<HTMLButtonElement>();
 
@@ -64,7 +68,7 @@ const DeleteArea: FC<DeleteAreaProps> = props => {
 
   useEffect(() => {
     setFixedConfig({ show: false });
-  }, [noTree]);
+  }, [noTree, mapRedraw]);
 
   if (isHidden) {
     return null;
