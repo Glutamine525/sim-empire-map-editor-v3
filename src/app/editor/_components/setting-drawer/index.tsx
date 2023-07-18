@@ -119,6 +119,14 @@ const SettingDrawer: FC<SettingDrawerProps> = props => {
         >
           <Switch />
         </FormItem>
+        <FormItem
+          disabled={true}
+          label="防护建筑高亮"
+          field="enableProtectionHighlight"
+          triggerPropName="checked"
+        >
+          <Switch />
+        </FormItem>
 
         <div className={styles['sub-title']}>历史操作</div>
         <FormItem disabled={true} label="最大历史操作数" field="commandMaxNum">
@@ -173,11 +181,6 @@ const SettingDrawer: FC<SettingDrawerProps> = props => {
         >
           <Switch />
         </FormItem>
-
-        {/* 
-          hover building highlight protections
-
-        */}
       </Form>
     </Drawer>
   );

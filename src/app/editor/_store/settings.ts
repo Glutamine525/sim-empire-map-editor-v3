@@ -13,6 +13,7 @@ interface Setting {
   roadCountStyle: string;
   protectionCountStyle: string;
   enableFixedBuildingIcon: boolean;
+  enableProtectionHighlight: boolean;
   commandMaxNum: number;
   enableLoadCommand: boolean;
   enableCommandStoredInDb: boolean;
@@ -38,6 +39,7 @@ export const useSetting = create<SettingState>()(
       roadCountStyle: 'A',
       protectionCountStyle: 'A',
       enableFixedBuildingIcon: true,
+      enableProtectionHighlight: true,
       commandMaxNum: 200,
       enableLoadCommand: false,
       enableCommandStoredInDb: false,
