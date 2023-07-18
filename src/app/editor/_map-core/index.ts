@@ -359,8 +359,6 @@ export default class MapCore {
           records.add(o);
         }
       }
-      console.log(Array.from(records));
-
       this.updateBuildingsMarker(Array.from(records));
     }
     for (let i = row; i < row + h; i++) {
@@ -653,7 +651,6 @@ export default class MapCore {
         this.selectCache.add(occupied);
       }
     }
-    console.log(this.selectCache);
   }
 
   public updateCounter(b: BuildingConfig, diff: number) {

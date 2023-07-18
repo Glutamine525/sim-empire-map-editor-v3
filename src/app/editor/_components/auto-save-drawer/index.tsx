@@ -82,7 +82,10 @@ const AutoSaveDrawer: FC<AutoSaveDrawerProps> = props => {
             type="text"
             onClick={async () => {
               if (decodeMapData(mapDataStr).md5 === originData.md5) {
-                Message.warning('载入失败，该存档和当前地图数据一致！');
+                Message.warning({
+                  id: 'load-auto-save-fail',
+                  content: '载入失败，该存档和当前地图数据一致！',
+                });
                 return;
               }
               const isOk = await new Promise<boolean>(resolve => {
@@ -102,7 +105,6 @@ const AutoSaveDrawer: FC<AutoSaveDrawerProps> = props => {
                 return;
               }
               const { imgSrc: _, ...data } = originData;
-              console.log(data);
               moveSelectedToFirst(index);
               resetBuildingData();
               importMapData(encodeMapData(data));

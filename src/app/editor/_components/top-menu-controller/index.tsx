@@ -21,8 +21,6 @@ import styles from './index.module.css';
 const mapCore = MapCore.getInstance();
 
 const MapTypeDropList = () => {
-  console.log('MapTypeDropList render');
-
   const [mapType, changeMapType, changeOperation, triggerMapRedraw] =
     useMapConfig(
       state => [
@@ -74,8 +72,6 @@ const MapTypeDropList = () => {
 };
 
 const CivilDropList = () => {
-  console.log('CivilDropList render');
-
   const [civil, changeCivil, changeOperation, triggerMapRedraw] = useMapConfig(
     state => [
       state.civil,
@@ -126,8 +122,6 @@ const CivilDropList = () => {
 };
 
 const TopMenuController = () => {
-  console.log('TopMenuController render');
-
   const [mapType, civil, noTree, rotated, changeNoTree, changeRotated] =
     useMapConfig(
       state => [
