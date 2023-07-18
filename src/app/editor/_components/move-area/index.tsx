@@ -45,8 +45,8 @@ const MoveArea: FC<MoveAreaProps> = props => {
 
   const mapCore = useMapCore();
 
-  const [noTree, mapRedraw] = useMapConfig(
-    state => [state.noTree, state.mapRedraw],
+  const [noTree, resetArea] = useMapConfig(
+    state => [state.noTree, state.resetArea],
     shallow,
   );
   const addCommand = useCommand(state => state.add);
@@ -111,7 +111,7 @@ const MoveArea: FC<MoveAreaProps> = props => {
   useEffect(() => {
     setFixedConfig({ show: false });
     setFreeMoveConfig({ show: false });
-  }, [noTree, mapRedraw]);
+  }, [noTree, resetArea]);
 
   const selectBuilding = (w = 1, h = 1, row = 0, col = 0) => {
     const keys = new Set<string>();

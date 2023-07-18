@@ -25,8 +25,8 @@ const DeleteArea: FC<DeleteAreaProps> = props => {
   const mapCore = useMapCore();
   const addCommand = useCommand(state => state.add);
 
-  const [noTree, mapRedraw] = useMapConfig(
-    state => [state.noTree, state.mapRedraw],
+  const [noTree, resetArea] = useMapConfig(
+    state => [state.noTree, state.resetArea],
     shallow,
   );
 
@@ -68,7 +68,7 @@ const DeleteArea: FC<DeleteAreaProps> = props => {
 
   useEffect(() => {
     setFixedConfig({ show: false });
-  }, [noTree, mapRedraw]);
+  }, [noTree, resetArea]);
 
   if (isHidden) {
     return null;

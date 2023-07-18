@@ -20,6 +20,7 @@ interface MapConfigState {
   counter: MapCounter;
   emptyCells: number;
   mapRedraw: number;
+  resetArea: number;
   leftMenuWidth: number;
   changeMapType: (mapType: MapType) => void;
   changeCivil: (civil: CivilType) => void;
@@ -31,6 +32,7 @@ interface MapConfigState {
   changeEmptyCells: (emptyCells: number) => void;
   changeLeftMenuWidth: (leftMenuWidth: number) => void;
   triggerMapRedraw: () => void;
+  triggerResetArea: () => void;
 }
 
 export const useMapConfig = create<MapConfigState>()(
@@ -54,6 +56,7 @@ export const useMapConfig = create<MapConfigState>()(
       },
       emptyCells: 0,
       mapRedraw: 0,
+      resetArea: 0,
       leftMenuWidth: UI_SETTING.leftMenuWidth,
       changeMapType: mapType => set({ mapType }),
       changeCivil: civil => set({ civil }),
@@ -66,6 +69,8 @@ export const useMapConfig = create<MapConfigState>()(
       changeLeftMenuWidth: leftMenuWidth => set({ leftMenuWidth }),
       triggerMapRedraw: () =>
         set(state => ({ mapRedraw: (state.mapRedraw + 1) % 10 })),
+      triggerResetArea: () =>
+        set(state => ({ resetArea: (state.resetArea + 1) % 10 })),
     }),
     {
       name: 'map-config-store',

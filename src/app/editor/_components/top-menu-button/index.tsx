@@ -8,6 +8,7 @@ import {
   IconSunFill,
 } from '@arco-design/web-react/icon';
 import { useKeyPress } from 'ahooks';
+import { shallow } from 'zustand/shallow';
 import useColorTheme, { ThemeType } from '@/hooks/use-color-theme';
 import useMapCore from '../../_hooks/use-map-core';
 import { useAutoSave } from '../../_store/auto-save';
@@ -26,7 +27,10 @@ const TopMenuButton = () => {
   const [theme, toggleTheme] = useColorTheme();
 
   const mapCore = useMapCore();
-  const triggerMapRedraw = useMapConfig(state => state.triggerMapRedraw);
+  const [triggerMapRedraw, triggerResetArea] = useMapConfig(
+    state => [state.triggerMapRedraw, state.triggerResetArea],
+    shallow,
+  );
   const trigger = useAutoSave(state => state.trigger);
 
   const [showDrawerType, setShowDrawerType] = useState(DrawerType.None);
@@ -75,11 +79,13 @@ const TopMenuButton = () => {
     if (!isOk) {
       return;
     }
+    triggerResetArea();
     triggerMapRedraw();
   };
 
   const onClickAutoSave = () => {
     if (showDrawerType === DrawerType.None) {
+      triggerResetArea();
       trigger();
       setShowDrawerType(DrawerType.AutoSave);
     } else {
@@ -88,6 +94,7 @@ const TopMenuButton = () => {
   };
 
   const onClickSetting = () => {
+    triggerResetArea();
     setShowDrawerType(
       showDrawerType === DrawerType.None ? DrawerType.Setting : DrawerType.None,
     );

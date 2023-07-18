@@ -21,16 +21,22 @@ import styles from './index.module.css';
 const mapCore = MapCore.getInstance();
 
 const MapTypeDropList = () => {
-  const [mapType, changeMapType, changeOperation, triggerMapRedraw] =
-    useMapConfig(
-      state => [
-        state.mapType,
-        state.changeMapType,
-        state.changeOperation,
-        state.triggerMapRedraw,
-      ],
-      shallow,
-    );
+  const [
+    mapType,
+    changeMapType,
+    changeOperation,
+    triggerMapRedraw,
+    triggerResetArea,
+  ] = useMapConfig(
+    state => [
+      state.mapType,
+      state.changeMapType,
+      state.changeOperation,
+      state.triggerMapRedraw,
+      state.triggerResetArea,
+    ],
+    shallow,
+  );
 
   return (
     <Menu
@@ -59,6 +65,7 @@ const MapTypeDropList = () => {
         changeOperation(OperationType.Empty);
         changeMapType(Number(data));
         triggerMapRedraw();
+        triggerResetArea();
       }}
     >
       {Object.values(MapType).map(type => {
@@ -72,12 +79,19 @@ const MapTypeDropList = () => {
 };
 
 const CivilDropList = () => {
-  const [civil, changeCivil, changeOperation, triggerMapRedraw] = useMapConfig(
+  const [
+    civil,
+    changeCivil,
+    changeOperation,
+    triggerMapRedraw,
+    triggerResetArea,
+  ] = useMapConfig(
     state => [
       state.civil,
       state.changeCivil,
       state.changeOperation,
       state.triggerMapRedraw,
+      state.triggerResetArea,
     ],
     shallow,
   );
@@ -108,6 +122,7 @@ const CivilDropList = () => {
         changeOperation(OperationType.Empty);
         changeCivil(data as CivilType);
         triggerMapRedraw();
+        triggerResetArea();
       }}
     >
       {Object.entries(CivilTypeLabel).map(entry => {
