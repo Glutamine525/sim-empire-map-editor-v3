@@ -18,21 +18,26 @@ export const mapContainer = createRef<HTMLDivElement>();
 const Map = () => {
   console.log('Map render');
 
-  const [mapType, civil, noTree, mapRedraw, changeCounter, changeEmptyCells] =
-    useMapConfig(
-      state => [
-        state.mapType,
-        state.civil,
-        state.noTree,
-        state.mapRedraw,
-        state.changeCounter,
-        state.changeEmptyCells,
-        state.changeMapType,
-        state.changeCivil,
-        state.changeNoTree,
-      ],
-      shallow,
-    );
+  const [
+    mapType,
+    civil,
+    noTree,
+    mapRedraw,
+    changeCounter,
+    changeEmptyCells,
+    triggerMapRedraw,
+  ] = useMapConfig(
+    state => [
+      state.mapType,
+      state.civil,
+      state.noTree,
+      state.mapRedraw,
+      state.changeCounter,
+      state.changeEmptyCells,
+      state.triggerMapRedraw,
+    ],
+    shallow,
+  );
   const [mapData, trigger] = useAutoSave(
     state => [state.mapDataStr, state.trigger],
     shallow,
@@ -62,12 +67,12 @@ const Map = () => {
     if (mapData) {
       // 用宏任务载入存档，避免被首次mapRedraw重置地图
       setTimeout(() => {
-        try {
-          resetBuildingData();
-          importMapData(mapData);
+        resetBuildingData();
+        if (importMapData(mapData)) {
           trigger();
-        } catch {
+        } else {
           Message.error('存档已损坏');
+          triggerMapRedraw();
         }
       }, 0);
     }

@@ -81,7 +81,7 @@ const AutoSaveDrawer: FC<AutoSaveDrawerProps> = props => {
             size="mini"
             type="text"
             onClick={async () => {
-              if (decodeMapData(mapDataStr).md5 === originData.md5) {
+              if (decodeMapData(mapDataStr)?.md5 === originData.md5) {
                 Message.warning({
                   id: 'load-auto-save-fail',
                   content: '载入失败，该存档和当前地图数据一致！',

@@ -179,7 +179,11 @@ export function exportMapData() {
 }
 
 export function decodeMapData(dataStr?: string) {
-  return JSON.parse(base64ToString(dataStr || '')) as MapData;
+  try {
+    return JSON.parse(base64ToString(dataStr || '')) as MapData;
+  } catch {
+    return undefined;
+  }
 }
 
 export function importMapData(dataStr: string) {
