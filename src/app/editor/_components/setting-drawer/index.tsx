@@ -13,7 +13,7 @@ interface SettingDrawerProps {
 const SettingDrawer: FC<SettingDrawerProps> = props => {
   const { visible, close } = props;
 
-  const { setting, setSetting } = useSetting();
+  const { setSetting, ...setting } = useSetting();
 
   const [form] = useForm();
 
@@ -37,6 +37,7 @@ const SettingDrawer: FC<SettingDrawerProps> = props => {
       >
         <div className={styles['sub-title']}>键盘快捷键</div>
         <FormItem
+          disabled={true}
           label="顶部菜单"
           field="enableTopMenuShortcut"
           triggerPropName="checked"
@@ -44,6 +45,7 @@ const SettingDrawer: FC<SettingDrawerProps> = props => {
           <Switch />
         </FormItem>
         <FormItem
+          disabled={true}
           label="侧边菜单"
           field="enableLeftMenuShortcut"
           triggerPropName="checked"
@@ -51,6 +53,7 @@ const SettingDrawer: FC<SettingDrawerProps> = props => {
           <Switch />
         </FormItem>
         <FormItem
+          disabled={true}
           label="地图区域"
           field="enableInteractLayerShortcut"
           triggerPropName="checked"
@@ -60,6 +63,7 @@ const SettingDrawer: FC<SettingDrawerProps> = props => {
 
         <div className={styles['sub-title']}>鼠标操作</div>
         <FormItem
+          disabled={true}
           label="双击删除"
           field="enableDoubleClickDelete"
           triggerPropName="checked"
@@ -67,6 +71,7 @@ const SettingDrawer: FC<SettingDrawerProps> = props => {
           <Switch />
         </FormItem>
         <FormItem
+          disabled={true}
           label="查询住宅需求"
           field="enableResidenceRequirementQuery"
           triggerPropName="checked"
@@ -75,7 +80,7 @@ const SettingDrawer: FC<SettingDrawerProps> = props => {
         </FormItem>
 
         <div className={styles['sub-title']}>存档</div>
-        <FormItem label="自动存档间隔" field="autoSaveInterval">
+        <FormItem disabled={true} label="自动存档间隔" field="autoSaveInterval">
           <Slider
             min={10}
             max={60}
@@ -90,7 +95,7 @@ const SettingDrawer: FC<SettingDrawerProps> = props => {
             }}
           />
         </FormItem>
-        <FormItem label="最大存档数" field="autoSaveMaxNum">
+        <FormItem disabled={true} label="最大存档数" field="autoSaveMaxNum">
           <Slider
             min={10}
             max={30}
@@ -100,13 +105,14 @@ const SettingDrawer: FC<SettingDrawerProps> = props => {
         </FormItem>
 
         <div className={styles['sub-title']}>样式</div>
-        <FormItem label="道路计数" field="roadCountStyle">
+        <FormItem disabled={true} label="道路计数" field="roadCountStyle">
           <Radio.Group options={['A', 'B']} />
         </FormItem>
-        <FormItem label="防护计数" field="protectionCountStyle">
+        <FormItem disabled={true} label="防护计数" field="protectionCountStyle">
           <Radio.Group options={['A', 'B']} />
         </FormItem>
         <FormItem
+          disabled={true}
           label="固定建筑标记"
           field="enableFixedBuildingIcon"
           triggerPropName="checked"
@@ -115,7 +121,7 @@ const SettingDrawer: FC<SettingDrawerProps> = props => {
         </FormItem>
 
         <div className={styles['sub-title']}>历史操作</div>
-        <FormItem label="最大历史操作数" field="commandMaxNum">
+        <FormItem disabled={true} label="最大历史操作数" field="commandMaxNum">
           <Slider
             min={100}
             max={500}
@@ -124,6 +130,7 @@ const SettingDrawer: FC<SettingDrawerProps> = props => {
           />
         </FormItem>
         <FormItem
+          disabled={true}
           label="开启载入操作"
           field="enableLoadCommand"
           triggerPropName="checked"
@@ -131,6 +138,7 @@ const SettingDrawer: FC<SettingDrawerProps> = props => {
           <Switch />
         </FormItem>
         <FormItem
+          disabled={true}
           label="存储操作"
           field="enableCommandStoredInDb"
           triggerPropName="checked"
@@ -158,6 +166,7 @@ const SettingDrawer: FC<SettingDrawerProps> = props => {
 
         <div className={styles['sub-title']}>兼容模式</div>
         <FormItem
+          disabled={true}
           label="城市与文明"
           field="enableCityAndCivilMode"
           triggerPropName="checked"

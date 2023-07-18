@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { UI_SETTING } from '../_config';
 import { BuildingConfig } from '@/app/editor/_map-core/building/type';
 import {
   CivilType,
@@ -9,6 +8,7 @@ import {
   MapType,
   OperationType,
 } from '@/app/editor/_map-core/type';
+import { UI_SETTING } from '../_config';
 
 interface MapConfigState {
   mapType: MapType;
@@ -69,10 +69,7 @@ export const useMapConfig = create<MapConfigState>()(
     }),
     {
       name: 'map-config-store',
-      partialize: state =>
-        Object.fromEntries(
-          Object.entries(state).filter(([key]) => key === 'leftMenuWidth'),
-        ),
+      partialize: state => ({ leftMenuWidth: state.leftMenuWidth }),
     },
   ),
 );

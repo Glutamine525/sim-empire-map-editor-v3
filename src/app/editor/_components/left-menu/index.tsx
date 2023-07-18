@@ -36,6 +36,7 @@ import {
 } from '../../_config/shortcut';
 import { useCommand } from '../../_store/command';
 import { useMapConfig } from '../../_store/map-config';
+import { useSetting } from '../../_store/settings';
 import { useSpecialBuilding } from '../../_store/special-building';
 import ImportDataModal from '../import-data-modal';
 import SpecialBuildingModal from '../special-building-modal';
@@ -109,6 +110,10 @@ const LeftMenu = () => {
     state => [state.commands, state.undoCommands, state.undo, state.redo],
     shallow,
   );
+  const [scale, quality] = useSetting(state => [
+    state.screenshotScale,
+    state.screenshotQuality,
+  ]);
 
   const [showModalType, setShowModalType] = useState(ModalType.None);
   const [subMenuContent, setSubMenuContent] = useState<{
@@ -290,7 +295,11 @@ const LeftMenu = () => {
       case CatalogType.ImportExport:
         const { name } = subMenuContent[catalog][index];
         if (name === ImportExportSubmenu.Screenshot) {
-          getScreenshot(document.getElementById('building-layer')!);
+          getScreenshot(
+            document.getElementById('building-layer')!,
+            scale,
+            quality,
+          );
         } else if (name === ImportExportSubmenu.ImportMapData) {
           setShowModalType(ModalType.ImportMap);
         } else if (name === ImportExportSubmenu.ExportMapData) {

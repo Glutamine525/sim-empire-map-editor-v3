@@ -45,10 +45,7 @@ export const useSpecialBuilding = create<SpecialBuildingState>()(
     }),
     {
       name: 'special-building-store',
-      partialize: state =>
-        Object.fromEntries(
-          Object.entries(state).filter(([key]) => key === 'buildings'),
-        ),
+      partialize: state => ({ buildings: state.buildings }),
     },
   ),
 );

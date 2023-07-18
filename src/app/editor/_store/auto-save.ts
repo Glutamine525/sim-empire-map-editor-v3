@@ -20,13 +20,18 @@ interface AutoSaveState {
 
 const LIMIT = 20;
 
+const DEFAULT_MAP_DATA_STR = 'JTdCJTdE'; // "JTdCJTdE" = base64("{}")
+
 export const useAutoSave = create<AutoSaveState>()(
   persist(
     (set, get) => ({
       snapshots: [],
       trigger: () => {
         const _data = getMapData();
-        if (decodeMapData(get().mapDataStr).md5 !== _data.md5) {
+        if (
+          decodeMapData(get().mapDataStr || DEFAULT_MAP_DATA_STR).md5 !==
+          _data.md5
+        ) {
           set({ mapDataStr: encodeMapData(_data) });
         }
         const md5s = get().snapshots.map(v => v.md5);
@@ -55,10 +60,7 @@ export const useAutoSave = create<AutoSaveState>()(
     }),
     {
       name: 'auto-save-data',
-      partialize: state =>
-        Object.fromEntries(
-          Object.entries(state).filter(([key]) => key === 'mapDataStr'),
-        ),
+      partialize: state => ({ mapDataStr: state.mapDataStr }),
     },
   ),
 );

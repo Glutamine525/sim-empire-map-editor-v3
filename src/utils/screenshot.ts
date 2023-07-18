@@ -4,7 +4,7 @@ import { download, getMapImageName } from './file';
 const SVG_XMLNS = 'http://www.w3.org/2000/svg';
 const DIV_XMLNS = 'http://www.w3.org/1999/xhtml';
 
-export async function getScreenshot(el: HTMLElement) {
+export async function getScreenshot(el: HTMLElement, scale = 2, quality = 0.8) {
   console.time('getScreenshot');
   const { width, height } = el.getBoundingClientRect();
   const html = `
@@ -29,11 +29,11 @@ export async function getScreenshot(el: HTMLElement) {
   await new Promise<void>(resolve => {
     img.onload = () => resolve();
   });
-  canvas.width = width * 2;
-  canvas.height = height * 2;
+  canvas.width = width * scale;
+  canvas.height = height * scale;
   canvas.getContext('2d')?.drawImage(img, 0, 0, canvas.width, canvas.height);
   const blob = await new Promise<Blob>(resolve => {
-    canvas.toBlob(blob => resolve(blob!), 'image/jpeg', 0.8);
+    canvas.toBlob(blob => resolve(blob!), 'image/jpeg', quality);
   });
   download(blob, getMapImageName());
   console.timeEnd('getScreenshot');
