@@ -3,6 +3,7 @@ import classcat from 'classcat';
 import MapCore from '@/app/editor/_map-core';
 import { BuildingConfig } from '@/app/editor/_map-core/building/type';
 import { showMarker } from '@/utils/building';
+import { useSetting } from '../../_store/settings';
 import Block, { BlockProps } from '../block';
 import FixedBuildingIcon from '../fixed-building-icon';
 import styles from './index.module.css';
@@ -30,6 +31,10 @@ const Building: FC<BuildingProps> = props => {
     isHidden,
   } = props;
 
+  const enableFixedBuildingIcon = useSetting(
+    state => state.enableFixedBuildingIcon,
+  );
+
   return (
     <Block
       {...props}
@@ -52,7 +57,9 @@ const Building: FC<BuildingProps> = props => {
           })}
         />
       )}
-      {isFixed && !isBarrier && <FixedBuildingIcon />}
+      {enableFixedBuildingIcon && isFixed && !isBarrier && (
+        <FixedBuildingIcon />
+      )}
       {text}
     </Block>
   );

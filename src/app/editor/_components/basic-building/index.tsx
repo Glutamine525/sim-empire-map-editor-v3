@@ -3,6 +3,7 @@ import classcat from 'classcat';
 import MapCore from '@/app/editor/_map-core';
 import { useBuildingData } from '@/app/editor/_store/building-data';
 import { showMarker } from '@/utils/building';
+import { useSetting } from '../../_store/settings';
 import Block from '../block';
 import FixedBuildingIcon from '../fixed-building-icon';
 import styles from './index.module.css';
@@ -17,6 +18,10 @@ const core = MapCore.getInstance();
 const BasicBuilding: FC<BasicBuildingProps> = ({ row, col }) => {
   const [data] = useBuildingData(row, col);
   const { w = 0, h = 0 } = data;
+
+  const enableFixedBuildingIcon = useSetting(
+    state => state.enableFixedBuildingIcon,
+  );
 
   return (
     <Block
@@ -43,7 +48,9 @@ const BasicBuilding: FC<BasicBuildingProps> = ({ row, col }) => {
           )}
         </>
       )}
-      {data.isFixed && !data.isBarrier && <FixedBuildingIcon />}
+      {enableFixedBuildingIcon && data.isFixed && !data.isBarrier && (
+        <FixedBuildingIcon />
+      )}
       {data.text}
       {process.env.NODE_ENV === 'development' && !data.isBarrier && (
         <div className={styles['debug-coord']}>

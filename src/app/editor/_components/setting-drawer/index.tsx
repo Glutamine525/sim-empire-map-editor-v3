@@ -110,7 +110,6 @@ const SettingDrawer: FC<SettingDrawerProps> = props => {
           <Radio.Group options={['A', 'B']} />
         </FormItem>
         <FormItem
-          disabled={true}
           label="固定建筑标记"
           field="enableFixedBuildingIcon"
           triggerPropName="checked"
