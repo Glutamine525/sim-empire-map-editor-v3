@@ -11,3 +11,29 @@
 .sub-title:first-of-type {
   margin-top: 4px;
 }
+
+.protection-count-style-radio-group {
+  display: flex;
+  align-items: center;
+}
+
+.protection-count-style-radio {
+  display: flex;
+  align-items: center;
+}
+
+.protection-count-style-container {
+  display: flex;
+}
+
+.protection-count-style-container-item {
+  position: relative;
+
+  width: 10px;
+  height: 10px;
+}
+
+.protection-count-style-container-item
+  + .protection-count-style-container-item {
+  margin-left: 8px;
+}

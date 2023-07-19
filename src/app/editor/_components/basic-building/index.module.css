@@ -10,23 +10,6 @@
   z-index: 1;
 }
 
-.circle-marker {
-  position: absolute;
-  top: 2px;
-  left: 2px;
-
-  width: 6px;
-  height: 6px;
-
-  border-radius: 50%;
-  background-color: rgb(var(--danger-5));
-  box-shadow: 0 0 4px white;
-}
-
-.full-protection {
-  background-color: rgb(var(--success-6));
-}
-
 .debug-coord {
   position: absolute;
   right: 0;

@@ -1,10 +1,11 @@
 import React, { FC } from 'react';
 import classcat from 'classcat';
-import MapCore from '@/app/editor/_map-core';
+import { shallow } from 'zustand/shallow';
 import { useBuildingData } from '@/app/editor/_store/building-data';
 import { showMarker } from '@/utils/building';
 import { useSetting } from '../../_store/settings';
 import Block from '../block';
+import BuildingProtectionCount from '../building-protection-count';
 import FixedBuildingIcon from '../fixed-building-icon';
 import styles from './index.module.css';
 
@@ -13,14 +14,13 @@ interface BasicBuildingProps {
   col: number;
 }
 
-const core = MapCore.getInstance();
-
 const BasicBuilding: FC<BasicBuildingProps> = ({ row, col }) => {
   const [data] = useBuildingData(row, col);
   const { w = 0, h = 0 } = data;
 
-  const enableFixedBuildingIcon = useSetting(
-    state => state.enableFixedBuildingIcon,
+  const [enableFixedBuildingIcon, protectionCountStyle] = useSetting(
+    state => [state.enableFixedBuildingIcon, state.protectionCountStyle],
+    shallow,
   );
 
   return (
@@ -38,12 +38,9 @@ const BasicBuilding: FC<BasicBuildingProps> = ({ row, col }) => {
           {data.isRoad ? (
             <>{data.marker}</>
           ) : (
-            <div
-              className={classcat({
-                [styles['circle-marker']]: true,
-                [styles['full-protection']]:
-                  data.marker === core.protection.length,
-              })}
+            <BuildingProtectionCount
+              marker={data.marker}
+              styleType={protectionCountStyle}
             />
           )}
         </>

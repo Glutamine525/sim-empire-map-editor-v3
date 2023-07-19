@@ -1,6 +1,8 @@
 import React, { FC } from 'react';
 import { Drawer, Form, Radio, Slider, Switch } from '@arco-design/web-react';
-import { useSetting } from '../../_store/settings';
+import useMapCore from '../../_hooks/use-map-core';
+import { ProtectionCountStyleType, useSetting } from '../../_store/settings';
+import BuildingProtectionCount from '../building-protection-count';
 import styles from './index.module.css';
 
 const { Item: FormItem, useForm } = Form;
@@ -13,6 +15,7 @@ interface SettingDrawerProps {
 const SettingDrawer: FC<SettingDrawerProps> = props => {
   const { visible, close } = props;
 
+  const mapCore = useMapCore();
   const { setSetting, ...setting } = useSetting();
 
   const [form] = useForm();
@@ -106,8 +109,57 @@ const SettingDrawer: FC<SettingDrawerProps> = props => {
         <FormItem disabled={true} label="道路计数" field="roadCountStyle">
           <Radio.Group options={['A', 'B']} />
         </FormItem>
-        <FormItem disabled={true} label="防护计数" field="protectionCountStyle">
-          <Radio.Group options={['A', 'B']} />
+        <FormItem label="防护计数" field="protectionCountStyle">
+          <Radio.Group className={styles['protection-count-style-radio-group']}>
+            <Radio
+              value={ProtectionCountStyleType.Circle}
+              className={styles['protection-count-style-radio']}
+            >
+              <div className={styles['protection-count-style-container']}>
+                <div
+                  className={styles['protection-count-style-container-item']}
+                >
+                  <BuildingProtectionCount
+                    styleType={ProtectionCountStyleType.Circle}
+                    marker={0}
+                  />
+                </div>
+                <div
+                  className={styles['protection-count-style-container-item']}
+                >
+                  <BuildingProtectionCount
+                    styleType={ProtectionCountStyleType.Circle}
+                    marker={mapCore.protection.length}
+                  />
+                </div>
+              </div>
+            </Radio>
+            <Radio
+              value={ProtectionCountStyleType.Number}
+              className={styles['protection-count-style-radio']}
+            >
+              <div className={styles['protection-count-style-container']}>
+                <div
+                  className={styles['protection-count-style-container-item']}
+                  style={{ top: -2 }}
+                >
+                  <BuildingProtectionCount
+                    styleType={ProtectionCountStyleType.Number}
+                    marker={0}
+                  />
+                </div>
+                <div
+                  className={styles['protection-count-style-container-item']}
+                  style={{ top: -2 }}
+                >
+                  <BuildingProtectionCount
+                    styleType={ProtectionCountStyleType.Number}
+                    marker={mapCore.protection.length}
+                  />
+                </div>
+              </div>
+            </Radio>
+          </Radio.Group>
         </FormItem>
         <FormItem
           label="固定建筑标记"

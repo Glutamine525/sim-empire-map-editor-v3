@@ -2,6 +2,16 @@ import { produce } from 'immer';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+export enum RoadCountStyleType {
+  CenterBigNumber = 'A',
+  TopLeftSmallNumber = 'B',
+}
+
+export enum ProtectionCountStyleType {
+  Circle = 'A',
+  Number = 'B',
+}
+
 interface Setting {
   enableTopMenuShortcut: boolean;
   enableLeftMenuShortcut: boolean;
@@ -10,8 +20,8 @@ interface Setting {
   enableResidenceRequirementQuery: boolean;
   autoSaveInterval: number;
   autoSaveMaxNum: number;
-  roadCountStyle: string;
-  protectionCountStyle: string;
+  roadCountStyle: RoadCountStyleType;
+  protectionCountStyle: ProtectionCountStyleType;
   enableFixedBuildingIcon: boolean;
   enableProtectionHighlight: boolean;
   commandMaxNum: number;
@@ -36,8 +46,8 @@ export const useSetting = create<SettingState>()(
       enableResidenceRequirementQuery: true,
       autoSaveInterval: 30,
       autoSaveMaxNum: 20,
-      roadCountStyle: 'A',
-      protectionCountStyle: 'A',
+      roadCountStyle: RoadCountStyleType.CenterBigNumber,
+      protectionCountStyle: ProtectionCountStyleType.Circle,
       enableFixedBuildingIcon: true,
       enableProtectionHighlight: true,
       commandMaxNum: 200,

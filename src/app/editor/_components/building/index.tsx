@@ -1,10 +1,11 @@
 import React, { FC } from 'react';
 import classcat from 'classcat';
-import MapCore from '@/app/editor/_map-core';
+import { shallow } from 'zustand/shallow';
 import { BuildingConfig } from '@/app/editor/_map-core/building/type';
 import { showMarker } from '@/utils/building';
 import { useSetting } from '../../_store/settings';
 import Block, { BlockProps } from '../block';
+import BuildingProtectionCount from '../building-protection-count';
 import FixedBuildingIcon from '../fixed-building-icon';
 import styles from './index.module.css';
 
@@ -14,8 +15,6 @@ interface BuildingProps extends BlockProps, BuildingConfig {
   canPlace?: boolean;
   isHidden?: boolean;
 }
-
-const core = MapCore.getInstance();
 
 const Building: FC<BuildingProps> = props => {
   const {
@@ -31,8 +30,9 @@ const Building: FC<BuildingProps> = props => {
     isHidden,
   } = props;
 
-  const enableFixedBuildingIcon = useSetting(
-    state => state.enableFixedBuildingIcon,
+  const [enableFixedBuildingIcon, protectionCountStyle] = useSetting(
+    state => [state.enableFixedBuildingIcon, state.protectionCountStyle],
+    shallow,
   );
 
   return (
@@ -49,12 +49,9 @@ const Building: FC<BuildingProps> = props => {
       })}
     >
       {!isRoad && showMarker(props) && (
-        <div
-          className={classcat({
-            [styles['circle-marker']]: true,
-            [styles['full-protection']]:
-              props.marker === core.protection.length,
-          })}
+        <BuildingProtectionCount
+          marker={props.marker}
+          styleType={protectionCountStyle}
         />
       )}
       {enableFixedBuildingIcon && isFixed && !isBarrier && (
