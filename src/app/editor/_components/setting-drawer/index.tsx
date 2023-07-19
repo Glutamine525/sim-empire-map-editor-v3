@@ -63,7 +63,6 @@ const SettingDrawer: FC<SettingDrawerProps> = props => {
 
         <div className={styles['sub-title']}>鼠标操作</div>
         <FormItem
-          disabled={true}
           label="双击删除"
           field="enableDoubleClickDelete"
           triggerPropName="checked"
@@ -71,7 +70,6 @@ const SettingDrawer: FC<SettingDrawerProps> = props => {
           <Switch />
         </FormItem>
         <FormItem
-          disabled={true}
           label="查询住宅需求"
           field="enableResidenceRequirementQuery"
           triggerPropName="checked"

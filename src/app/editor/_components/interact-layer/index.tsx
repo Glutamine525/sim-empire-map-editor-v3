@@ -16,6 +16,7 @@ import useMapCore from '../../_hooks/use-map-core';
 import { CatalogType } from '../../_map-core/building/type';
 import { useCommand } from '../../_store/command';
 import { useMapConfig } from '../../_store/map-config';
+import { useSetting } from '../../_store/settings';
 import BlockHighlight, { HighlightType } from '../block-highlight';
 import Building from '../building';
 import Copyright from '../copyright';
@@ -42,6 +43,12 @@ const InteractLayer = () => {
     shallow,
   );
   const addCommand = useCommand(state => state.add);
+  const [enableDoubleClickDelete, enableResidenceRequirementQuery] = useSetting(
+    state => [
+      state.enableDoubleClickDelete,
+      state.enableResidenceRequirementQuery,
+    ],
+  );
 
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [originMousePos, setOriginMousePos] = useState({
@@ -342,7 +349,7 @@ const InteractLayer = () => {
         setOriginMousePos({ x: 0, y: 0, row: 0, col: 0 });
       }}
       onDoubleClick={() => {
-        if (operation !== OperationType.Empty) {
+        if (operation !== OperationType.Empty || !enableDoubleClickDelete) {
           return;
         }
         const { row, col } = mouseCoord;
@@ -365,7 +372,10 @@ const InteractLayer = () => {
       }}
       onContextMenu={e => {
         e.preventDefault();
-        if (operation !== OperationType.Empty) {
+        if (
+          operation !== OperationType.Empty ||
+          !enableResidenceRequirementQuery
+        ) {
           return;
         }
         if (hoverBuilding?.catalog !== CatalogType.Residence) {
@@ -382,6 +392,7 @@ const InteractLayer = () => {
           id: 'residence-requirement',
           title: '住宅需求查询',
           content: <ResidenceRequirement {...hoverBuilding} />,
+          position: 'bottomRight',
           onClose: () => {
             setRequirementConfig({ show: false, row: 0, col: 0, w: 0, h: 0 });
           },

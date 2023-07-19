@@ -1,5 +1,5 @@
 import React, { memo, useState } from 'react';
-import { Button, Modal, Tooltip } from '@arco-design/web-react';
+import { Button, Modal, Notification, Tooltip } from '@arco-design/web-react';
 import {
   IconDelete,
   IconMoonFill,
@@ -84,6 +84,7 @@ const TopMenuButton = () => {
   };
 
   const onClickAutoSave = () => {
+    Notification.clear();
     if (showDrawerType === DrawerType.None) {
       triggerResetArea();
       trigger();
@@ -94,6 +95,7 @@ const TopMenuButton = () => {
   };
 
   const onClickSetting = () => {
+    Notification.clear();
     triggerResetArea();
     setShowDrawerType(
       showDrawerType === DrawerType.None ? DrawerType.Setting : DrawerType.None,
