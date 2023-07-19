@@ -8,8 +8,6 @@ export const UI_SETTING = {
   leftMenuWidthCollapsed: 48,
 };
 
-export const AUTO_SAVE_INTERVAL = 30 * 1000;
-
 export const GITHUB_LINK =
   'https://github.com/Glutamine525/sim-empire-map-editor-v3';
 

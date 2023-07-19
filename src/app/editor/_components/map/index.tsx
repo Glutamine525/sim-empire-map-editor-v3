@@ -1,14 +1,20 @@
-import React, { createRef, useEffect, useLayoutEffect, useMemo } from 'react';
+import React, {
+  createRef,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+} from 'react';
 import { Message } from '@arco-design/web-react';
 import Content from '@arco-design/web-react/es/Layout/content';
 import PerfectScrollbar from 'perfect-scrollbar';
 import { shallow } from 'zustand/shallow';
 import { importMapData } from '@/utils/import-export';
-import { AUTO_SAVE_INTERVAL } from '../../_config';
 import useMapCore from '../../_hooks/use-map-core';
 import { useAutoSave } from '../../_store/auto-save';
 import { buildingData, resetBuildingData } from '../../_store/building-data';
 import { useMapConfig } from '../../_store/map-config';
+import { useSetting } from '../../_store/settings';
 import BuildingLayer from '../building-layer';
 import InteractLayer from '../interact-layer';
 import styles from './index.module.css';
@@ -42,9 +48,12 @@ const Map = () => {
     state => [state.mapDataStr, state.trigger],
     shallow,
   );
+  const autoSaveInterval = useSetting(state => state.autoSaveInterval);
 
   const mapCore = useMapCore();
   const buildings = useMemo(() => <BuildingLayer />, []);
+
+  const autoSaveTimer = useRef(0);
 
   useLayoutEffect(() => {
     mapCore.mapUpdater = (key, b) => {
@@ -76,12 +85,6 @@ const Map = () => {
       }, 0);
     }
 
-    setInterval(() => {
-      if (trigger()) {
-        Message.success('自动存档');
-      }
-    }, AUTO_SAVE_INTERVAL);
-
     window.addEventListener('beforeunload', () => {
       trigger();
     });
@@ -90,6 +93,20 @@ const Map = () => {
       scrollbar.destroy();
     };
   }, []);
+
+  useEffect(() => {
+    if (autoSaveTimer.current) {
+      clearInterval(autoSaveTimer.current);
+      if (trigger()) {
+        Message.success('自动存档');
+      }
+    }
+    autoSaveTimer.current = window.setInterval(() => {
+      if (trigger()) {
+        Message.success('自动存档');
+      }
+    }, autoSaveInterval * 1000);
+  }, [autoSaveInterval]);
 
   useEffect(() => {
     resetBuildingData();

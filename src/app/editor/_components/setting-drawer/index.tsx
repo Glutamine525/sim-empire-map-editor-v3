@@ -80,7 +80,7 @@ const SettingDrawer: FC<SettingDrawerProps> = props => {
         </FormItem>
 
         <div className={styles['sub-title']}>存档</div>
-        <FormItem disabled={true} label="自动存档间隔" field="autoSaveInterval">
+        <FormItem label="自动存档间隔" field="autoSaveInterval">
           <Slider
             min={10}
             max={60}
@@ -95,7 +95,7 @@ const SettingDrawer: FC<SettingDrawerProps> = props => {
             }}
           />
         </FormItem>
-        <FormItem disabled={true} label="最大存档数" field="autoSaveMaxNum">
+        <FormItem label="最大存档数" field="autoSaveMaxNum">
           <Slider
             min={10}
             max={30}

@@ -8,6 +8,7 @@ import {
   MapData,
 } from '@/utils/import-export';
 import { miniMapCanvas } from '../_components/mini-map';
+import { useSetting } from './settings';
 
 type FinalMapData = MapData & { imgSrc: string };
 
@@ -17,8 +18,6 @@ interface AutoSaveState {
   trigger: () => boolean;
   moveSelectedToFirst: (index: number) => void;
 }
-
-const LIMIT = 20;
 
 export const useAutoSave = create<AutoSaveState>()(
   persist(
@@ -39,7 +38,13 @@ export const useAutoSave = create<AutoSaveState>()(
         };
         set(
           produce<AutoSaveState>(state => {
-            state.snapshots = [data, ...state.snapshots.slice(0, LIMIT - 1)];
+            state.snapshots = [
+              data,
+              ...state.snapshots.slice(
+                0,
+                useSetting.getState().autoSaveMaxNum - 1,
+              ),
+            ];
           }),
         );
         return true;
