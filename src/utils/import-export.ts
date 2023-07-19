@@ -11,6 +11,7 @@ import {
   mapCivilLabelToType,
   MapLength,
   MapType,
+  OperationType,
 } from '@/app/editor/_map-core/type';
 import { resetBuildingData } from '@/app/editor/_store/building-data';
 import { useMapConfig } from '@/app/editor/_store/map-config';
@@ -43,7 +44,13 @@ export interface MapData {
 }
 
 function changeMapConfig(mapType: MapType, civil: CivilType, noTree: boolean) {
-  useMapConfig.setState({ mapType, civil, noTree });
+  useMapConfig.setState({
+    mapType,
+    civil,
+    noTree,
+    operation: OperationType.Empty,
+    brush: undefined,
+  });
   MapCore.getInstance().toggleNoTree(noTree);
 }
 
