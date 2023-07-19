@@ -82,6 +82,7 @@ export function importOldMapData(data: any) {
   if (!civil) {
     return false;
   }
+  resetBuildingData();
   changeMapConfig(mapType, civil, noTree);
   core.init(mapType, civil, noTree);
   const roadBuilding = getRoadBuilding();
