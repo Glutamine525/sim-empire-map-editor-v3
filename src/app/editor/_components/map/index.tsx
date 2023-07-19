@@ -82,6 +82,10 @@ const Map = () => {
       }
     }, AUTO_SAVE_INTERVAL);
 
+    window.addEventListener('beforeunload', () => {
+      trigger();
+    });
+
     return () => {
       scrollbar.destroy();
     };
