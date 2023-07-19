@@ -12,6 +12,7 @@ import {
   MapLength,
   MapType,
 } from '@/app/editor/_map-core/type';
+import { resetBuildingData } from '@/app/editor/_store/building-data';
 import { useMapConfig } from '@/app/editor/_store/map-config';
 import {
   getGeneralBuilding,
@@ -208,6 +209,7 @@ export function importMapData(dataStr: string) {
   if (dataMd5 !== md5(JSON.stringify(data))) {
     return false;
   }
+  resetBuildingData();
   const core = MapCore.getInstance();
   core.init(mapType, civil, noTree);
   changeMapConfig(mapType, civil, noTree);

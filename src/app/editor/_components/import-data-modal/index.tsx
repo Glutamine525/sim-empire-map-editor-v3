@@ -3,7 +3,6 @@ import { Message, Modal, Upload } from '@arco-design/web-react';
 import { importMapData } from '@/utils/import-export';
 import useMapCore from '../../_hooks/use-map-core';
 import { useAutoSave } from '../../_store/auto-save';
-import { resetBuildingData } from '../../_store/building-data';
 import { useCommand } from '../../_store/command';
 import { ModalType } from '../left-menu';
 import styles from './index.module.css';
@@ -54,7 +53,6 @@ const ImportDataModal: FC<ImportDataModalProps> = props => {
       reader.readAsText(file);
     });
     if (type === ModalType.ImportMap) {
-      resetBuildingData();
       const succeed = importMapData(data);
       if (!succeed) {
         Message.error('该存档已损坏，导入失败！');

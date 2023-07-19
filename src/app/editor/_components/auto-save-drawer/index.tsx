@@ -18,7 +18,6 @@ import {
 } from '@/utils/import-export';
 import { CivilTypeLabel } from '../../_map-core/type';
 import { useAutoSave } from '../../_store/auto-save';
-import { resetBuildingData } from '../../_store/building-data';
 import { useCommand } from '../../_store/command';
 
 interface AutoSaveDrawerProps {
@@ -106,7 +105,6 @@ const AutoSaveDrawer: FC<AutoSaveDrawerProps> = props => {
               }
               const { imgSrc: _, ...data } = originData;
               moveSelectedToFirst(index);
-              resetBuildingData();
               importMapData(encodeMapData(data));
               resetCommand();
               Message.success('成功载入该存档！');

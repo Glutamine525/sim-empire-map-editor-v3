@@ -67,7 +67,6 @@ const Map = () => {
     if (mapData) {
       // 用宏任务载入存档，避免被首次mapRedraw重置地图
       setTimeout(() => {
-        resetBuildingData();
         if (importMapData(mapData)) {
           trigger();
         } else {
