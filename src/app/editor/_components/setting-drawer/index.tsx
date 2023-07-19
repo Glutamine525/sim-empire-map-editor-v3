@@ -118,7 +118,6 @@ const SettingDrawer: FC<SettingDrawerProps> = props => {
           <Switch />
         </FormItem>
         <FormItem
-          disabled={true}
           label="防护建筑高亮"
           field="enableProtectionHighlight"
           triggerPropName="checked"

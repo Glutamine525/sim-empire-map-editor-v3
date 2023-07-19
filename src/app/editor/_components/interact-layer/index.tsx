@@ -43,11 +43,17 @@ const InteractLayer = () => {
     shallow,
   );
   const addCommand = useCommand(state => state.add);
-  const [enableDoubleClickDelete, enableResidenceRequirementQuery] = useSetting(
+  const [
+    enableDoubleClickDelete,
+    enableResidenceRequirementQuery,
+    enableProtectionHighlight,
+  ] = useSetting(
     state => [
       state.enableDoubleClickDelete,
       state.enableResidenceRequirementQuery,
+      state.enableProtectionHighlight,
     ],
+    shallow,
   );
 
   const [isMouseDown, setIsMouseDown] = useState(false);
@@ -405,20 +411,21 @@ const InteractLayer = () => {
         isHidden={!hoverBuilding || !hoverBuilding.range}
         {...hoverBuilding}
       />
-      {hoverBuilding?.protections.map(key => {
-        const { w = 1, h = 1 } = mapCore.buildings[key];
-        const [r, c] = parseBuildingKey(key);
-        return (
-          <BlockHighlight
-            key={key}
-            type={HighlightType.Protection}
-            w={w}
-            h={h}
-            row={r}
-            col={c}
-          />
-        );
-      })}
+      {enableProtectionHighlight &&
+        hoverBuilding?.protections.map(key => {
+          const { w = 1, h = 1 } = mapCore.buildings[key];
+          const [r, c] = parseBuildingKey(key);
+          return (
+            <BlockHighlight
+              key={key}
+              type={HighlightType.Protection}
+              w={w}
+              h={h}
+              row={r}
+              col={c}
+            />
+          );
+        })}
       {/* preview building */}
       <Building
         isHidden={!previewBuilding}
@@ -437,7 +444,8 @@ const InteractLayer = () => {
         {...previewConfig}
         {...previewBuilding}
       />
-      {Boolean(previewBuilding) &&
+      {enableProtectionHighlight &&
+        Boolean(previewBuilding) &&
         previewConfig?.protections.map(key => {
           const { w = 1, h = 1 } = mapCore.buildings[key];
           const [r, c] = parseBuildingKey(key);
