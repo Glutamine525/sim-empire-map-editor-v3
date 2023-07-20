@@ -13,12 +13,12 @@
 }
 
 .road-count-style-radio-group {
-  display: flex;
+  display: flex !important;
   align-items: center;
 }
 
 .road-count-style-radio {
-  display: flex;
+  display: flex !important;
   align-items: center;
 }
 
@@ -30,12 +30,12 @@
 }
 
 .protection-count-style-radio-group {
-  display: flex;
+  display: flex !important;
   align-items: center;
 }
 
 .protection-count-style-radio {
-  display: flex;
+  display: flex !important;
   align-items: center;
 }
 
