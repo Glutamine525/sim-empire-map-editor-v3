@@ -1,8 +1,15 @@
 import React, { FC } from 'react';
 import { Drawer, Form, Radio, Slider, Switch } from '@arco-design/web-react';
+import { getRoadBuilding } from '@/utils/building';
 import useMapCore from '../../_hooks/use-map-core';
-import { ProtectionCountStyleType, useSetting } from '../../_store/settings';
+import {
+  ProtectionCountStyleType,
+  RoadCountStyleType,
+  useSetting,
+} from '../../_store/settings';
+import Block from '../block';
 import BuildingProtectionCount from '../building-protection-count';
+import RoadCount from '../road-count';
 import styles from './index.module.css';
 
 const { Item: FormItem, useForm } = Form;
@@ -103,8 +110,35 @@ const SettingDrawer: FC<SettingDrawerProps> = props => {
         </FormItem>
 
         <div className={styles['sub-title']}>样式</div>
-        <FormItem disabled={true} label="道路计数" field="roadCountStyle">
-          <Radio.Group options={['A', 'B']} />
+        <FormItem label="道路计数" field="roadCountStyle">
+          <Radio.Group className={styles['road-count-style-radio-group']}>
+            <Radio
+              value={RoadCountStyleType.CenterBigNumber}
+              className={styles['road-count-style-radio']}
+            >
+              <div className={styles['road-count-style-container']}>
+                <Block row={1} col={1} {...getRoadBuilding()}>
+                  <RoadCount
+                    styleType={RoadCountStyleType.CenterBigNumber}
+                    marker={1}
+                  />
+                </Block>
+              </div>
+            </Radio>
+            <Radio
+              value={RoadCountStyleType.TopLeftSmallNumber}
+              className={styles['road-count-style-radio']}
+            >
+              <div className={styles['road-count-style-container']}>
+                <Block row={1} col={1} {...getRoadBuilding()}>
+                  <RoadCount
+                    styleType={RoadCountStyleType.TopLeftSmallNumber}
+                    marker={1}
+                  />
+                </Block>
+              </div>
+            </Radio>
+          </Radio.Group>
         </FormItem>
         <FormItem label="防护计数" field="protectionCountStyle">
           <Radio.Group className={styles['protection-count-style-radio-group']}>

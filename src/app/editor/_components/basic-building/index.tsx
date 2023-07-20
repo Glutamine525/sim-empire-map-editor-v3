@@ -7,6 +7,7 @@ import { useSetting } from '../../_store/settings';
 import Block from '../block';
 import BuildingProtectionCount from '../building-protection-count';
 import FixedBuildingIcon from '../fixed-building-icon';
+import RoadCount from '../road-count';
 import styles from './index.module.css';
 
 interface BasicBuildingProps {
@@ -18,10 +19,15 @@ const BasicBuilding: FC<BasicBuildingProps> = ({ row, col }) => {
   const [data] = useBuildingData(row, col);
   const { w = 0, h = 0 } = data;
 
-  const [enableFixedBuildingIcon, protectionCountStyle] = useSetting(
-    state => [state.enableFixedBuildingIcon, state.protectionCountStyle],
-    shallow,
-  );
+  const [enableFixedBuildingIcon, protectionCountStyle, roadCountStyle] =
+    useSetting(
+      state => [
+        state.enableFixedBuildingIcon,
+        state.protectionCountStyle,
+        state.roadCountStyle,
+      ],
+      shallow,
+    );
 
   return (
     <Block
@@ -36,7 +42,7 @@ const BasicBuilding: FC<BasicBuildingProps> = ({ row, col }) => {
       {showMarker(data) && (
         <>
           {data.isRoad ? (
-            <>{data.marker}</>
+            <RoadCount marker={data.marker} styleType={roadCountStyle} />
           ) : (
             <BuildingProtectionCount
               marker={data.marker}
