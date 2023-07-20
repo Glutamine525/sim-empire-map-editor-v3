@@ -44,11 +44,13 @@ const InteractLayer = () => {
   );
   const addCommand = useCommand(state => state.add);
   const [
+    enableInteractLayerShortcut,
     enableDoubleClickDelete,
     enableResidenceRequirementQuery,
     enableProtectionHighlight,
   ] = useSetting(
     state => [
+      state.enableInteractLayerShortcut,
       state.enableDoubleClickDelete,
       state.enableResidenceRequirementQuery,
       state.enableProtectionHighlight,
@@ -201,7 +203,8 @@ const InteractLayer = () => {
 
   // copy building
   useKeyPress('c', e => {
-    if (!e.ctrlKey || !hoverBuilding) {
+    e.preventDefault();
+    if (!e.ctrlKey || !hoverBuilding || !enableInteractLayerShortcut) {
       return;
     }
     if (hoverBuilding.isFixed) {

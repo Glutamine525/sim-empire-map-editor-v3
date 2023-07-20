@@ -110,7 +110,8 @@ const LeftMenu = () => {
     state => [state.commands, state.undoCommands, state.undo, state.redo],
     shallow,
   );
-  const [scale, quality] = useSetting(state => [
+  const [enableLeftMenuShortcut, scale, quality] = useSetting(state => [
+    state.enableLeftMenuShortcut,
     state.screenshotScale,
     state.screenshotQuality,
   ]);
@@ -158,13 +159,15 @@ const LeftMenu = () => {
   useKeyPress(
     Object.keys(mapShortcutToMenu),
     e => {
-      if (showModalType !== ModalType.None || e.ctrlKey) {
+      e.preventDefault();
+      if (
+        showModalType !== ModalType.None ||
+        e.ctrlKey ||
+        !enableLeftMenuShortcut
+      ) {
         return;
       }
       const key = e.key === ' ' ? e.code : e.key.toUpperCase();
-      if (key === 'Space') {
-        e.preventDefault();
-      }
       const catalog = mapShortcutToMenu[key] as CatalogType;
       resetSubMenuOpened();
       if (catalog === CatalogType.Special && subMenuOpened[catalog]) {
@@ -185,7 +188,11 @@ const LeftMenu = () => {
   );
 
   useKeyPress(ahooksIdxKeyFilter, e => {
-    if (showModalType !== ModalType.None || e.ctrlKey) {
+    if (
+      showModalType !== ModalType.None ||
+      e.ctrlKey ||
+      !enableLeftMenuShortcut
+    ) {
       return;
     }
     if (!openedSubMenu.current) {
@@ -195,7 +202,11 @@ const LeftMenu = () => {
   });
 
   useKeyPress(protectionShortcut, e => {
-    if (showModalType !== ModalType.None || e.ctrlKey) {
+    if (
+      showModalType !== ModalType.None ||
+      e.ctrlKey ||
+      !enableLeftMenuShortcut
+    ) {
       return;
     }
     const key = e.key.toUpperCase();
@@ -355,11 +366,13 @@ const LeftMenu = () => {
                   <div className={styles['main-menu-container']}>
                     <Icon catalog={catalog} />
                     <div className={styles.text}>{catalog}</div>
-                    <div className={styles['key-shortcut']}>
-                      {mapMenuToShortcut[catalog] === 'Space'
-                        ? '⎵'
-                        : mapMenuToShortcut[catalog]}
-                    </div>
+                    {enableLeftMenuShortcut && (
+                      <div className={styles['key-shortcut']}>
+                        {mapMenuToShortcut[catalog] === 'Space'
+                          ? '⎵'
+                          : mapMenuToShortcut[catalog]}
+                      </div>
+                    )}
                   </div>
                 </Tooltip>
               </MenuItem>
@@ -372,14 +385,16 @@ const LeftMenu = () => {
                 <div className={styles['main-menu-container']}>
                   <Icon catalog={catalog} />
                   <div className={styles.text}>{catalog}</div>
-                  <div
-                    className={classcat([
-                      styles['key-shortcut'],
-                      styles['key-shortcut-arrow'],
-                    ])}
-                  >
-                    {mapMenuToShortcut[catalog]}
-                  </div>
+                  {enableLeftMenuShortcut && (
+                    <div
+                      className={classcat([
+                        styles['key-shortcut'],
+                        styles['key-shortcut-arrow'],
+                      ])}
+                    >
+                      {mapMenuToShortcut[catalog]}
+                    </div>
+                  )}
                 </div>
               }
               triggerProps={{
@@ -454,7 +469,7 @@ const LeftMenu = () => {
                         </>
                       )}
                     </div>
-                    {i < shortcutIdxCap && (
+                    {i < shortcutIdxCap && enableLeftMenuShortcut && (
                       <div className={styles['key-container']}>
                         <div className={styles['key-shortcut']}>
                           {mapMenuToShortcut[catalog]}
@@ -479,15 +494,17 @@ const LeftMenu = () => {
                   }}
                 >
                   <div>编辑</div>
-                  <div className={styles['key-container']}>
-                    <div className={styles['key-shortcut']}>
-                      {mapMenuToShortcut[catalog]}
+                  {enableLeftMenuShortcut && (
+                    <div className={styles['key-container']}>
+                      <div className={styles['key-shortcut']}>
+                        {mapMenuToShortcut[catalog]}
+                      </div>
+                      +
+                      <div className={styles['key-shortcut']}>
+                        {mapMenuToShortcut[catalog]}
+                      </div>
                     </div>
-                    +
-                    <div className={styles['key-shortcut']}>
-                      {mapMenuToShortcut[catalog]}
-                    </div>
-                  </div>
+                  )}
                 </div>
               )}
             </SubMenu>

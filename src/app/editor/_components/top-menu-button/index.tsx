@@ -2,6 +2,7 @@ import React, { memo, useState } from 'react';
 import { Button, Modal, Notification, Tooltip } from '@arco-design/web-react';
 import {
   IconDelete,
+  IconMindMapping,
   IconMoonFill,
   IconSave,
   IconSettings,
@@ -13,6 +14,7 @@ import useColorTheme, { ThemeType } from '@/hooks/use-color-theme';
 import useMapCore from '../../_hooks/use-map-core';
 import { useAutoSave } from '../../_store/auto-save';
 import { useMapConfig } from '../../_store/map-config';
+import { useSetting } from '../../_store/settings';
 import AutoSaveDrawer from '../auto-save-drawer';
 import SettingDrawer from '../setting-drawer';
 import styles from './index.module.css';
@@ -32,15 +34,18 @@ const TopMenuButton = () => {
     shallow,
   );
   const trigger = useAutoSave(state => state.trigger);
+  const enableTopMenuShortcut = useSetting(
+    state => state.enableTopMenuShortcut,
+  );
 
   const [showDrawerType, setShowDrawerType] = useState(DrawerType.None);
 
   // button shortcut
   useKeyPress(['d', 's', 'g', 'comma'], e => {
-    if (!e.ctrlKey) {
+    e.preventDefault();
+    if (!e.ctrlKey || !enableTopMenuShortcut) {
       return;
     }
-    e.preventDefault();
     switch (e.key.toLowerCase()) {
       case 'd':
         onClickDelete();
@@ -112,10 +117,12 @@ const TopMenuButton = () => {
         content={
           <div className={styles['tooltip-container']}>
             <div>重置地图</div>
-            <div className={styles['key-container']}>
-              <div className={styles['key-shortcut']}>Ctrl</div>+
-              <div className={styles['key-shortcut']}>D</div>
-            </div>
+            {enableTopMenuShortcut && (
+              <div className={styles['key-container']}>
+                <div className={styles['key-shortcut']}>Ctrl</div>+
+                <div className={styles['key-shortcut']}>D</div>
+              </div>
+            )}
           </div>
         }
       >
@@ -131,11 +138,35 @@ const TopMenuButton = () => {
       <Tooltip
         content={
           <div className={styles['tooltip-container']}>
+            <div>游戏进程</div>
+            {enableTopMenuShortcut && (
+              <div className={styles['key-container']}>
+                <div className={styles['key-shortcut']}>Ctrl</div>+
+                <div className={styles['key-shortcut']}>.</div>
+              </div>
+            )}
+          </div>
+        }
+      >
+        <Button
+          disabled={true}
+          shape="square"
+          type="text"
+          iconOnly={true}
+          icon={<IconMindMapping />}
+          onClick={undefined}
+        />
+      </Tooltip>
+      <Tooltip
+        content={
+          <div className={styles['tooltip-container']}>
             <div>自动存档</div>
-            <div className={styles['key-container']}>
-              <div className={styles['key-shortcut']}>Ctrl</div>+
-              <div className={styles['key-shortcut']}>S</div>
-            </div>
+            {enableTopMenuShortcut && (
+              <div className={styles['key-container']}>
+                <div className={styles['key-shortcut']}>Ctrl</div>+
+                <div className={styles['key-shortcut']}>S</div>
+              </div>
+            )}
           </div>
         }
       >
@@ -151,10 +182,12 @@ const TopMenuButton = () => {
         content={
           <div className={styles['tooltip-container']}>
             <div>设置</div>
-            <div className={styles['key-container']}>
-              <div className={styles['key-shortcut']}>Ctrl</div>+
-              <div className={styles['key-shortcut']}>,</div>
-            </div>
+            {enableTopMenuShortcut && (
+              <div className={styles['key-container']}>
+                <div className={styles['key-shortcut']}>Ctrl</div>+
+                <div className={styles['key-shortcut']}>,</div>
+              </div>
+            )}
           </div>
         }
       >
@@ -170,10 +203,12 @@ const TopMenuButton = () => {
         content={
           <div className={styles['tooltip-container']}>
             <div>主题切换</div>
-            <div className={styles['key-container']}>
-              <div className={styles['key-shortcut']}>Ctrl</div>+
-              <div className={styles['key-shortcut']}>G</div>
-            </div>
+            {enableTopMenuShortcut && (
+              <div className={styles['key-container']}>
+                <div className={styles['key-shortcut']}>Ctrl</div>+
+                <div className={styles['key-shortcut']}>G</div>
+              </div>
+            )}
           </div>
         }
       >

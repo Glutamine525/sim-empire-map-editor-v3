@@ -40,7 +40,6 @@ const SettingDrawer: FC<SettingDrawerProps> = props => {
       >
         <div className={styles['sub-title']}>键盘快捷键</div>
         <FormItem
-          disabled={true}
           label="顶部菜单"
           field="enableTopMenuShortcut"
           triggerPropName="checked"
@@ -48,7 +47,6 @@ const SettingDrawer: FC<SettingDrawerProps> = props => {
           <Switch />
         </FormItem>
         <FormItem
-          disabled={true}
           label="侧边菜单"
           field="enableLeftMenuShortcut"
           triggerPropName="checked"
@@ -56,7 +54,6 @@ const SettingDrawer: FC<SettingDrawerProps> = props => {
           <Switch />
         </FormItem>
         <FormItem
-          disabled={true}
           label="地图区域"
           field="enableInteractLayerShortcut"
           triggerPropName="checked"
