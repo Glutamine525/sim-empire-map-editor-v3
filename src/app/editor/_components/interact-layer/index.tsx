@@ -2,7 +2,7 @@ import React, { useMemo, useRef, useState } from 'react';
 import { Message, Notification } from '@arco-design/web-react';
 import { useKeyPress } from 'ahooks';
 import { shallow } from 'zustand/shallow';
-import { BLOCK_PX } from '@/app/editor/_config';
+import { BLOCK_PX, IS_MAC, IS_WINDOWS } from '@/app/editor/_config';
 import { MapLength, OperationType } from '@/app/editor/_map-core/type';
 import { canHover, showMarker } from '@/utils/building';
 import {
@@ -204,7 +204,10 @@ const InteractLayer = () => {
   // copy building
   useKeyPress('c', e => {
     e.preventDefault();
-    if (!e.ctrlKey || !hoverBuilding || !enableInteractLayerShortcut) {
+    if (!hoverBuilding || !enableInteractLayerShortcut) {
+      return;
+    }
+    if ((IS_WINDOWS && !e.ctrlKey) || (IS_MAC && !e.metaKey)) {
       return;
     }
     if (hoverBuilding.isFixed) {
@@ -406,8 +409,7 @@ const InteractLayer = () => {
             setRequirementConfig({ show: false, row: 0, col: 0, w: 0, h: 0 });
           },
         });
-      }}
-    >
+      }}>
       {/* hover building */}
       <Building isHidden={!hoverBuilding} isHovered={true} {...hoverBuilding} />
       <Range

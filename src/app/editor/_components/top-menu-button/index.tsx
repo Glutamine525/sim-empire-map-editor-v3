@@ -18,6 +18,8 @@ import { useSetting } from '../../_store/settings';
 import AutoSaveDrawer from '../auto-save-drawer';
 import SettingDrawer from '../setting-drawer';
 import styles from './index.module.css';
+import { IS_MAC, IS_WINDOWS } from '../../_config';
+import { getCtrlKeyText } from '@/utils/env';
 
 enum DrawerType {
   None,
@@ -43,7 +45,10 @@ const TopMenuButton = () => {
   // button shortcut
   useKeyPress(['d', 's', 'g', 'comma'], e => {
     e.preventDefault();
-    if (!e.ctrlKey || !enableTopMenuShortcut) {
+    if (!enableTopMenuShortcut) {
+      return;
+    }
+    if ((IS_WINDOWS && !e.ctrlKey) || (IS_MAC && !e.metaKey)) {
       return;
     }
     switch (e.key.toLowerCase()) {
@@ -119,13 +124,12 @@ const TopMenuButton = () => {
             <div>重置地图</div>
             {enableTopMenuShortcut && (
               <div className={styles['key-container']}>
-                <div className={styles['key-shortcut']}>Ctrl</div>+
-                <div className={styles['key-shortcut']}>D</div>
+                <div className={styles['key-shortcut']}>{getCtrlKeyText()}</div>
+                +<div className={styles['key-shortcut']}>D</div>
               </div>
             )}
           </div>
-        }
-      >
+        }>
         <Button
           shape="square"
           status="danger"
@@ -141,13 +145,12 @@ const TopMenuButton = () => {
             <div>游戏进程</div>
             {enableTopMenuShortcut && (
               <div className={styles['key-container']}>
-                <div className={styles['key-shortcut']}>Ctrl</div>+
-                <div className={styles['key-shortcut']}>.</div>
+                <div className={styles['key-shortcut']}>{getCtrlKeyText()}</div>
+                +<div className={styles['key-shortcut']}>.</div>
               </div>
             )}
           </div>
-        }
-      >
+        }>
         <Button
           disabled={true}
           shape="square"
@@ -163,13 +166,12 @@ const TopMenuButton = () => {
             <div>自动存档</div>
             {enableTopMenuShortcut && (
               <div className={styles['key-container']}>
-                <div className={styles['key-shortcut']}>Ctrl</div>+
-                <div className={styles['key-shortcut']}>S</div>
+                <div className={styles['key-shortcut']}>{getCtrlKeyText()}</div>
+                +<div className={styles['key-shortcut']}>S</div>
               </div>
             )}
           </div>
-        }
-      >
+        }>
         <Button
           shape="square"
           type="text"
@@ -184,13 +186,12 @@ const TopMenuButton = () => {
             <div>设置</div>
             {enableTopMenuShortcut && (
               <div className={styles['key-container']}>
-                <div className={styles['key-shortcut']}>Ctrl</div>+
-                <div className={styles['key-shortcut']}>,</div>
+                <div className={styles['key-shortcut']}>{getCtrlKeyText()}</div>
+                +<div className={styles['key-shortcut']}>,</div>
               </div>
             )}
           </div>
-        }
-      >
+        }>
         <Button
           shape="square"
           type="text"
@@ -205,13 +206,12 @@ const TopMenuButton = () => {
             <div>主题切换</div>
             {enableTopMenuShortcut && (
               <div className={styles['key-container']}>
-                <div className={styles['key-shortcut']}>Ctrl</div>+
-                <div className={styles['key-shortcut']}>G</div>
+                <div className={styles['key-shortcut']}>{getCtrlKeyText()}</div>
+                +<div className={styles['key-shortcut']}>G</div>
               </div>
             )}
           </div>
-        }
-      >
+        }>
         <Button
           shape="square"
           type="text"

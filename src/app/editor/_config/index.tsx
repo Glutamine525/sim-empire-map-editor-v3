@@ -1,3 +1,5 @@
+import { isMac, isWindows } from '@/utils/env';
+
 export const VERSION = '3.0.0';
 
 export const BLOCK_PX = 30;
@@ -12,3 +14,7 @@ export const GITHUB_LINK =
   'https://github.com/Glutamine525/sim-empire-map-editor-v3';
 
 export const WEB_LINK = 'https://www.simempire.fun';
+
+export const IS_MAC = isMac();
+
+export const IS_WINDOWS = isWindows();

@@ -162,6 +162,7 @@ const LeftMenu = () => {
       if (
         showModalType !== ModalType.None ||
         e.ctrlKey ||
+        e.metaKey ||
         !enableLeftMenuShortcut
       ) {
         return;
@@ -193,6 +194,7 @@ const LeftMenu = () => {
     if (
       showModalType !== ModalType.None ||
       e.ctrlKey ||
+      e.metaKey ||
       !enableLeftMenuShortcut
     ) {
       return;
@@ -207,6 +209,7 @@ const LeftMenu = () => {
     if (
       showModalType !== ModalType.None ||
       e.ctrlKey ||
+      e.metaKey ||
       !enableLeftMenuShortcut
     ) {
       return;
