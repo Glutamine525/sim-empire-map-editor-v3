@@ -362,7 +362,8 @@ const LeftMenu = () => {
                 }>
                 <Tooltip
                   content={isCollapsed ? catalog : null}
-                  position="right">
+                  position="right"
+                  style={{ left: leftMenuWidth + 8 }}>
                   <div className={styles['main-menu-container']}>
                     <Icon catalog={catalog} />
                     <div className={styles.text}>{catalog}</div>
