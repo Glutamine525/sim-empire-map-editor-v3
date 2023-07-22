@@ -109,10 +109,11 @@ const LeftMenu = () => {
     state => [state.commands, state.undoCommands, state.undo, state.redo],
     shallow,
   );
-  const [enableLeftMenuShortcut, scale, quality] = useSetting(state => [
+  const [enableLeftMenuShortcut, scale, quality, rotate] = useSetting(state => [
     state.enableLeftMenuShortcut,
     state.screenshotScale,
     state.screenshotQuality,
+    state.enableScreenshot45deg,
   ]);
 
   const [showModalType, setShowModalType] = useState(ModalType.None);
@@ -314,6 +315,7 @@ const LeftMenu = () => {
             document.getElementById('building-layer')!,
             scale,
             quality,
+            rotate,
           );
         } else if (name === ImportExportSubmenu.ImportMapData) {
           setShowModalType(ModalType.ImportMap);

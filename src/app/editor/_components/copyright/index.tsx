@@ -24,6 +24,7 @@ const Copyright: FC<CopyrightProps> = props => {
 
   return (
     <div
+      id={isInteractLayer || isMiniMap ? undefined : 'copyright'}
       className={classcat({
         [styles.container]: true,
         [styles['interact-layer']]: isInteractLayer,
