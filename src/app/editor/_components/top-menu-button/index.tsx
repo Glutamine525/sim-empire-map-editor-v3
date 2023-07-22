@@ -10,16 +10,16 @@ import {
 } from '@arco-design/web-react/icon';
 import { useKeyPress } from 'ahooks';
 import { shallow } from 'zustand/shallow';
-import useColorTheme, { ThemeType } from '@/hooks/use-color-theme';
+import { IS_MAC, IS_WINDOWS } from '../../_config';
 import useMapCore from '../../_hooks/use-map-core';
 import { useAutoSave } from '../../_store/auto-save';
 import { useMapConfig } from '../../_store/map-config';
 import { useSetting } from '../../_store/settings';
 import AutoSaveDrawer from '../auto-save-drawer';
 import SettingDrawer from '../setting-drawer';
-import styles from './index.module.css';
-import { IS_MAC, IS_WINDOWS } from '../../_config';
+import useColorTheme, { ThemeType } from '@/hooks/use-color-theme';
 import { getCtrlKeyText } from '@/utils/env';
+import styles from './index.module.css';
 
 enum DrawerType {
   None,
@@ -94,22 +94,22 @@ const TopMenuButton = () => {
   };
 
   const onClickAutoSave = () => {
-    Notification.clear();
-    if (showDrawerType === DrawerType.None) {
-      triggerResetArea();
-      trigger();
-      setShowDrawerType(DrawerType.AutoSave);
-    } else {
-      setShowDrawerType(DrawerType.None);
+    if (showDrawerType !== DrawerType.None) {
+      return;
     }
+    Notification.clear();
+    triggerResetArea();
+    trigger();
+    setShowDrawerType(DrawerType.AutoSave);
   };
 
   const onClickSetting = () => {
+    if (showDrawerType !== DrawerType.None) {
+      return;
+    }
     Notification.clear();
     triggerResetArea();
-    setShowDrawerType(
-      showDrawerType === DrawerType.None ? DrawerType.Setting : DrawerType.None,
-    );
+    setShowDrawerType(DrawerType.Setting);
   };
 
   const onClickChangeTheme = () => {

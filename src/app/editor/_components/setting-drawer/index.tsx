@@ -1,6 +1,5 @@
 import React, { FC } from 'react';
 import { Drawer, Form, Radio, Slider, Switch } from '@arco-design/web-react';
-import { getRoadBuilding } from '@/utils/building';
 import useMapCore from '../../_hooks/use-map-core';
 import {
   ProtectionCountStyleType,
@@ -10,6 +9,7 @@ import {
 import Block from '../block';
 import BuildingProtectionCount from '../building-protection-count';
 import RoadCount from '../road-count';
+import { getRoadBuilding } from '@/utils/building';
 import styles from './index.module.css';
 
 const { Item: FormItem, useForm } = Form;
