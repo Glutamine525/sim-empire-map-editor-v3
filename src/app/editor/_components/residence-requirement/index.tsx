@@ -103,7 +103,7 @@ const ResidenceRequirement: FC<ResidenceRequirementProps> = props => {
   }
 
   return (
-    <div className={styles.container}>
+    <>
       {Object.keys(result).map(_catalog => {
         const catalog = _catalog as BuildingType;
         return (
@@ -144,7 +144,7 @@ const ResidenceRequirement: FC<ResidenceRequirementProps> = props => {
           </Fragment>
         );
       })}
-    </div>
+    </>
   );
 };
 
