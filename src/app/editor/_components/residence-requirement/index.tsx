@@ -96,7 +96,7 @@ const ResidenceRequirement: FC<ResidenceRequirementProps> = props => {
       }
     }
     return res;
-  }, [civil, requirement, row, col]);
+  }, [props]);
 
   if (!result) {
     return '未知错误，请尝试刷新页面重试~';
@@ -126,16 +126,14 @@ const ResidenceRequirement: FC<ResidenceRequirementProps> = props => {
                             )!,
                           ),
                         );
-                      }}
-                    >
+                      }}>
                       {data.name}:{' '}
                       <span
                         style={{
                           color: data.covered
                             ? 'rgb(var(--success-5))'
                             : 'rgb(var(--danger-5))',
-                        }}
-                      >
+                        }}>
                         {data.covered ? '√' : 'x'}
                       </span>
                     </span>
