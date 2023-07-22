@@ -50,7 +50,6 @@ export enum ModalType {
   None,
   SpecialBuilding,
   ImportMap,
-  ImportCivil,
 }
 
 const Icon = ({ catalog }: { catalog: CatalogType }) => (
@@ -320,7 +319,6 @@ const LeftMenu = () => {
           setShowModalType(ModalType.ImportMap);
         } else if (name === ImportExportSubmenu.ExportMapData) {
           exportMapData();
-        } else if (name === ImportExportSubmenu.ImportNewCivil) {
         }
         return;
       default:
@@ -435,12 +433,7 @@ const LeftMenu = () => {
                 </div>
               )}
               {subMenu.map((v, i) => (
-                <MenuItem
-                  key={catalog + '-' + i}
-                  disabled={
-                    catalog === CatalogType.ImportExport &&
-                    v.name === ImportExportSubmenu.ImportNewCivil
-                  }>
+                <MenuItem key={catalog + '-' + i}>
                   <div>
                     {i + 1}. {v.name}
                   </div>

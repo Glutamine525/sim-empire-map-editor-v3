@@ -67,15 +67,14 @@ const ImportDataModal: FC<ImportDataModalProps> = props => {
 
   return (
     <Modal
-      visible={[ModalType.ImportMap, ModalType.ImportCivil].includes(type)}
+      visible={[ModalType.ImportMap].includes(type)}
       footer={null}
       closable={false}
       focusLock={false}
       className={styles.container}
       onCancel={() => {
         close(ModalType.None);
-      }}
-    >
+      }}>
       <Upload
         drag={true}
         accept={ACCEPT}

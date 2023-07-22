@@ -44,7 +44,6 @@ enum __CatalogType {
 }
 
 export enum ImportExportSubmenu {
-  ImportNewCivil = '导入新文明',
   ImportMapData = '导入地图数据',
   Screenshot = '截图',
   ExportMapData = '导出地图数据',
