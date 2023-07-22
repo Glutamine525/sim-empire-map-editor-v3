@@ -203,13 +203,13 @@ const InteractLayer = () => {
 
   // copy building
   useKeyPress('c', e => {
-    e.preventDefault();
     if (!hoverBuilding || !enableInteractLayerShortcut) {
       return;
     }
     if ((IS_WINDOWS && !e.ctrlKey) || (IS_MAC && !e.metaKey)) {
       return;
     }
+    e.preventDefault();
     if (hoverBuilding.isFixed) {
       Message.warning({ content: '固定建筑不允许复制~', id: 'copy-message' });
       return;
