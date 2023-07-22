@@ -37,34 +37,29 @@ const SettingDrawer: FC<SettingDrawerProps> = props => {
       onCancel={() => {
         setSetting(form.getFields());
         close();
-      }}
-    >
+      }}>
       <Form
         form={form}
         initialValues={setting}
         labelCol={{ span: 5 }}
-        wrapperCol={{ span: 12 }}
-      >
+        wrapperCol={{ span: 12 }}>
         <div className={styles['sub-title']}>键盘快捷键</div>
         <FormItem
           label="顶部菜单"
           field="enableTopMenuShortcut"
-          triggerPropName="checked"
-        >
+          triggerPropName="checked">
           <Switch />
         </FormItem>
         <FormItem
           label="侧边菜单"
           field="enableLeftMenuShortcut"
-          triggerPropName="checked"
-        >
+          triggerPropName="checked">
           <Switch />
         </FormItem>
         <FormItem
           label="地图区域"
           field="enableInteractLayerShortcut"
-          triggerPropName="checked"
-        >
+          triggerPropName="checked">
           <Switch />
         </FormItem>
 
@@ -72,15 +67,13 @@ const SettingDrawer: FC<SettingDrawerProps> = props => {
         <FormItem
           label="双击删除"
           field="enableDoubleClickDelete"
-          triggerPropName="checked"
-        >
+          triggerPropName="checked">
           <Switch />
         </FormItem>
         <FormItem
           label="查询住宅需求"
           field="enableResidenceRequirementQuery"
-          triggerPropName="checked"
-        >
+          triggerPropName="checked">
           <Switch />
         </FormItem>
 
@@ -114,8 +107,7 @@ const SettingDrawer: FC<SettingDrawerProps> = props => {
           <Radio.Group className={styles['road-count-style-radio-group']}>
             <Radio
               value={RoadCountStyleType.CenterBigNumber}
-              className={styles['road-count-style-radio']}
-            >
+              className={styles['road-count-style-radio']}>
               <div className={styles['road-count-style-container']}>
                 <Block row={1} col={1} {...getRoadBuilding()}>
                   <RoadCount
@@ -127,8 +119,7 @@ const SettingDrawer: FC<SettingDrawerProps> = props => {
             </Radio>
             <Radio
               value={RoadCountStyleType.TopLeftSmallNumber}
-              className={styles['road-count-style-radio']}
-            >
+              className={styles['road-count-style-radio']}>
               <div className={styles['road-count-style-container']}>
                 <Block row={1} col={1} {...getRoadBuilding()}>
                   <RoadCount
@@ -144,20 +135,17 @@ const SettingDrawer: FC<SettingDrawerProps> = props => {
           <Radio.Group className={styles['protection-count-style-radio-group']}>
             <Radio
               value={ProtectionCountStyleType.Circle}
-              className={styles['protection-count-style-radio']}
-            >
+              className={styles['protection-count-style-radio']}>
               <div className={styles['protection-count-style-container']}>
                 <div
-                  className={styles['protection-count-style-container-item']}
-                >
+                  className={styles['protection-count-style-container-item']}>
                   <BuildingProtectionCount
                     styleType={ProtectionCountStyleType.Circle}
                     marker={0}
                   />
                 </div>
                 <div
-                  className={styles['protection-count-style-container-item']}
-                >
+                  className={styles['protection-count-style-container-item']}>
                   <BuildingProtectionCount
                     styleType={ProtectionCountStyleType.Circle}
                     marker={mapCore.protection.length}
@@ -167,13 +155,11 @@ const SettingDrawer: FC<SettingDrawerProps> = props => {
             </Radio>
             <Radio
               value={ProtectionCountStyleType.Number}
-              className={styles['protection-count-style-radio']}
-            >
+              className={styles['protection-count-style-radio']}>
               <div className={styles['protection-count-style-container']}>
                 <div
                   className={styles['protection-count-style-container-item']}
-                  style={{ top: -2 }}
-                >
+                  style={{ top: -2 }}>
                   <BuildingProtectionCount
                     styleType={ProtectionCountStyleType.Number}
                     marker={0}
@@ -181,8 +167,7 @@ const SettingDrawer: FC<SettingDrawerProps> = props => {
                 </div>
                 <div
                   className={styles['protection-count-style-container-item']}
-                  style={{ top: -2 }}
-                >
+                  style={{ top: -2 }}>
                   <BuildingProtectionCount
                     styleType={ProtectionCountStyleType.Number}
                     marker={mapCore.protection.length}
@@ -195,15 +180,13 @@ const SettingDrawer: FC<SettingDrawerProps> = props => {
         <FormItem
           label="固定建筑标记"
           field="enableFixedBuildingIcon"
-          triggerPropName="checked"
-        >
+          triggerPropName="checked">
           <Switch />
         </FormItem>
         <FormItem
           label="防护建筑高亮"
           field="enableProtectionHighlight"
-          triggerPropName="checked"
-        >
+          triggerPropName="checked">
           <Switch />
         </FormItem>
 
@@ -220,16 +203,14 @@ const SettingDrawer: FC<SettingDrawerProps> = props => {
           disabled={true}
           label="开启载入操作"
           field="enableLoadCommand"
-          triggerPropName="checked"
-        >
+          triggerPropName="checked">
           <Switch />
         </FormItem>
         <FormItem
           disabled={true}
           label="存储操作"
           field="enableCommandStoredInDb"
-          triggerPropName="checked"
-        >
+          triggerPropName="checked">
           <Switch />
         </FormItem>
 
@@ -250,14 +231,19 @@ const SettingDrawer: FC<SettingDrawerProps> = props => {
             marks={{ 0.2: 0.2, 0.4: 0.4, 0.6: 0.6, 0.8: 0.8, 1: 1 }}
           />
         </FormItem>
+        <FormItem
+          label="地图旋转45度"
+          field="enableScreenshot45deg"
+          triggerPropName="checked">
+          <Switch />
+        </FormItem>
 
         <div className={styles['sub-title']}>兼容模式</div>
         <FormItem
           disabled={true}
           label="城市与文明"
           field="enableCityAndCivilMode"
-          triggerPropName="checked"
-        >
+          triggerPropName="checked">
           <Switch />
         </FormItem>
       </Form>

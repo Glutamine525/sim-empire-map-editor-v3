@@ -29,6 +29,7 @@ interface Setting {
   enableCommandStoredInDb: boolean;
   screenshotScale: number;
   screenshotQuality: number;
+  enableScreenshot45deg: boolean;
   enableCityAndCivilMode: boolean;
 }
 
@@ -55,6 +56,7 @@ export const useSetting = create<SettingState>()(
       enableCommandStoredInDb: false,
       screenshotScale: 2,
       screenshotQuality: 0.8,
+      enableScreenshot45deg: false,
       enableCityAndCivilMode: false,
       setSetting: data => {
         set(

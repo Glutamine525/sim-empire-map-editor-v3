@@ -66,8 +66,7 @@ const MapTypeDropList = () => {
         changeMapType(Number(data));
         triggerMapRedraw();
         triggerResetArea();
-      }}
-    >
+      }}>
       {Object.values(MapType).map(type => {
         if (typeof type === 'string') {
           return null;
@@ -123,8 +122,7 @@ const CivilDropList = () => {
         changeCivil(data as CivilType);
         triggerMapRedraw();
         triggerResetArea();
-      }}
-    >
+      }}>
       {Object.entries(CivilTypeLabel).map(entry => {
         const [civil, civilLabel] = entry;
         if (civil === CivilType.Custom) {
@@ -223,7 +221,7 @@ const TopMenuController = () => {
           }}
         />
       </div>
-      <div>
+      {/* <div>
         <div>旋转:</div>
         <Switch
           checked={rotated}
@@ -232,7 +230,7 @@ const TopMenuController = () => {
           }}
           disabled={true}
         />
-      </div>
+      </div> */}
     </div>
   );
 };
