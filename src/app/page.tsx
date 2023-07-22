@@ -1,8 +1,7 @@
 import React from 'react';
-import EditorPage from './editor/page';
 
 const Page = () => {
-  return <EditorPage />;
+  return <div>Root Page</div>;
 };
 
 export default Page;
