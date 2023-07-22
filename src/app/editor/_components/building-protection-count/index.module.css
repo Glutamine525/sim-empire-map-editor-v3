@@ -7,7 +7,7 @@
   height: 6px;
 
   border-radius: 50%;
-  background-color: rgb(var(--danger-5));
+  background-color: rgb(var(--danger-6));
   box-shadow: 0 0 4px white;
 }
 
@@ -24,7 +24,7 @@
   transform: scale(0.75);
   transform-origin: top left;
 
-  color: rgb(var(--danger-5));
+  color: rgb(var(--danger-6));
   border-radius: unset;
   background: transparent;
   box-shadow: none;

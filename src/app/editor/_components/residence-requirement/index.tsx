@@ -132,8 +132,8 @@ const ResidenceRequirement: FC<ResidenceRequirementProps> = props => {
                       <span
                         style={{
                           color: data.covered
-                            ? 'rgb(var(--success-5))'
-                            : 'rgb(var(--danger-5))',
+                            ? 'rgb(var(--success-6))'
+                            : 'rgb(var(--danger-6))',
                         }}>
                         {data.covered ? <IconCheck /> : <IconClose />}
                       </span>

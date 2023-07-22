@@ -41,8 +41,8 @@ const SpecialBuildingModal: FC<SpecialBuildingModalProps> = props => {
                     <span
                       style={{
                         color: v.isDecoration
-                          ? 'rgb(var(--success-5))'
-                          : 'rgb(var(--danger-5))',
+                          ? 'rgb(var(--success-6))'
+                          : 'rgb(var(--danger-6))',
                       }}>
                       {v.isDecoration ? <IconCheck /> : <IconClose />}
                     </span>

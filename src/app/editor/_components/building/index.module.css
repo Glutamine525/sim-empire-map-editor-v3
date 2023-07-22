@@ -24,7 +24,7 @@
   z-index: 12;
 
   opacity: 0.8;
-  box-shadow: inset 0 0 15px 3px rgb(var(--danger-5));
+  box-shadow: inset 0 0 15px 3px rgb(var(--danger-6));
 }
 
 .is-preview::before {
@@ -41,8 +41,8 @@
   background: linear-gradient(
     45deg,
     transparent 48%,
-    rgb(var(--danger-5)) 48%,
-    rgb(var(--danger-5)) 52%,
+    rgb(var(--danger-6)) 48%,
+    rgb(var(--danger-6)) 52%,
     transparent 52%
   );
 }
@@ -61,8 +61,8 @@
   background: linear-gradient(
     135deg,
     transparent 48%,
-    rgb(var(--danger-5)) 48%,
-    rgb(var(--danger-5)) 52%,
+    rgb(var(--danger-6)) 48%,
+    rgb(var(--danger-6)) 52%,
     transparent 52%
   );
 }
