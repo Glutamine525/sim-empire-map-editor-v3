@@ -3,6 +3,7 @@ import { Modal, Tag, Tooltip } from '@arco-design/web-react';
 import { useSpecialBuilding } from '../../_store/special-building';
 import CustomBuildingEditor from '../custom-building-editor';
 import styles from './index.module.css';
+import { IconCheck, IconClose } from '@arco-design/web-react/icon';
 
 interface SpecialBuildingModalProps {
   visible: boolean;
@@ -21,8 +22,7 @@ const SpecialBuildingModal: FC<SpecialBuildingModalProps> = props => {
       className={styles.wrapper}
       onCancel={() => {
         close();
-      }}
-    >
+      }}>
       <CustomBuildingEditor isNameValid={isNameValid} insert={insert}>
         <div className={styles.tags}>
           {Object.values(buildings).map(v => (
@@ -43,14 +43,12 @@ const SpecialBuildingModal: FC<SpecialBuildingModalProps> = props => {
                         color: v.isDecoration
                           ? 'rgb(var(--success-5))'
                           : 'rgb(var(--danger-5))',
-                      }}
-                    >
-                      {v.isDecoration ? '√' : 'x'}
+                      }}>
+                      {v.isDecoration ? <IconCheck /> : <IconClose />}
                     </span>
                   </div>
                 </div>
-              }
-            >
+              }>
               <Tag
                 color={v.bg}
                 bordered={true}
@@ -58,8 +56,7 @@ const SpecialBuildingModal: FC<SpecialBuildingModalProps> = props => {
                 style={{ color: v.color }}
                 onClose={() => {
                   remove(v.name);
-                }}
-              >
+                }}>
                 {v.name}
               </Tag>
             </Tooltip>

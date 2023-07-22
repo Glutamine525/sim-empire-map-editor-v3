@@ -21,6 +21,7 @@ import { useAutoSave } from '../../_store/auto-save';
 import { useCommand } from '../../_store/command';
 import { useSetting } from '../../_store/settings';
 import styles from './index.module.css';
+import { IconCheck, IconClose } from '@arco-design/web-react/icon';
 
 interface AutoSaveDrawerProps {
   visible: boolean;
@@ -41,30 +42,37 @@ const AutoSaveDrawer: FC<AutoSaveDrawerProps> = props => {
     {
       title: '地图',
       dataIndex: 'mapType',
+      align: 'center',
     },
     {
       title: '文明',
       dataIndex: 'civil',
+      align: 'center',
     },
     {
       title: '无木',
       dataIndex: 'noTree',
+      align: 'center',
     },
     {
       title: '建筑数量',
       dataIndex: 'buildingNum',
+      align: 'center',
     },
     {
       title: '道路数量',
       dataIndex: 'roadNum',
+      align: 'center',
     },
     {
       title: '存档时间',
       dataIndex: 'createAt',
+      align: 'center',
     },
     {
       title: '操作',
       dataIndex: 'operation',
+      align: 'center',
       render: (_, { imgSrc, originData }, index) => {
         const mapData = decodeMapData(mapDataStr);
         const isCurrentMap = mapData?.md5 === originData.md5;
@@ -84,8 +92,7 @@ const AutoSaveDrawer: FC<AutoSaveDrawerProps> = props => {
                   style={{ display: 'block' }}
                 />
               )
-            }
-          >
+            }>
             <Button
               size="mini"
               type="text"
@@ -114,8 +121,7 @@ const AutoSaveDrawer: FC<AutoSaveDrawerProps> = props => {
                 resetCommand();
                 Message.success('成功载入该存档！');
                 close();
-              }}
-            >
+              }}>
               载入
             </Button>
           </Tooltip>
@@ -142,8 +148,7 @@ const AutoSaveDrawer: FC<AutoSaveDrawerProps> = props => {
       onCancel={() => {
         close();
       }}
-      footer={null}
-    >
+      footer={null}>
       <Table
         columns={columns}
         pagination={false}
@@ -151,7 +156,7 @@ const AutoSaveDrawer: FC<AutoSaveDrawerProps> = props => {
           key: i,
           mapType: `${v.mapType}木`,
           civil: CivilTypeLabel[v.civil],
-          noTree: v.noTree ? '√' : '×',
+          noTree: v.noTree ? <IconCheck /> : <IconClose />,
           buildingNum: Object.values(v.buildings).reduce(
             (pre, cur) => pre + cur.length,
             0,

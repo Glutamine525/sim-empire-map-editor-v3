@@ -11,6 +11,7 @@ import {
 import { OperationType } from '../../_map-core/type';
 import { useMapConfig } from '../../_store/map-config';
 import styles from './index.module.css';
+import { IconCheck, IconClose } from '@arco-design/web-react/icon';
 
 interface ResidenceRequirementProps extends BuildingConfig {
   row: number;
@@ -134,7 +135,7 @@ const ResidenceRequirement: FC<ResidenceRequirementProps> = props => {
                             ? 'rgb(var(--success-5))'
                             : 'rgb(var(--danger-5))',
                         }}>
-                        {data.covered ? '√' : 'x'}
+                        {data.covered ? <IconCheck /> : <IconClose />}
                       </span>
                     </span>
                   </div>
