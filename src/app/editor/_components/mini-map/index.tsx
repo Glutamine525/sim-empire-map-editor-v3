@@ -14,10 +14,11 @@ import { mapContainer } from '../map';
 import { MapLength } from '@/app/editor/_map-core/type';
 import { isBoundary, parseBuildingKey } from '@/utils/coordinate';
 import styles from './index.module.css';
+import Copyright from '../copyright';
 
 export const miniMapCanvas = createRef<HTMLCanvasElement>();
 
-const RATIO = 2;
+export const MINI_MAP_RATIO = 2;
 
 interface MiniMapProps {
   onMouseEnter: () => void;
@@ -45,12 +46,22 @@ const MiniMap: FC<MiniMapProps> = props => {
       if (!ctx) {
         return;
       }
-      ctx.clearRect(0, 0, MapLength * RATIO, MapLength * RATIO);
+      ctx.clearRect(
+        0,
+        0,
+        MapLength * MINI_MAP_RATIO,
+        MapLength * MINI_MAP_RATIO,
+      );
       ctx.fillStyle = 'black';
       for (let i = 0; i <= MapLength; i++) {
         for (let j = 0; j <= MapLength; j++) {
           if (!isBoundary(i, j)) continue;
-          ctx.fillRect((j - 1) * RATIO, (i - 1) * RATIO, RATIO, RATIO);
+          ctx.fillRect(
+            (j - 1) * MINI_MAP_RATIO,
+            (i - 1) * MINI_MAP_RATIO,
+            MINI_MAP_RATIO,
+            MINI_MAP_RATIO,
+          );
         }
       }
     };
@@ -62,19 +73,19 @@ const MiniMap: FC<MiniMapProps> = props => {
       const [row, col] = parseBuildingKey(key);
       if (b.isEmpty) {
         ctx.clearRect(
-          (col - 1) * RATIO,
-          (row - 1) * RATIO,
-          b.w! * RATIO,
-          b.h! * RATIO,
+          (col - 1) * MINI_MAP_RATIO,
+          (row - 1) * MINI_MAP_RATIO,
+          b.w! * MINI_MAP_RATIO,
+          b.h! * MINI_MAP_RATIO,
         );
         return;
       }
       ctx.fillStyle = b.bg!;
       ctx.fillRect(
-        (col - 1) * RATIO,
-        (row - 1) * RATIO,
-        b.w! * RATIO,
-        b.h! * RATIO,
+        (col - 1) * MINI_MAP_RATIO,
+        (row - 1) * MINI_MAP_RATIO,
+        b.w! * MINI_MAP_RATIO,
+        b.h! * MINI_MAP_RATIO,
       );
     };
   }, []);
@@ -121,9 +132,9 @@ const MiniMap: FC<MiniMapProps> = props => {
     const [offsetX, offsetY] = [pageX - left, pageY - top];
     const { w, h } = focusConfig;
     mapContainer.current?.scrollTo(
-      ((offsetX - (w * RATIO) / 2) / (MapLength * RATIO)) *
+      ((offsetX - (w * MINI_MAP_RATIO) / 2) / (MapLength * MINI_MAP_RATIO)) *
         (MapLength * BLOCK_PX),
-      ((offsetY - (h * RATIO) / 2) / (MapLength * RATIO)) *
+      ((offsetY - (h * MINI_MAP_RATIO) / 2) / (MapLength * MINI_MAP_RATIO)) *
         (MapLength * BLOCK_PX),
     );
   };
@@ -132,8 +143,8 @@ const MiniMap: FC<MiniMapProps> = props => {
     <div
       className={styles.wrapper}
       style={{
-        width: MapLength * RATIO,
-        height: MapLength * RATIO,
+        width: MapLength * MINI_MAP_RATIO,
+        height: MapLength * MINI_MAP_RATIO,
       }}
       onMouseDownCapture={e => {
         e.stopPropagation();
@@ -158,16 +169,17 @@ const MiniMap: FC<MiniMapProps> = props => {
       <canvas
         ref={miniMapCanvas}
         className={styles.container}
-        width={MapLength * RATIO}
-        height={MapLength * RATIO}
+        width={MapLength * MINI_MAP_RATIO}
+        height={MapLength * MINI_MAP_RATIO}
       />
+      <Copyright isMiniMap={true} />
       <div
         className={styles.focus}
         style={{
-          width: focusConfig.w * RATIO,
-          height: focusConfig.h * RATIO,
-          top: focusConfig.top * RATIO,
-          left: focusConfig.left * RATIO,
+          width: focusConfig.w * MINI_MAP_RATIO,
+          height: focusConfig.h * MINI_MAP_RATIO,
+          top: focusConfig.top * MINI_MAP_RATIO,
+          left: focusConfig.left * MINI_MAP_RATIO,
         }}
       />
     </div>

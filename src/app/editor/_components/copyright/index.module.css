@@ -8,6 +8,12 @@
   color: transparent !important;
 }
 
+.mini-map.container {
+  white-space: nowrap;
+  pointer-events: none;
+  transform-origin: bottom left;
+}
+
 .title {
   font-size: 100px;
   font-weight: bold;
