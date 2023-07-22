@@ -4,6 +4,7 @@ import React, {
   useLayoutEffect,
   useMemo,
   useRef,
+  useState,
 } from 'react';
 import { Message } from '@arco-design/web-react';
 import Content from '@arco-design/web-react/es/Layout/content';
@@ -18,6 +19,7 @@ import { useSetting } from '../../_store/settings';
 import BuildingLayer from '../building-layer';
 import InteractLayer from '../interact-layer';
 import styles from './index.module.css';
+import BeiAn from '@/components/BeiAn';
 
 export const mapContainer = createRef<HTMLDivElement>();
 
@@ -55,6 +57,8 @@ const Map = () => {
 
   const autoSaveTimer = useRef(0);
 
+  const [showBeiAn, setShowBeiAn] = useState(false);
+
   useLayoutEffect(() => {
     mapCore.mapUpdater = (key, b) => {
       buildingData[key].set({ ...b });
@@ -89,7 +93,22 @@ const Map = () => {
       trigger();
     });
 
+    const scroller = () => {
+      if (!mapContainer.current) {
+        return;
+      }
+      const { scrollTop, scrollHeight, clientHeight } = mapContainer.current;
+      if (scrollTop + clientHeight > scrollHeight * 0.99) {
+        setShowBeiAn(true);
+        return;
+      }
+      setShowBeiAn(false);
+    };
+
+    mapContainer.current?.addEventListener('scroll', scroller);
+
     return () => {
+      mapContainer.current?.removeEventListener('scroll', scroller);
       scrollbar.destroy();
     };
   }, []);
@@ -122,6 +141,7 @@ const Map = () => {
       <div ref={mapContainer} className={styles.container}>
         {buildings}
         <InteractLayer />
+        {showBeiAn && <BeiAn className={styles['bei-an']} />}
       </div>
     </Content>
   );

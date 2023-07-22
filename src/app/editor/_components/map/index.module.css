@@ -13,3 +13,10 @@
   width: 100%;
   height: 100%;
 }
+
+.bei-an {
+  position: fixed;
+  bottom: 12px;
+  left: 0;
+  z-index: 101;
+}
