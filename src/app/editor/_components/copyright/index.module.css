@@ -59,3 +59,7 @@
 .web-link strong {
   cursor: pointer;
 }
+
+.web-link strong:hover {
+  color: rgb(var(--primary-5)) !important;
+}

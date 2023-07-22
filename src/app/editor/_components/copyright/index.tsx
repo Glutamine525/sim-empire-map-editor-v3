@@ -63,9 +63,9 @@ const Copyright: FC<CopyrightProps> = props => {
             onClick={() => {
               const success = copy(WEB_LINK);
               if (success) {
-                Message.success('成功复制到剪贴板');
+                Message.success({ id: 'copy', content: '成功复制到剪贴板' });
               } else {
-                Message.error('复制失败');
+                Message.error({ id: 'copy', content: '复制失败' });
               }
             }}>
             simempire.fun
