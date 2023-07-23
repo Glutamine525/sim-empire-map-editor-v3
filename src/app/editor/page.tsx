@@ -20,7 +20,6 @@ const EditorPage = () => {
 
   useEffect(() => {
     setIsClient(true);
-    console.log(performance.now());
   }, []);
 
   if (!isClient) {
