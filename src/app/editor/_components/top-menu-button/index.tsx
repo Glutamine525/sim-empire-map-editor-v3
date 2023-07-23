@@ -10,21 +10,23 @@ import {
 } from '@arco-design/web-react/icon';
 import { useKeyPress } from 'ahooks';
 import { shallow } from 'zustand/shallow';
+import useColorTheme, { ThemeType } from '@/hooks/use-color-theme';
+import { getCtrlKeyText } from '@/utils/env';
 import { IS_MAC, IS_WINDOWS } from '../../_config';
 import useMapCore from '../../_hooks/use-map-core';
 import { useAutoSave } from '../../_store/auto-save';
 import { useMapConfig } from '../../_store/map-config';
 import { useSetting } from '../../_store/settings';
 import AutoSaveDrawer from '../auto-save-drawer';
+import GameProgressDrawer from '../game-progress-drawer';
 import SettingDrawer from '../setting-drawer';
-import useColorTheme, { ThemeType } from '@/hooks/use-color-theme';
-import { getCtrlKeyText } from '@/utils/env';
 import styles from './index.module.css';
 
 enum DrawerType {
   None,
   AutoSave,
   Setting,
+  GameProgress,
 }
 
 const TopMenuButton = () => {
@@ -93,6 +95,15 @@ const TopMenuButton = () => {
     triggerMapRedraw();
   };
 
+  const onClickGameProgress = () => {
+    if (showDrawerType !== DrawerType.None) {
+      return;
+    }
+    Notification.clear();
+    triggerResetArea();
+    setShowDrawerType(DrawerType.GameProgress);
+  };
+
   const onClickAutoSave = () => {
     if (showDrawerType !== DrawerType.None) {
       return;
@@ -129,7 +140,8 @@ const TopMenuButton = () => {
               </div>
             )}
           </div>
-        }>
+        }
+      >
         <Button
           shape="square"
           status="danger"
@@ -150,14 +162,14 @@ const TopMenuButton = () => {
               </div>
             )}
           </div>
-        }>
+        }
+      >
         <Button
-          disabled={true}
           shape="square"
           type="text"
           iconOnly={true}
           icon={<IconMindMapping />}
-          onClick={undefined}
+          onClick={onClickGameProgress}
         />
       </Tooltip>
       <Tooltip
@@ -171,7 +183,8 @@ const TopMenuButton = () => {
               </div>
             )}
           </div>
-        }>
+        }
+      >
         <Button
           shape="square"
           type="text"
@@ -191,7 +204,8 @@ const TopMenuButton = () => {
               </div>
             )}
           </div>
-        }>
+        }
+      >
         <Button
           shape="square"
           type="text"
@@ -211,7 +225,8 @@ const TopMenuButton = () => {
               </div>
             )}
           </div>
-        }>
+        }
+      >
         <Button
           shape="square"
           type="text"
@@ -224,6 +239,12 @@ const TopMenuButton = () => {
       <Button type="text" disabled={true}>
         登录
       </Button>
+      <GameProgressDrawer
+        visible={showDrawerType === DrawerType.GameProgress}
+        close={() => {
+          setShowDrawerType(DrawerType.None);
+        }}
+      />
       <AutoSaveDrawer
         visible={showDrawerType === DrawerType.AutoSave}
         close={() => {

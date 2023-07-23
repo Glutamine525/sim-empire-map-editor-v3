@@ -11,7 +11,7 @@ import {
 import { UI_SETTING } from '../_config';
 
 interface MapConfigState {
-  loading: Boolean;
+  loading: boolean;
   mapType: MapType;
   civil: CivilType;
   noTree: boolean;
@@ -23,7 +23,7 @@ interface MapConfigState {
   mapRedraw: number;
   resetArea: number;
   leftMenuWidth: number;
-  changeLoading: (loading: Boolean) => void;
+  changeLoading: (loading: boolean) => void;
   changeMapType: (mapType: MapType) => void;
   changeCivil: (civil: CivilType) => void;
   changeNoTree: (noTree: boolean) => void;

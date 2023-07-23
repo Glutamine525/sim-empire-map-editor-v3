@@ -1,8 +1,8 @@
 import { Base64 } from 'js-base64';
-import { download, getMapImageName } from './file';
-import { rgbToHex } from './color';
 import { BLOCK_PX } from '@/app/editor/_config';
 import { MapLength } from '@/app/editor/_map-core/type';
+import { rgbToHex } from './color';
+import { download, getMapImageName } from './file';
 
 const SVG_XMLNS = 'http://www.w3.org/2000/svg';
 const DIV_XMLNS = 'http://www.w3.org/1999/xhtml';
@@ -36,7 +36,7 @@ export async function getScreenshot(
     ctx.fillStyle = rgbToHex(bgData[0], bgData[1], bgData[2]);
     ctx.fillRect(0, 0, 400 * scale, h); // remove strange copyright after rotate
     ctx.fillRect(0, h - 400 * scale, w, 400 * scale); // remove strange copyright before rotate
-    const copyright = document.getElementById('copyright');
+    const copyright = document.getElementById(copyrightId);
     if (!copyright) {
       throw 'copyright dom not found';
     }
