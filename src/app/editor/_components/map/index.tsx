@@ -31,6 +31,7 @@ const Map = () => {
     civil,
     noTree,
     mapRedraw,
+    changeLoading,
     changeCounter,
     changeEmptyCells,
     triggerMapRedraw,
@@ -40,6 +41,7 @@ const Map = () => {
       state.civil,
       state.noTree,
       state.mapRedraw,
+      state.changeLoading,
       state.changeCounter,
       state.changeEmptyCells,
       state.triggerMapRedraw,
@@ -86,7 +88,10 @@ const Map = () => {
           Message.error('存档已损坏');
           triggerMapRedraw();
         }
+        changeLoading(false);
       }, 0);
+    } else {
+      changeLoading(false);
     }
 
     window.addEventListener('beforeunload', () => {

@@ -11,6 +11,7 @@ import {
 import { UI_SETTING } from '../_config';
 
 interface MapConfigState {
+  loading: Boolean;
   mapType: MapType;
   civil: CivilType;
   noTree: boolean;
@@ -22,6 +23,7 @@ interface MapConfigState {
   mapRedraw: number;
   resetArea: number;
   leftMenuWidth: number;
+  changeLoading: (loading: Boolean) => void;
   changeMapType: (mapType: MapType) => void;
   changeCivil: (civil: CivilType) => void;
   changeNoTree: (noTree: boolean) => void;
@@ -38,6 +40,7 @@ interface MapConfigState {
 export const useMapConfig = create<MapConfigState>()(
   persist(
     set => ({
+      loading: true,
       mapType: MapType._5,
       civil: CivilType.China,
       noTree: false,
@@ -58,6 +61,7 @@ export const useMapConfig = create<MapConfigState>()(
       mapRedraw: 0,
       resetArea: 0,
       leftMenuWidth: UI_SETTING.leftMenuWidth,
+      changeLoading: loading => set({ loading }),
       changeMapType: mapType => set({ mapType }),
       changeCivil: civil => set({ civil }),
       changeNoTree: noTree => set({ noTree }),
