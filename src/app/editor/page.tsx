@@ -24,7 +24,7 @@ const EditorPage = () => {
   }, []);
 
   if (!isClient) {
-    return <Loading />;
+    return <Loading key="loading" />;
   }
 
   return (
@@ -42,7 +42,7 @@ const EditorPage = () => {
           <Map />
         </Layout>
       </Layout>
-      {isLoading && <Loading />}
+      {isLoading && <Loading key="loading" />}
     </>
   );
 };
