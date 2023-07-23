@@ -24,9 +24,6 @@ interface Setting {
   protectionCountStyle: ProtectionCountStyleType;
   enableFixedBuildingIcon: boolean;
   enableProtectionHighlight: boolean;
-  commandMaxNum: number;
-  enableLoadCommand: boolean;
-  enableCommandStoredInDb: boolean;
   screenshotScale: number;
   screenshotQuality: number;
   enableScreenshot45deg: boolean;
@@ -51,9 +48,6 @@ export const useSetting = create<SettingState>()(
       protectionCountStyle: ProtectionCountStyleType.Circle,
       enableFixedBuildingIcon: true,
       enableProtectionHighlight: true,
-      commandMaxNum: 200,
-      enableLoadCommand: false,
-      enableCommandStoredInDb: false,
       screenshotScale: 2,
       screenshotQuality: 0.8,
       enableScreenshot45deg: false,
