@@ -10,6 +10,7 @@ import { Message } from '@arco-design/web-react';
 import Content from '@arco-design/web-react/es/Layout/content';
 import PerfectScrollbar from 'perfect-scrollbar';
 import { shallow } from 'zustand/shallow';
+import BeiAn from '@/components/bei-an';
 import { importMapData } from '@/utils/import-export';
 import useMapCore from '../../_hooks/use-map-core';
 import { useAutoSave } from '../../_store/auto-save';
@@ -19,7 +20,6 @@ import { useSetting } from '../../_store/settings';
 import BuildingLayer from '../building-layer';
 import InteractLayer from '../interact-layer';
 import styles from './index.module.css';
-import BeiAn from '@/components/BeiAn';
 
 export const mapContainer = createRef<HTMLDivElement>();
 
