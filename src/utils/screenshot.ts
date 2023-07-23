@@ -1,7 +1,7 @@
 import { Base64 } from 'js-base64';
+import { hideLoading } from '@/app/editor/_components/loading';
 import { BLOCK_PX } from '@/app/editor/_config';
 import { MapLength } from '@/app/editor/_map-core/type';
-import { useMapConfig } from '@/app/editor/_store/map-config';
 import { rgbToHex } from './color';
 import { download, getMapImageName } from './file';
 
@@ -16,7 +16,6 @@ export async function getScreenshot(
   copyrightId = 'copyright',
 ) {
   try {
-    useMapConfig.setState({ loading: true });
     console.time('getScreenshot');
     const img = await getHtmlImage(el);
     const { width, height } = el.getBoundingClientRect();
@@ -51,7 +50,7 @@ export async function getScreenshot(
     });
     download(blob, getMapImageName());
   } finally {
-    useMapConfig.setState({ loading: false });
+    hideLoading();
     console.timeEnd('getScreenshot');
   }
 }

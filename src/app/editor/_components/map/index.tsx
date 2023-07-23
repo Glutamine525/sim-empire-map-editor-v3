@@ -19,6 +19,7 @@ import { useMapConfig } from '../../_store/map-config';
 import { useSetting } from '../../_store/settings';
 import BuildingLayer from '../building-layer';
 import InteractLayer from '../interact-layer';
+import { hideLoading } from '../loading';
 import styles from './index.module.css';
 
 export const mapContainer = createRef<HTMLDivElement>();
@@ -31,7 +32,6 @@ const Map = () => {
     civil,
     noTree,
     mapRedraw,
-    changeLoading,
     changeCounter,
     changeEmptyCells,
     triggerMapRedraw,
@@ -41,7 +41,6 @@ const Map = () => {
       state.civil,
       state.noTree,
       state.mapRedraw,
-      state.changeLoading,
       state.changeCounter,
       state.changeEmptyCells,
       state.triggerMapRedraw,
@@ -88,10 +87,10 @@ const Map = () => {
           Message.error('存档已损坏');
           triggerMapRedraw();
         }
-        changeLoading(false);
+        hideLoading();
       }, 0);
     } else {
-      changeLoading(false);
+      hideLoading();
     }
 
     window.addEventListener('beforeunload', () => {

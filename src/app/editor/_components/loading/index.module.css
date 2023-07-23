@@ -14,13 +14,13 @@
 
   background-image: linear-gradient(
     25deg,
-    #2246cef7,
-    #697cc5f7,
-    #8ab4baf7,
-    #9defaaf7
+    #2246cedf,
+    #697cc5df,
+    #8ab4badf,
+    #9defaadf
   );
 
-  backdrop-filter: blur(20px);
+  backdrop-filter: blur(10px);
 }
 
 .lds-spinner {

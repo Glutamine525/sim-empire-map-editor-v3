@@ -39,6 +39,7 @@ import { useMapConfig } from '../../_store/map-config';
 import { useSetting } from '../../_store/settings';
 import { useSpecialBuilding } from '../../_store/special-building';
 import ImportDataModal from '../import-data-modal';
+import { showLoading } from '../loading';
 import SpecialBuildingModal from '../special-building-modal';
 import styles from './index.module.css';
 
@@ -311,12 +312,16 @@ const LeftMenu = () => {
       case CatalogType.ImportExport:
         const { name } = subMenuContent[catalog][index];
         if (name === ImportExportSubmenu.Screenshot) {
-          getScreenshot(
-            document.getElementById('building-layer')!,
-            scale,
-            quality,
-            rotate,
-          );
+          showLoading();
+          // 用宏任务截图，让loading可以立即显示出来
+          setTimeout(() => {
+            getScreenshot(
+              document.getElementById('building-layer')!,
+              scale,
+              quality,
+              rotate,
+            );
+          }, 0);
         } else if (name === ImportExportSubmenu.ImportMapData) {
           setShowModalType(ModalType.ImportMap);
         } else if (name === ImportExportSubmenu.ExportMapData) {

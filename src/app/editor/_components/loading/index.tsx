@@ -1,9 +1,11 @@
 import React from 'react';
 import styles from './index.module.css';
 
+const ID = 'loading';
+
 const Loading = () => {
   return (
-    <div className={styles.container}>
+    <div id={ID} className={styles.container}>
       <div className={styles['lds-spinner']}>
         {Array(12)
           .fill(0)
@@ -17,3 +19,11 @@ const Loading = () => {
 };
 
 export default Loading;
+
+export function showLoading() {
+  document.getElementById(ID)!.style.display = 'flex';
+}
+
+export function hideLoading() {
+  document.getElementById(ID)!.style.display = 'none';
+}

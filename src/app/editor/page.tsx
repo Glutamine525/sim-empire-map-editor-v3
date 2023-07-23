@@ -7,14 +7,11 @@ import { UI_SETTING } from '@/app/editor/_config';
 import LeftMenu from './_components/left-menu';
 import Map from './_components/map';
 import TopMenu from './_components/top-menu';
-import { useMapConfig } from './_store/map-config';
 import 'perfect-scrollbar/css/perfect-scrollbar.css';
 import styles from './index.module.css';
 
 const EditorPage = () => {
   console.log('Page render');
-
-  const isLoading = useMapConfig(state => state.loading);
 
   const [isClient, setIsClient] = useState(false);
 
@@ -41,7 +38,7 @@ const EditorPage = () => {
           <Map />
         </Layout>
       </Layout>
-      {isLoading && <Loading key="loading" />}
+      <Loading key="loading" />
     </>
   );
 };
