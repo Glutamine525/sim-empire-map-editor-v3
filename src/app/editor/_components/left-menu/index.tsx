@@ -350,7 +350,8 @@ const LeftMenu = () => {
         selectable={false}
         tooltipProps={{ content: null }}
         collapse={isCollapsed}
-        onClickMenuItem={onClickMenuItem}>
+        onClickMenuItem={onClickMenuItem}
+      >
         {Object.entries(subMenuContent).map(([_catalog, subMenu]) => {
           const catalog = _catalog as CatalogType;
           if (subMenu.length === 0) {
@@ -361,11 +362,13 @@ const LeftMenu = () => {
                   catalog === CatalogType.WatermarkMode ||
                   (catalog === CatalogType.Undo && !commands.length) ||
                   (catalog === CatalogType.Redo && !undoCommands.length)
-                }>
+                }
+              >
                 <Tooltip
                   content={isCollapsed ? catalog : null}
                   position="right"
-                  style={{ left: leftMenuWidth + 8 }}>
+                  style={{ left: leftMenuWidth + 8 }}
+                >
                   <div className={styles['main-menu-container']}>
                     <Icon catalog={catalog} />
                     <div className={styles.text}>{catalog}</div>
@@ -393,7 +396,8 @@ const LeftMenu = () => {
                       className={classcat([
                         styles['key-shortcut'],
                         styles['key-shortcut-arrow'],
-                      ])}>
+                      ])}
+                    >
                       {mapMenuToShortcut[catalog]}
                     </div>
                   )}
@@ -429,7 +433,8 @@ const LeftMenu = () => {
                   resetSubMenuOpened();
                   openedSubMenu.current = undefined;
                 },
-              }}>
+              }}
+            >
               {isCollapsed && (
                 <div className={styles['pop-sub-menu-title']} key="title">
                   {catalog}
@@ -486,7 +491,8 @@ const LeftMenu = () => {
                   ])}
                   onClick={() => {
                     setShowModalType(ModalType.SpecialBuilding);
-                  }}>
+                  }}
+                >
                   <div>编辑</div>
                   {enableLeftMenuShortcut && (
                     <div className={styles['key-container']}>
@@ -509,7 +515,8 @@ const LeftMenu = () => {
         className={styles['collapse-button-container']}
         style={{
           left: (leftMenuWidth || UI_SETTING.leftMenuWidth) - 20,
-        }}>
+        }}
+      >
         <Button
           shape="circle"
           type="text"

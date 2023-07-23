@@ -2,8 +2,8 @@
 
 import React, { useEffect, useState } from 'react';
 import { Layout } from '@arco-design/web-react';
+import Loading from '@/app/editor/_components/loading';
 import { UI_SETTING } from '@/app/editor/_config';
-import Loading from '@/components/loading';
 import LeftMenu from './_components/left-menu';
 import Map from './_components/map';
 import TopMenu from './_components/top-menu';

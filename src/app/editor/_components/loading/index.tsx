@@ -11,7 +11,7 @@ const Loading = () => {
             <div key={i} style={{ '--index': i + 1 } as any} />
           ))}
       </div>
-      <div className={styles.text}>加载中...</div>
+      <div className={styles.text}>处理中...</div>
     </div>
   );
 };

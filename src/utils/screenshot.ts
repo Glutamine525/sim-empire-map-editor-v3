@@ -1,6 +1,7 @@
 import { Base64 } from 'js-base64';
 import { BLOCK_PX } from '@/app/editor/_config';
 import { MapLength } from '@/app/editor/_map-core/type';
+import { useMapConfig } from '@/app/editor/_store/map-config';
 import { rgbToHex } from './color';
 import { download, getMapImageName } from './file';
 
@@ -14,40 +15,45 @@ export async function getScreenshot(
   rotate45deg = false,
   copyrightId = 'copyright',
 ) {
-  console.time('getScreenshot');
-  const img = await getHtmlImage(el);
-  const { width, height } = el.getBoundingClientRect();
-  const canvas = document.createElement('canvas');
-  const ctx = canvas.getContext('2d');
-  if (!ctx) {
-    throw 'null context';
-  }
-  const [w, h] = [width * scale, height * scale];
-  canvas.width = w;
-  canvas.height = h;
-  ctx.drawImage(img, 0, 0, w, h);
-  if (rotate45deg) {
-    ctx.translate(w / 2, h / 2);
-    ctx.rotate(Math.PI / 4);
-    ctx.drawImage(img, -w / 2, -h / 2, w, h);
-    ctx.rotate(-Math.PI / 4);
-    ctx.translate(-w / 2, -h / 2);
-    const bgData = ctx.getImageData(0, 0, 1, 1).data!;
-    ctx.fillStyle = rgbToHex(bgData[0], bgData[1], bgData[2]);
-    ctx.fillRect(0, 0, 400 * scale, h); // remove strange copyright after rotate
-    ctx.fillRect(0, h - 400 * scale, w, 400 * scale); // remove strange copyright before rotate
-    const copyright = document.getElementById(copyrightId);
-    if (!copyright) {
-      throw 'copyright dom not found';
+  try {
+    useMapConfig.setState({ loading: true });
+    console.time('getScreenshot');
+    const img = await getHtmlImage(el);
+    const { width, height } = el.getBoundingClientRect();
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
+      throw 'null context';
     }
-    const copyrightImg = await getHtmlImage(copyright);
-    ctx.drawImage(copyrightImg, BLOCK_PX * scale, BLOCK_PX * scale, w, h);
+    const [w, h] = [width * scale, height * scale];
+    canvas.width = w;
+    canvas.height = h;
+    ctx.drawImage(img, 0, 0, w, h);
+    if (rotate45deg) {
+      ctx.translate(w / 2, h / 2);
+      ctx.rotate(Math.PI / 4);
+      ctx.drawImage(img, -w / 2, -h / 2, w, h);
+      ctx.rotate(-Math.PI / 4);
+      ctx.translate(-w / 2, -h / 2);
+      const bgData = ctx.getImageData(0, 0, 1, 1).data!;
+      ctx.fillStyle = rgbToHex(bgData[0], bgData[1], bgData[2]);
+      ctx.fillRect(0, 0, 400 * scale, h); // remove strange copyright after rotate
+      ctx.fillRect(0, h - 400 * scale, w, 400 * scale); // remove strange copyright before rotate
+      const copyright = document.getElementById(copyrightId);
+      if (!copyright) {
+        throw 'copyright dom not found';
+      }
+      const copyrightImg = await getHtmlImage(copyright);
+      ctx.drawImage(copyrightImg, BLOCK_PX * scale, BLOCK_PX * scale, w, h);
+    }
+    const blob = await new Promise<Blob>(resolve => {
+      canvas.toBlob(blob => resolve(blob!), 'image/jpeg', quality);
+    });
+    download(blob, getMapImageName());
+  } finally {
+    useMapConfig.setState({ loading: false });
+    console.timeEnd('getScreenshot');
   }
-  const blob = await new Promise<Blob>(resolve => {
-    canvas.toBlob(blob => resolve(blob!), 'image/jpeg', quality);
-  });
-  download(blob, getMapImageName());
-  console.timeEnd('getScreenshot');
 }
 
 async function getHtmlImage(el: HTMLElement) {
