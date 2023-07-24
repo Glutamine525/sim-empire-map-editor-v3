@@ -16,6 +16,7 @@ import {
   SimpleBuildingConfig,
 } from '@/app/editor/_map-core/building/type';
 import { OperationType } from '@/app/editor/_map-core/type';
+import Kbd from '@/components/kbd';
 import {
   getGeneralBuilding,
   getRoadBuilding,
@@ -378,10 +379,12 @@ const LeftMenu = () => {
                     <Icon catalog={catalog} />
                     <div className={styles.text}>{catalog}</div>
                     {enableLeftMenuShortcut && (
-                      <div className={styles['key-shortcut']}>
-                        {mapMenuToShortcut[catalog] === 'Space'
-                          ? '⎵'
-                          : mapMenuToShortcut[catalog]}
+                      <div className={styles['key-container']}>
+                        <Kbd>
+                          {mapMenuToShortcut[catalog] === 'Space'
+                            ? '⎵'
+                            : mapMenuToShortcut[catalog]}
+                        </Kbd>
                       </div>
                     )}
                   </div>
@@ -397,13 +400,8 @@ const LeftMenu = () => {
                   <Icon catalog={catalog} />
                   <div className={styles.text}>{catalog}</div>
                   {enableLeftMenuShortcut && (
-                    <div
-                      className={classcat([
-                        styles['key-shortcut'],
-                        styles['key-shortcut-arrow'],
-                      ])}
-                    >
-                      {mapMenuToShortcut[catalog]}
+                    <div className={styles['key-container']}>
+                      <Kbd showArrow={true}>{mapMenuToShortcut[catalog]}</Kbd>
                     </div>
                   )}
                 </div>
@@ -476,13 +474,8 @@ const LeftMenu = () => {
                     </div>
                     {i < shortcutIdxCap && enableLeftMenuShortcut && (
                       <div className={styles['key-container']}>
-                        <div className={styles['key-shortcut']}>
-                          {mapMenuToShortcut[catalog]}
-                        </div>
-                        +
-                        <div className={styles['key-shortcut']}>
-                          {mapIdxToShortcut[i]}
-                        </div>
+                        <Kbd>{mapMenuToShortcut[catalog]}</Kbd>+
+                        <Kbd>{mapIdxToShortcut[i]}</Kbd>
                       </div>
                     )}
                   </div>
@@ -501,13 +494,8 @@ const LeftMenu = () => {
                   <div>编辑</div>
                   {enableLeftMenuShortcut && (
                     <div className={styles['key-container']}>
-                      <div className={styles['key-shortcut']}>
-                        {mapMenuToShortcut[catalog]}
-                      </div>
-                      +
-                      <div className={styles['key-shortcut']}>
-                        {mapMenuToShortcut[catalog]}
-                      </div>
+                      <Kbd>{mapMenuToShortcut[catalog]}</Kbd>+
+                      <Kbd>{mapMenuToShortcut[catalog]}</Kbd>
                     </div>
                   )}
                 </div>

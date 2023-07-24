@@ -9,6 +9,7 @@ import {
 } from '@arco-design/web-react/icon';
 import { useKeyPress } from 'ahooks';
 import { shallow } from 'zustand/shallow';
+import Kbd from '@/components/kbd';
 import useColorTheme, { ThemeType } from '@/hooks/use-color-theme';
 import { getCtrlKeyText } from '@/utils/env';
 import { IS_MAC, IS_WINDOWS } from '../../_config';
@@ -123,8 +124,7 @@ const TopMenuButton = () => {
             <div>重置地图</div>
             {enableTopMenuShortcut && (
               <div className={styles['key-container']}>
-                <div className={styles['key-shortcut']}>{getCtrlKeyText()}</div>
-                +<div className={styles['key-shortcut']}>D</div>
+                <Kbd>{getCtrlKeyText()}</Kbd>+<Kbd>D</Kbd>
               </div>
             )}
           </div>
@@ -145,8 +145,7 @@ const TopMenuButton = () => {
             <div>自动存档</div>
             {enableTopMenuShortcut && (
               <div className={styles['key-container']}>
-                <div className={styles['key-shortcut']}>{getCtrlKeyText()}</div>
-                +<div className={styles['key-shortcut']}>S</div>
+                <Kbd>{getCtrlKeyText()}</Kbd>+<Kbd>S</Kbd>
               </div>
             )}
           </div>
@@ -166,8 +165,7 @@ const TopMenuButton = () => {
             <div>设置</div>
             {enableTopMenuShortcut && (
               <div className={styles['key-container']}>
-                <div className={styles['key-shortcut']}>{getCtrlKeyText()}</div>
-                +<div className={styles['key-shortcut']}>,</div>
+                <Kbd>{getCtrlKeyText()}</Kbd>+<Kbd>,</Kbd>
               </div>
             )}
           </div>
@@ -187,8 +185,7 @@ const TopMenuButton = () => {
             <div>主题切换</div>
             {enableTopMenuShortcut && (
               <div className={styles['key-container']}>
-                <div className={styles['key-shortcut']}>{getCtrlKeyText()}</div>
-                +<div className={styles['key-shortcut']}>G</div>
+                <Kbd>{getCtrlKeyText()}</Kbd>+<Kbd>G</Kbd>
               </div>
             )}
           </div>

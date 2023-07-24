@@ -20,30 +20,3 @@ body[arco-theme='dark'] .theme-button {
   align-items: center;
   justify-content: center;
 }
-
-.key-shortcut {
-  box-sizing: border-box;
-  height: 18px;
-  padding: 0 4px;
-
-  transform: scale(0.9);
-  transform-origin: center;
-
-  color: var(--color-text-3);
-  border: 1px solid #c9cdd4;
-  border-radius: 4px;
-  background: #ffffff;
-  box-shadow: 0 2px 0 #c9cdd4;
-
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-    'Liberation Mono', 'Courier New', monospace;
-  font-size: 12px;
-  font-weight: bold;
-}
-
-body[arco-theme='dark'] .key-shortcut {
-  color: hsla(0, 0%, 100%, 0.4);
-  border: 1px solid hsla(0, 0%, 100%, 0.12);
-  background: #202022;
-  box-shadow: 0 2px 0 hsla(0, 0%, 100%, 0.12);
-}
