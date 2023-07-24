@@ -2,7 +2,6 @@ import React, { memo, useState } from 'react';
 import { Button, Modal, Notification, Tooltip } from '@arco-design/web-react';
 import {
   IconDelete,
-  IconMindMapping,
   IconMoonFill,
   IconSave,
   IconSettings,
@@ -18,7 +17,6 @@ import { useAutoSave } from '../../_store/auto-save';
 import { useMapConfig } from '../../_store/map-config';
 import { useSetting } from '../../_store/settings';
 import AutoSaveDrawer from '../auto-save-drawer';
-import GameProgressDrawer from '../game-progress-drawer';
 import SettingDrawer from '../setting-drawer';
 import styles from './index.module.css';
 
@@ -26,7 +24,6 @@ enum DrawerType {
   None,
   AutoSave,
   Setting,
-  GameProgress,
 }
 
 const TopMenuButton = () => {
@@ -95,15 +92,6 @@ const TopMenuButton = () => {
     triggerMapRedraw();
   };
 
-  const onClickGameProgress = () => {
-    if (showDrawerType !== DrawerType.None) {
-      return;
-    }
-    Notification.clear();
-    triggerResetArea();
-    setShowDrawerType(DrawerType.GameProgress);
-  };
-
   const onClickAutoSave = () => {
     if (showDrawerType !== DrawerType.None) {
       return;
@@ -149,27 +137,6 @@ const TopMenuButton = () => {
           iconOnly={true}
           icon={<IconDelete />}
           onClick={onClickDelete}
-        />
-      </Tooltip>
-      <Tooltip
-        content={
-          <div className={styles['tooltip-container']}>
-            <div>游戏进程</div>
-            {enableTopMenuShortcut && (
-              <div className={styles['key-container']}>
-                <div className={styles['key-shortcut']}>{getCtrlKeyText()}</div>
-                +<div className={styles['key-shortcut']}>.</div>
-              </div>
-            )}
-          </div>
-        }
-      >
-        <Button
-          shape="square"
-          type="text"
-          iconOnly={true}
-          icon={<IconMindMapping />}
-          onClick={onClickGameProgress}
         />
       </Tooltip>
       <Tooltip
@@ -239,12 +206,6 @@ const TopMenuButton = () => {
       <Button type="text" disabled={true}>
         登录
       </Button>
-      <GameProgressDrawer
-        visible={showDrawerType === DrawerType.GameProgress}
-        close={() => {
-          setShowDrawerType(DrawerType.None);
-        }}
-      />
       <AutoSaveDrawer
         visible={showDrawerType === DrawerType.AutoSave}
         close={() => {
