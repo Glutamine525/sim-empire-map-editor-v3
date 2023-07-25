@@ -1,0 +1,16 @@
+.container {
+  position: absolute;
+
+  overflow: hidden;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+
+  user-select: none;
+  text-align: center;
+
+  color: #000000;
+  border: 1px solid var(--color-border-2);
+  background: var(--color-bg-5);
+}

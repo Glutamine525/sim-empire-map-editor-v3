@@ -1,0 +1,19 @@
+.catalog {
+  margin-top: 16px;
+
+  font-weight: bold;
+}
+
+.item-container {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+}
+
+.item-container:last-child {
+  margin: 0;
+}
+
+.item {
+  cursor: pointer;
+}

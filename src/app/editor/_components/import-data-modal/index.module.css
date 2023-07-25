@@ -1,0 +1,3 @@
+.container :global(.arco-modal-content) {
+  padding: 0 !important;
+}

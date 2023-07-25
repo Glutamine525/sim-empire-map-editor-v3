@@ -1,0 +1,14 @@
+.container :global(.arco-drawer-header-title) {
+  width: 100%;
+}
+
+.title {
+  display: flex;
+  justify-content: space-between;
+
+  padding-right: 36px;
+}
+
+.limit {
+  font-size: 12px;
+}

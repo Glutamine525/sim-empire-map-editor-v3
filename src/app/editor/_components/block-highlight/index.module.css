@@ -1,0 +1,20 @@
+.container {
+  pointer-events: none;
+
+  background: transparent;
+
+  --size: 0px;
+}
+
+.protection {
+  z-index: 10;
+
+  box-shadow: inset 0 0 calc(var(--size) * 10) calc(var(--size) * 3) white;
+}
+
+.requirement {
+  z-index: 11;
+
+  box-shadow: inset 0 0 calc(var(--size) * 10) calc(var(--size) * 3)
+    rgb(var(--success-7));
+}

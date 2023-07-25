@@ -1,0 +1,22 @@
+.container {
+  display: flex;
+  align-items: center;
+}
+
+.theme-button {
+  color: #ffb700 !important;
+}
+
+body[arco-theme='dark'] .theme-button {
+  color: #ffffff !important;
+}
+
+.tooltip-container {
+  text-align: center;
+}
+
+.key-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

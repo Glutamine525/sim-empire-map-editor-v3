@@ -1,0 +1,38 @@
+.container {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+
+  width: 6px;
+  height: 6px;
+
+  border-radius: 50%;
+  background-color: rgb(var(--danger-6));
+  box-shadow: 0 0 4px white;
+}
+
+.full-protection {
+  background-color: rgb(var(--success-6));
+}
+
+.container.number {
+  top: 0;
+
+  width: unset;
+  height: unset;
+
+  transform: scale(0.75);
+  transform-origin: top left;
+
+  color: rgb(var(--danger-6));
+  border-radius: unset;
+  background: transparent;
+  box-shadow: none;
+  text-shadow: white 0 1px 5px;
+
+  font-size: 12px;
+}
+
+.full-protection.number {
+  color: rgb(var(--success-6));
+}

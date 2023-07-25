@@ -1,0 +1,30 @@
+.container {
+  width: 100%;
+  font-size: 12px;
+  color: var(--color-text-2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+}
+
+.container img {
+  display: block;
+  margin-right: 4px;
+}
+
+.container a {
+  color: var(--color-text-2);
+  cursor: pointer;
+  text-decoration: none;
+  pointer-events: initial;
+}
+
+.container a:visited {
+  text-decoration: none;
+  color: var(--color-text-2);
+}
+
+.container a:hover {
+  color: rgb(var(--primary-5));
+}

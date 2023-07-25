@@ -1,0 +1,29 @@
+.container {
+  display: flex;
+
+  text-shadow: 0 0 1px white, 0 0 1px white, 0 0 1px white, 0 0 1px white;
+
+  font-weight: bold;
+}
+
+.large {
+  z-index: 1;
+}
+
+.debug-coord {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+
+  padding: 0 4px;
+
+  transform: scale(0.4);
+  transform-origin: bottom right;
+  text-align: right;
+  white-space: nowrap;
+
+  color: var(--color-text-3);
+  text-shadow: none;
+
+  font-size: 20px;
+}

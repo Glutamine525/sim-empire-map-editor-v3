@@ -1,0 +1,17 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  box-sizing: border-box;
+  padding: 0 24px;
+
+  color: var(--color-text-1);
+  border-bottom: 1px solid var(--color-border);
+  background-color: var(--color-bg-2);
+}
+
+.title {
+  font-size: 18px;
+  font-weight: bold;
+}

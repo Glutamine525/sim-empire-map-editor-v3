@@ -1,0 +1,25 @@
+.wrapper {
+  width: fit-content !important;
+  max-width: 762px;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  width: 100%;
+  margin: 16px auto;
+
+  text-shadow: 0 0 1px white, 0 0 1px white, 0 0 1px white, 0 0 1px white;
+
+  gap: 8px;
+}
+
+.tags svg {
+  filter: drop-shadow(0 0 1px white) drop-shadow(0 0 1px white);
+}
+
+.tags > * {
+  flex-shrink: 0;
+}

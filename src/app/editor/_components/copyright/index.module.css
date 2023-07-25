@@ -1,0 +1,65 @@
+.container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.container.interact-layer * {
+  color: transparent !important;
+}
+
+.mini-map.container {
+  white-space: nowrap;
+  pointer-events: none;
+  transform-origin: bottom left;
+}
+
+.title {
+  font-size: 100px;
+  font-weight: bold;
+}
+
+.title > * + * {
+  margin-left: 32px;
+}
+
+.civil {
+  color: rgb(var(--primary-6));
+}
+
+.map-type {
+  color: rgb(var(--danger-6));
+}
+
+.no-tree {
+  color: rgb(var(--success-6));
+}
+
+.map-layout {
+  color: var(--color-text-2);
+}
+
+.author,
+.web-link {
+  color: var(--color-text-2);
+
+  font-size: 30px;
+}
+
+.author > * + *,
+.web-link > div > * + * {
+  margin-left: 12px;
+}
+
+.author strong,
+.web-link strong {
+  color: var(--color-text-1);
+}
+
+.web-link strong {
+  cursor: pointer;
+}
+
+.web-link strong:hover {
+  color: rgb(var(--primary-5)) !important;
+}
