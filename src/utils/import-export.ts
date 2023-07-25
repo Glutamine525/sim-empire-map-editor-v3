@@ -20,13 +20,9 @@ import {
   getRoadBuilding,
   getSelectedBuilding,
 } from './building';
+import { compress, decompress } from './compress';
 import { parseBuildingKey } from './coordinate';
-import {
-  base64ToString,
-  download,
-  getMapDataName,
-  stringToBase64,
-} from './file';
+import { base64ToString, download, getMapDataName } from './file';
 
 export interface MapData {
   md5: string;
@@ -179,7 +175,7 @@ export function getMapData(): MapData {
 }
 
 export function encodeMapData(data?: MapData) {
-  return stringToBase64(JSON.stringify(data || getMapData()));
+  return compress(JSON.stringify(data || getMapData()));
 }
 
 export function exportMapData() {
@@ -189,16 +185,24 @@ export function exportMapData() {
 
 export function decodeMapData(dataStr?: string) {
   try {
-    return JSON.parse(base64ToString(dataStr || '')) as MapData;
+    return JSON.parse(decompress(dataStr || '')) as MapData;
   } catch {
     return undefined;
   }
 }
 
-export function importMapData(dataStr: string) {
-  const data = decodeMapData(dataStr);
-  if (!data) {
-    return false;
+export function importMapData(_data: string | MapData) {
+  let data: MapData | undefined;
+  if (typeof _data === 'string') {
+    data = decodeMapData(_data);
+    if (!data) {
+      data = JSON.parse(base64ToString(_data || '')) as MapData;
+      if (!data) {
+        return false;
+      }
+    }
+  } else {
+    data = _data;
   }
   if ('woodNum' in data) {
     return importOldMapData(data);

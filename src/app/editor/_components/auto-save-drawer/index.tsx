@@ -8,20 +8,16 @@ import {
   TableColumnProps,
   Tooltip,
 } from '@arco-design/web-react';
+import { IconCheck, IconClose } from '@arco-design/web-react/icon';
 import dayjs from 'dayjs';
 import Image from 'next/image';
 import { shallow } from 'zustand/shallow';
-import {
-  decodeMapData,
-  encodeMapData,
-  importMapData,
-} from '@/utils/import-export';
+import { encodeMapData, importMapData } from '@/utils/import-export';
 import { CivilTypeLabel } from '../../_map-core/type';
 import { useAutoSave } from '../../_store/auto-save';
 import { useCommand } from '../../_store/command';
 import { useSetting } from '../../_store/settings';
 import styles from './index.module.css';
-import { IconCheck, IconClose } from '@arco-design/web-react/icon';
 
 interface AutoSaveDrawerProps {
   visible: boolean;
@@ -32,8 +28,8 @@ const AutoSaveDrawer: FC<AutoSaveDrawerProps> = props => {
   const { visible, close } = props;
 
   const resetCommand = useCommand(state => state.reset);
-  const [mapDataStr, snapshots, moveSelectedToFirst] = useAutoSave(
-    state => [state.mapDataStr, state.snapshots, state.moveSelectedToFirst],
+  const [mapData, snapshots, moveSelectedToFirst] = useAutoSave(
+    state => [state.mapData, state.snapshots, state.moveSelectedToFirst],
     shallow,
   );
   const limit = useSetting(state => state.autoSaveMaxNum);
@@ -74,7 +70,6 @@ const AutoSaveDrawer: FC<AutoSaveDrawerProps> = props => {
       dataIndex: 'operation',
       align: 'center',
       render: (_, { imgSrc, originData }, index) => {
-        const mapData = decodeMapData(mapDataStr);
         const isCurrentMap = mapData?.md5 === originData.md5;
         return (
           <Tooltip
@@ -92,7 +87,8 @@ const AutoSaveDrawer: FC<AutoSaveDrawerProps> = props => {
                   style={{ display: 'block' }}
                 />
               )
-            }>
+            }
+          >
             <Button
               size="mini"
               type="text"
@@ -121,7 +117,8 @@ const AutoSaveDrawer: FC<AutoSaveDrawerProps> = props => {
                 resetCommand();
                 Message.success('成功载入该存档！');
                 close();
-              }}>
+              }}
+            >
               载入
             </Button>
           </Tooltip>
@@ -148,7 +145,8 @@ const AutoSaveDrawer: FC<AutoSaveDrawerProps> = props => {
       onCancel={() => {
         close();
       }}
-      footer={null}>
+      footer={null}
+    >
       <Table
         columns={columns}
         pagination={false}

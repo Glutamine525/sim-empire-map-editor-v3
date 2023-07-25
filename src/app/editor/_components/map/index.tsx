@@ -48,7 +48,7 @@ const Map = () => {
     shallow,
   );
   const [mapData, trigger] = useAutoSave(
-    state => [state.mapDataStr, state.trigger],
+    state => [state.mapData, state.trigger],
     shallow,
   );
   const autoSaveInterval = useSetting(state => state.autoSaveInterval);

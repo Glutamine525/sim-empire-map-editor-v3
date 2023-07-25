@@ -1,19 +1,14 @@
 import { produce } from 'immer';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import {
-  decodeMapData,
-  encodeMapData,
-  getMapData,
-  MapData,
-} from '@/utils/import-export';
+import { getMapData, MapData } from '@/utils/import-export';
 import { miniMapCanvas } from '../_components/mini-map';
 import { useSetting } from './settings';
 
 type FinalMapData = MapData & { imgSrc: string };
 
 interface AutoSaveState {
-  mapDataStr?: string;
+  mapData?: MapData;
   snapshots: FinalMapData[];
   trigger: () => boolean;
   moveSelectedToFirst: (index: number) => void;
@@ -25,8 +20,8 @@ export const useAutoSave = create<AutoSaveState>()(
       snapshots: [],
       trigger: () => {
         const _data = getMapData();
-        if (decodeMapData(get().mapDataStr)?.md5 !== _data.md5) {
-          set({ mapDataStr: encodeMapData(_data) });
+        if (get().mapData?.md5 !== _data.md5) {
+          set({ mapData: getMapData() });
         }
         const md5s = get().snapshots.map(v => v.md5);
         if (md5s.includes(_data.md5)) {
@@ -60,7 +55,7 @@ export const useAutoSave = create<AutoSaveState>()(
     }),
     {
       name: 'auto-save-data',
-      partialize: state => ({ mapDataStr: state.mapDataStr }),
+      partialize: state => ({ mapData: state.mapData }),
     },
   ),
 );

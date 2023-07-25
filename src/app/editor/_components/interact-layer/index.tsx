@@ -409,7 +409,8 @@ const InteractLayer = () => {
             setRequirementConfig({ show: false, row: 0, col: 0, w: 0, h: 0 });
           },
         });
-      }}>
+      }}
+    >
       {/* hover building */}
       <Building isHidden={!hoverBuilding} isHovered={true} {...hoverBuilding} />
       <Range
