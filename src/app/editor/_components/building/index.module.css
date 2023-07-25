@@ -15,9 +15,10 @@
 .is-hovered {
   z-index: 11;
 
-  transform: scale(1.02);
+  /* transform: scale(1.02); */
+  /* border: 1px solid rgb(var(--primary-5)); */
 
-  box-shadow: 0 0 4px rgb(var(--gray-5));
+  box-shadow: 0 0 8px rgb(var(--gray-5));
 }
 
 .is-preview {

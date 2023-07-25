@@ -9,9 +9,9 @@
 }
 
 .mini-map.container {
+  transform-origin: bottom left;
   white-space: nowrap;
   pointer-events: none;
-  transform-origin: bottom left;
 }
 
 .title {
@@ -57,9 +57,13 @@
 }
 
 .web-link strong {
+  padding: 0 8px;
+
   cursor: pointer;
+  transition: background 0.2s ease-in-out;
 }
 
 .web-link strong:hover {
-  color: rgb(var(--primary-5)) !important;
+  border-radius: 8px;
+  background: var(--color-fill-2);
 }
