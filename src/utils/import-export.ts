@@ -196,7 +196,11 @@ export function importMapData(_data: string | MapData) {
   if (typeof _data === 'string') {
     data = decodeMapData(_data);
     if (!data) {
-      data = JSON.parse(base64ToString(_data || '')) as MapData;
+      try {
+        data = JSON.parse(base64ToString(_data || '')) as MapData;
+      } catch {
+        return false;
+      }
       if (!data) {
         return false;
       }
