@@ -19,7 +19,6 @@ interface Setting {
   enableDoubleClickDelete: boolean;
   enableResidenceRequirementQuery: boolean;
   autoSaveInterval: number;
-  autoSaveMaxNum: number;
   roadCountStyle: RoadCountStyleType;
   protectionCountStyle: ProtectionCountStyleType;
   enableFixedBuildingIcon: boolean;
@@ -43,7 +42,6 @@ export const useSetting = create<SettingState>()(
       enableDoubleClickDelete: true,
       enableResidenceRequirementQuery: true,
       autoSaveInterval: 30,
-      autoSaveMaxNum: 20,
       roadCountStyle: RoadCountStyleType.CenterBigNumber,
       protectionCountStyle: ProtectionCountStyleType.Circle,
       enableFixedBuildingIcon: true,

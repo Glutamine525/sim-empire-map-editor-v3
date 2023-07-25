@@ -53,6 +53,7 @@ const ImportDataModal: FC<ImportDataModalProps> = props => {
       reader.readAsText(file);
     });
     if (type === ModalType.ImportMap) {
+      trigger();
       const succeed = importMapData(data);
       if (!succeed) {
         Message.error('该存档已损坏，导入失败！');
@@ -74,7 +75,8 @@ const ImportDataModal: FC<ImportDataModalProps> = props => {
       className={styles.container}
       onCancel={() => {
         close(ModalType.None);
-      }}>
+      }}
+    >
       <Upload
         drag={true}
         accept={ACCEPT}

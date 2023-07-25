@@ -89,6 +89,7 @@ const TopMenuButton = () => {
     if (!isOk) {
       return;
     }
+    trigger();
     triggerResetArea();
     triggerMapRedraw();
   };

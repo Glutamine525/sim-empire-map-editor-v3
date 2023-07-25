@@ -3,9 +3,10 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { getMapData, MapData } from '@/utils/import-export';
 import { miniMapCanvas } from '../_components/mini-map';
-import { useSetting } from './settings';
 
 type FinalMapData = MapData & { imgSrc: string };
+
+const LIMIT = 20;
 
 interface AutoSaveState {
   mapData?: MapData;
@@ -23,6 +24,12 @@ export const useAutoSave = create<AutoSaveState>()(
         if (get().mapData?.md5 !== _data.md5) {
           set({ mapData: getMapData() });
         }
+        if (
+          _data.roads.length === 0 &&
+          Object.keys(_data.buildings).length === 0
+        ) {
+          return false;
+        }
         const md5s = get().snapshots.map(v => v.md5);
         if (md5s.includes(_data.md5)) {
           return false;
@@ -33,13 +40,7 @@ export const useAutoSave = create<AutoSaveState>()(
         };
         set(
           produce<AutoSaveState>(state => {
-            state.snapshots = [
-              data,
-              ...state.snapshots.slice(
-                0,
-                useSetting.getState().autoSaveMaxNum - 1,
-              ),
-            ];
+            state.snapshots = [data, ...state.snapshots.slice(0, LIMIT - 1)];
           }),
         );
         return true;

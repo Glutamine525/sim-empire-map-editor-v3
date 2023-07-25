@@ -16,7 +16,6 @@ import { encodeMapData, importMapData } from '@/utils/import-export';
 import { CivilTypeLabel } from '../../_map-core/type';
 import { useAutoSave } from '../../_store/auto-save';
 import { useCommand } from '../../_store/command';
-import { useSetting } from '../../_store/settings';
 import styles from './index.module.css';
 
 interface AutoSaveDrawerProps {
@@ -32,7 +31,6 @@ const AutoSaveDrawer: FC<AutoSaveDrawerProps> = props => {
     state => [state.mapData, state.snapshots, state.moveSelectedToFirst],
     shallow,
   );
-  const limit = useSetting(state => state.autoSaveMaxNum);
 
   const columns: TableColumnProps[] = [
     {
@@ -136,7 +134,7 @@ const AutoSaveDrawer: FC<AutoSaveDrawerProps> = props => {
           <strong>自动存档</strong>
           <div>
             <strong>{snapshots.length}</strong>
-            <span className={styles.limit}>/{limit}</span>
+            <span className={styles.limit}>/20</span>
           </div>
         </div>
       }

@@ -100,14 +100,6 @@ const SettingDrawer: FC<SettingDrawerProps> = props => {
             }}
           />
         </FormItem>
-        <FormItem label="最大存档数" field="autoSaveMaxNum">
-          <Slider
-            min={10}
-            max={30}
-            step={1}
-            marks={{ 10: 10, 15: 15, 20: 20, 25: 25, 30: 30 }}
-          />
-        </FormItem>
 
         <div className={styles['sub-title']}>样式</div>
         <FormItem label="道路计数" field="roadCountStyle">
