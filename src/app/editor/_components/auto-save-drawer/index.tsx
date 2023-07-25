@@ -13,6 +13,7 @@ import dayjs from 'dayjs';
 import Image from 'next/image';
 import { shallow } from 'zustand/shallow';
 import { encodeMapData, importMapData } from '@/utils/import-export';
+import { TIME_AGO } from '../../_config';
 import { CivilTypeLabel } from '../../_map-core/type';
 import { useAutoSave } from '../../_store/auto-save';
 import { useCommand } from '../../_store/command';
@@ -60,8 +61,17 @@ const AutoSaveDrawer: FC<AutoSaveDrawerProps> = props => {
     },
     {
       title: '存档时间',
-      dataIndex: 'createAt',
+      dataIndex: 'timeAgo',
       align: 'center',
+      render: (_, { createAt, timeAgo }) => (
+        <Tooltip
+          position="bottom"
+          color="var(--color-bg-5)"
+          content={dayjs(createAt).format('MM月DD日 HH:mm:ss')}
+        >
+          {timeAgo}
+        </Tooltip>
+      ),
     },
     {
       title: '操作',
@@ -158,7 +168,11 @@ const AutoSaveDrawer: FC<AutoSaveDrawerProps> = props => {
             0,
           ),
           roadNum: v.roads.length,
-          createAt: dayjs(v.createAt).format('HH:mm:ss'),
+          timeAgo: TIME_AGO.format(v.createAt, 'round-minute').replace(
+            '现在',
+            '刚刚',
+          ),
+          createAt: v.createAt,
           imgSrc: v.imgSrc,
           originData: v,
         }))}

@@ -1,6 +1,7 @@
 import { produce } from 'immer';
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
+import { compress, decompress } from '@/utils/compress';
 import { getMapData, MapData } from '@/utils/import-export';
 import { miniMapCanvas } from '../_components/mini-map';
 
@@ -56,7 +57,18 @@ export const useAutoSave = create<AutoSaveState>()(
     }),
     {
       name: 'auto-save-data',
-      partialize: state => ({ mapData: state.mapData }),
+      partialize: state => ({
+        mapData: state.mapData,
+        snapshots: state.snapshots,
+      }),
+      storage: createJSONStorage(() => localStorage, {
+        replacer: (_, v) => {
+          return compress(JSON.stringify(v));
+        },
+        reviver: (_, v) => {
+          return JSON.parse(decompress(v as string));
+        },
+      }),
     },
   ),
 );

@@ -1,4 +1,8 @@
+import TimeAgo from 'javascript-time-ago';
+import zh from 'javascript-time-ago/locale/zh';
 import { isMac, isWindows } from '@/utils/env';
+
+TimeAgo.addDefaultLocale(zh);
 
 export const VERSION = '3.0.0';
 
@@ -18,3 +22,5 @@ export const WEB_LINK = 'https://www.simempire.fun';
 export const IS_MAC = isMac();
 
 export const IS_WINDOWS = isWindows();
+
+export const TIME_AGO = new TimeAgo('zh');

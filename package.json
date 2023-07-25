@@ -21,6 +21,7 @@
     "eslint": "8.42.0",
     "eslint-config-next": "13.4.5",
     "immer": "^10.0.2",
+    "javascript-time-ago": "^2.5.9",
     "js-base64": "^3.7.5",
     "lodash": "^4.17.21",
     "md5": "^2.3.0",
