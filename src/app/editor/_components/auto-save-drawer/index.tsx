@@ -66,7 +66,6 @@ const AutoSaveDrawer: FC<AutoSaveDrawerProps> = props => {
       render: (_, { createAt, timeAgo }) => (
         <Tooltip
           position="bottom"
-          color="var(--color-bg-5)"
           content={dayjs(createAt).format('MM月DD日 HH:mm:ss')}
         >
           {timeAgo}
@@ -82,7 +81,6 @@ const AutoSaveDrawer: FC<AutoSaveDrawerProps> = props => {
         return (
           <Tooltip
             position="br"
-            color="var(--color-bg-5)"
             content={
               isCurrentMap ? (
                 '当前地图，禁止载入'
