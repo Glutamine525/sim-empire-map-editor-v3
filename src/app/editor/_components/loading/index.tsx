@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { memo } from 'react';
 import styles from './index.module.css';
 
 const ID = 'loading';
+const TEXT_ID = 'loading-text';
 
 const Loading = () => {
   return (
@@ -13,15 +14,18 @@ const Loading = () => {
             <div key={i} style={{ '--index': i + 1 } as any} />
           ))}
       </div>
-      <div className={styles.text}>处理中...</div>
+      <div id={TEXT_ID} className={styles.text}>
+        加载中...
+      </div>
     </div>
   );
 };
 
-export default Loading;
+export default memo(Loading);
 
-export function showLoading() {
+export function showLoading(text = '处理中...') {
   document.getElementById(ID)!.style.display = 'flex';
+  document.getElementById(TEXT_ID)!.innerText = text;
 }
 
 export function hideLoading() {
