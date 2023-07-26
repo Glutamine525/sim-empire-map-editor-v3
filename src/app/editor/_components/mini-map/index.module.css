@@ -7,9 +7,10 @@
   box-sizing: content-box;
   padding: 2px;
 
-  opacity: 0.8;
   border: 2px solid var(--color-border-2);
-  background: var(--color-bg-2);
+  background: rgba(var(--gray-2), 0.6);
+
+  backdrop-filter: blur(4px);
 }
 
 .container {

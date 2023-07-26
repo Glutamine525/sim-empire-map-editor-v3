@@ -21,6 +21,7 @@ interface Setting {
   autoSaveInterval: number;
   roadCountStyle: RoadCountStyleType;
   protectionCountStyle: ProtectionCountStyleType;
+  enableMiniMap: boolean;
   enableFixedBuildingIcon: boolean;
   enableProtectionHighlight: boolean;
   screenshotScale: number;
@@ -44,6 +45,7 @@ export const useSetting = create<SettingState>()(
       autoSaveInterval: 30,
       roadCountStyle: RoadCountStyleType.CenterBigNumber,
       protectionCountStyle: ProtectionCountStyleType.Circle,
+      enableMiniMap: true,
       enableFixedBuildingIcon: true,
       enableProtectionHighlight: true,
       screenshotScale: 2,

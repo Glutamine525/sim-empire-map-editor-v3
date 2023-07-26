@@ -185,6 +185,13 @@ const SettingDrawer: FC<SettingDrawerProps> = props => {
           </Radio.Group>
         </FormItem>
         <FormItem
+          label="小地图"
+          field="enableMiniMap"
+          triggerPropName="checked"
+        >
+          <Switch />
+        </FormItem>
+        <FormItem
           label="固定建筑标记"
           field="enableFixedBuildingIcon"
           triggerPropName="checked"

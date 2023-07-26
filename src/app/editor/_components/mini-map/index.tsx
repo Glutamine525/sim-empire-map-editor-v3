@@ -7,14 +7,15 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { MapLength } from '@/app/editor/_map-core/type';
+import { isBoundary, parseBuildingKey } from '@/utils/coordinate';
 import { BLOCK_PX, UI_SETTING } from '../../_config';
 import useMapCore from '../../_hooks/use-map-core';
 import { useMapConfig } from '../../_store/map-config';
-import { mapContainer } from '../map';
-import { MapLength } from '@/app/editor/_map-core/type';
-import { isBoundary, parseBuildingKey } from '@/utils/coordinate';
-import styles from './index.module.css';
+import { useSetting } from '../../_store/settings';
 import Copyright from '../copyright';
+import { mapContainer } from '../map';
+import styles from './index.module.css';
 
 export const miniMapCanvas = createRef<HTMLCanvasElement>();
 
@@ -28,8 +29,8 @@ const MiniMap: FC<MiniMapProps> = props => {
   const { onMouseEnter } = props;
 
   const mapCore = useMapCore();
-
   const leftMenuWidth = useMapConfig(state => state.leftMenuWidth);
+  const enableMiniMap = useSetting(state => state.enableMiniMap);
 
   const isMouseDown = useRef(false);
 
@@ -145,6 +146,7 @@ const MiniMap: FC<MiniMapProps> = props => {
       style={{
         width: MapLength * MINI_MAP_RATIO,
         height: MapLength * MINI_MAP_RATIO,
+        display: enableMiniMap ? 'block' : 'none',
       }}
       onMouseDownCapture={e => {
         e.stopPropagation();
@@ -165,7 +167,8 @@ const MiniMap: FC<MiniMapProps> = props => {
       onMouseEnter={onMouseEnter}
       onMouseLeave={() => {
         isMouseDown.current = false;
-      }}>
+      }}
+    >
       <canvas
         ref={miniMapCanvas}
         className={styles.container}
