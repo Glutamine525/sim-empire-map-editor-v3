@@ -8,6 +8,7 @@ import React, {
   useState,
 } from 'react';
 import { MapLength } from '@/app/editor/_map-core/type';
+import { isCssPropertySupported } from '@/utils/browser';
 import { isBoundary, parseBuildingKey } from '@/utils/coordinate';
 import { BLOCK_PX, UI_SETTING } from '../../_config';
 import useMapCore from '../../_hooks/use-map-core';
@@ -103,7 +104,10 @@ const MiniMap: FC<MiniMapProps> = props => {
   };
 
   const scroller = () => {
-    const { scrollTop, scrollLeft } = mapContainer.current!;
+    if (!mapContainer.current) {
+      return;
+    }
+    const { scrollTop, scrollLeft } = mapContainer.current;
     setFocusConfig(state => ({
       ...state,
       top: scrollTop / BLOCK_PX,
@@ -147,6 +151,9 @@ const MiniMap: FC<MiniMapProps> = props => {
         width: MapLength * MINI_MAP_RATIO,
         height: MapLength * MINI_MAP_RATIO,
         display: enableMiniMap ? 'block' : 'none',
+        background: isCssPropertySupported('backdropFilter')
+          ? 'rgba(var(--gray-2), 0.6)'
+          : 'rgba(var(--gray-2), 0.95)',
       }}
       onMouseDownCapture={e => {
         e.stopPropagation();
