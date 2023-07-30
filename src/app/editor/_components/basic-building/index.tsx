@@ -8,6 +8,7 @@ import { useSetting } from '../../_store/settings';
 import Block from '../block';
 import BuildingIcon from '../building-icon';
 import BuildingProtectionCount from '../building-protection-count';
+import DebugBuildingKey from '../debug-building-key';
 import RoadCount from '../road-count';
 import styles from './index.module.css';
 
@@ -23,12 +24,14 @@ const BasicBuilding: FC<BasicBuildingProps> = ({ row, col }) => {
   const [
     enableFixedBuildingIcon,
     enableSpecialBuildingIcon,
+    enableDebugCoordInEmptyCell,
     protectionCountStyle,
     roadCountStyle,
   ] = useSetting(
     state => [
       state.enableFixedBuildingIcon,
       state.enableSpecialBuildingIcon,
+      state.enableDebugCoordInEmptyCell,
       state.protectionCountStyle,
       state.roadCountStyle,
     ],
@@ -64,13 +67,12 @@ const BasicBuilding: FC<BasicBuildingProps> = ({ row, col }) => {
         <BuildingIcon type="special" bg={data.bg} />
       )}
       {data.text}
-      {process.env.NODE_ENV === 'development' && !data.isBarrier && (
-        <div className={styles['debug-coord']}>
-          {row}
-          <br />
-          {col}
-        </div>
-      )}
+      {((!enableDebugCoordInEmptyCell && !data.isEmpty) ||
+        enableDebugCoordInEmptyCell) &&
+        process.env.NODE_ENV === 'development' &&
+        !data.isBarrier && (
+          <DebugBuildingKey row={row} col={col} bg={data.bg} />
+        )}
     </Block>
   );
 };

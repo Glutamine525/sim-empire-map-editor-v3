@@ -16,11 +16,11 @@ export function rgbToHex(r: number, g: number, b: number) {
   return `#${((r << 16) | (g << 8) | b).toString(16)}`;
 }
 
-export function getColorByBg(_hex: string) {
+export function getColorTypeByBg(_hex: string) {
   const hex = hexToRgb(_hex);
   if (!hex) {
-    return 'rgb(var(--gray-7))';
+    return 'dark';
   }
   var color = 0.213 * hex.r + 0.715 * hex.g + 0.072 * hex.b > 255 / 2;
-  return color ? 'rgb(var(--gray-7))' : 'rgb(var(--gray-10))';
+  return color ? 'dark' : 'light';
 }

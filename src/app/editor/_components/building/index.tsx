@@ -10,6 +10,7 @@ import { useSetting } from '../../_store/settings';
 import Block, { BlockProps } from '../block';
 import BuildingIcon from '../building-icon';
 import BuildingProtectionCount from '../building-protection-count';
+import DebugBuildingKey from '../debug-building-key';
 import styles from './index.module.css';
 
 interface BuildingProps extends BlockProps, BuildingConfig {
@@ -72,6 +73,9 @@ const Building: FC<BuildingProps> = props => {
         <BuildingIcon type="special" bg={props.bg} />
       )}
       {text}
+      {process.env.NODE_ENV === 'development' && !props.isBarrier && (
+        <DebugBuildingKey row={props.row} col={props.col} bg={props.bg} />
+      )}
     </Block>
   );
 };

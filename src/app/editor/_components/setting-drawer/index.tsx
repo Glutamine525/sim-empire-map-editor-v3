@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import { Drawer, Form, Radio, Slider, Switch } from '@arco-design/web-react';
+import useColorTheme, { ThemeType } from '@/hooks/use-color-theme';
 import { getRoadBuilding } from '@/utils/building';
 import useMapCore from '../../_hooks/use-map-core';
 import {
@@ -24,6 +25,7 @@ const SettingDrawer: FC<SettingDrawerProps> = props => {
   const { visible, close } = props;
 
   const mapCore = useMapCore();
+  const [theme] = useColorTheme();
   const { setSetting, ...setting } = useSetting();
 
   const [form] = useForm();
@@ -211,7 +213,10 @@ const SettingDrawer: FC<SettingDrawerProps> = props => {
             <>
               特殊建筑标记
               <div style={{ position: 'absolute', top: 0, right: 4 }}>
-                <BuildingIcon type="special" />
+                <BuildingIcon
+                  type="special"
+                  bg={theme === ThemeType.Light ? '#ffffff' : '#000000'}
+                />
               </div>
             </>
           }
@@ -227,6 +232,15 @@ const SettingDrawer: FC<SettingDrawerProps> = props => {
         >
           <Switch />
         </FormItem>
+        {process.env.NODE_ENV === 'development' && (
+          <FormItem
+            label="显示空格坐标"
+            field="enableDebugCoordInEmptyCell"
+            triggerPropName="checked"
+          >
+            <Switch />
+          </FormItem>
+        )}
 
         <div className={styles['sub-title']}>截图</div>
         <FormItem label="像素缩放" field="screenshotScale">

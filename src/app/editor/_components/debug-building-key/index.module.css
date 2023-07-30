@@ -1,0 +1,16 @@
+.container {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+
+  padding: 0 4px;
+
+  transform: scale(0.4);
+  transform-origin: bottom right;
+  text-align: right;
+  white-space: nowrap;
+
+  text-shadow: none;
+
+  font-size: 20px;
+}
