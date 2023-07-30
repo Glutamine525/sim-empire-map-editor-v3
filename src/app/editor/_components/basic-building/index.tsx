@@ -3,10 +3,11 @@ import classcat from 'classcat';
 import { shallow } from 'zustand/shallow';
 import { useBuildingData } from '@/app/editor/_store/building-data';
 import { showMarker } from '@/utils/building';
+import { CatalogType } from '../../_map-core/building/type';
 import { useSetting } from '../../_store/settings';
 import Block from '../block';
+import BuildingIcon from '../building-icon';
 import BuildingProtectionCount from '../building-protection-count';
-import FixedBuildingIcon from '../fixed-building-icon';
 import RoadCount from '../road-count';
 import styles from './index.module.css';
 
@@ -19,15 +20,20 @@ const BasicBuilding: FC<BasicBuildingProps> = ({ row, col }) => {
   const [data] = useBuildingData(row, col);
   const { w = 0, h = 0 } = data;
 
-  const [enableFixedBuildingIcon, protectionCountStyle, roadCountStyle] =
-    useSetting(
-      state => [
-        state.enableFixedBuildingIcon,
-        state.protectionCountStyle,
-        state.roadCountStyle,
-      ],
-      shallow,
-    );
+  const [
+    enableFixedBuildingIcon,
+    enableSpecialBuildingIcon,
+    protectionCountStyle,
+    roadCountStyle,
+  ] = useSetting(
+    state => [
+      state.enableFixedBuildingIcon,
+      state.enableSpecialBuildingIcon,
+      state.protectionCountStyle,
+      state.roadCountStyle,
+    ],
+    shallow,
+  );
 
   return (
     <Block
@@ -52,7 +58,10 @@ const BasicBuilding: FC<BasicBuildingProps> = ({ row, col }) => {
         </>
       )}
       {enableFixedBuildingIcon && data.isFixed && !data.isBarrier && (
-        <FixedBuildingIcon />
+        <BuildingIcon type="fixed" />
+      )}
+      {enableSpecialBuildingIcon && data.catalog === CatalogType.Special && (
+        <BuildingIcon type="special" bg={data.bg} />
       )}
       {data.text}
       {process.env.NODE_ENV === 'development' && !data.isBarrier && (

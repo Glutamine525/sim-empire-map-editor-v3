@@ -7,7 +7,10 @@ import {
   InputNumber,
   Switch,
 } from '@arco-design/web-react';
-import { BuildingConfig } from '@/app/editor/_map-core/building/type';
+import {
+  BuildingConfig,
+  CatalogType,
+} from '@/app/editor/_map-core/building/type';
 import { BLOCK_PX } from '../../_config';
 import useMapCore from '../../_hooks/use-map-core';
 import Block from '../block';
@@ -39,6 +42,7 @@ const CustomBuildingEditor: FC<CustomBuildingEditorProps> = props => {
     color: '#000000',
     bg: '#9fff6b',
     isDecoration: true,
+    catalog: CatalogType.Special,
   });
 
   const size = useMemo(() => {
@@ -103,7 +107,7 @@ const CustomBuildingEditor: FC<CustomBuildingEditorProps> = props => {
           required: (_, { label }) => `必须填写 ${label}`,
         }}
         onValuesChange={(_, v) => {
-          setConfig(v);
+          setConfig({ ...v, catalog: CatalogType.Special });
         }}
         onSubmit={v => {
           insert(v);

@@ -23,6 +23,7 @@ interface Setting {
   protectionCountStyle: ProtectionCountStyleType;
   enableMiniMap: boolean;
   enableFixedBuildingIcon: boolean;
+  enableSpecialBuildingIcon: boolean;
   enableProtectionHighlight: boolean;
   screenshotScale: number;
   screenshotQuality: number;
@@ -47,6 +48,7 @@ export const useSetting = create<SettingState>()(
       protectionCountStyle: ProtectionCountStyleType.Circle,
       enableMiniMap: true,
       enableFixedBuildingIcon: true,
+      enableSpecialBuildingIcon: true,
       enableProtectionHighlight: true,
       screenshotScale: 2,
       screenshotQuality: 0.8,

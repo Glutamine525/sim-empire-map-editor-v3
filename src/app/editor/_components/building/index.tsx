@@ -1,12 +1,15 @@
 import React, { FC } from 'react';
 import classcat from 'classcat';
 import { shallow } from 'zustand/shallow';
-import { BuildingConfig } from '@/app/editor/_map-core/building/type';
+import {
+  BuildingConfig,
+  CatalogType,
+} from '@/app/editor/_map-core/building/type';
 import { showMarker } from '@/utils/building';
 import { useSetting } from '../../_store/settings';
 import Block, { BlockProps } from '../block';
+import BuildingIcon from '../building-icon';
 import BuildingProtectionCount from '../building-protection-count';
-import FixedBuildingIcon from '../fixed-building-icon';
 import styles from './index.module.css';
 
 interface BuildingProps extends BlockProps, BuildingConfig {
@@ -30,8 +33,16 @@ const Building: FC<BuildingProps> = props => {
     isHidden,
   } = props;
 
-  const [enableFixedBuildingIcon, protectionCountStyle] = useSetting(
-    state => [state.enableFixedBuildingIcon, state.protectionCountStyle],
+  const [
+    enableFixedBuildingIcon,
+    enableSpecialBuildingIcon,
+    protectionCountStyle,
+  ] = useSetting(
+    state => [
+      state.enableFixedBuildingIcon,
+      state.enableSpecialBuildingIcon,
+      state.protectionCountStyle,
+    ],
     shallow,
   );
 
@@ -55,7 +66,10 @@ const Building: FC<BuildingProps> = props => {
         />
       )}
       {enableFixedBuildingIcon && isFixed && !isBarrier && (
-        <FixedBuildingIcon />
+        <BuildingIcon type="fixed" />
+      )}
+      {enableSpecialBuildingIcon && props.catalog === CatalogType.Special && (
+        <BuildingIcon type="special" bg={props.bg} />
       )}
       {text}
     </Block>

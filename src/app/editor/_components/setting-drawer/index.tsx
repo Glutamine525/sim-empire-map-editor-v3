@@ -8,6 +8,7 @@ import {
   useSetting,
 } from '../../_store/settings';
 import Block from '../block';
+import BuildingIcon from '../building-icon';
 import BuildingProtectionCount from '../building-protection-count';
 import RoadCount from '../road-count';
 import styles from './index.module.css';
@@ -192,8 +193,29 @@ const SettingDrawer: FC<SettingDrawerProps> = props => {
           <Switch />
         </FormItem>
         <FormItem
-          label="固定建筑标记"
+          label={
+            <>
+              固定建筑标记
+              <div style={{ position: 'absolute', top: 0, right: 4 }}>
+                <BuildingIcon type="fixed" />
+              </div>
+            </>
+          }
           field="enableFixedBuildingIcon"
+          triggerPropName="checked"
+        >
+          <Switch />
+        </FormItem>
+        <FormItem
+          label={
+            <>
+              特殊建筑标记
+              <div style={{ position: 'absolute', top: 0, right: 4 }}>
+                <BuildingIcon type="special" />
+              </div>
+            </>
+          }
+          field="enableSpecialBuildingIcon"
           triggerPropName="checked"
         >
           <Switch />

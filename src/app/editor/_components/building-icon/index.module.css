@@ -2,8 +2,6 @@
   position: absolute;
   top: 1px;
   right: 1px;
-
-  filter: drop-shadow(0 0 1px white) drop-shadow(0 0 1px white);
 }
 
 .container img {
