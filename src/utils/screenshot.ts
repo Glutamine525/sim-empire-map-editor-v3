@@ -75,6 +75,7 @@ async function getHtmlImage(el: HTMLElement) {
   // window.open(url);
 
   const img = new Image();
+  img.crossOrigin = 'anonymous';
   img.src = `data:image/svg+xml;base64,${Base64.encode(html)}`;
   await new Promise<void>(resolve => {
     img.onload = () => resolve();
