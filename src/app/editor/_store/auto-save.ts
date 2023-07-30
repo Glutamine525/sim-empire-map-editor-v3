@@ -65,7 +65,7 @@ export const useAutoSave = create<AutoSaveState>()(
         getItem: name => {
           const str = localStorage.getItem(name);
           if (!str) return null;
-          const { state } = JSON.parse(str) as {
+          const { state, ...rest } = JSON.parse(str) as {
             state: {
               mapData: string;
               snapshots: string[];
@@ -76,25 +76,26 @@ export const useAutoSave = create<AutoSaveState>()(
               mapData: JSON.parse(decompress(state.mapData)),
               snapshots: state.snapshots.map(s => JSON.parse(decompress(s))),
             },
+            ...rest,
           };
         },
         setItem: (
-          name,
-          newValue: StorageValue<{
+          key,
+          data: StorageValue<{
             mapData?: MapData;
             snapshots: FinalMapData[];
           }>,
         ) => {
           const str = JSON.stringify({
             state: {
-              mapData: compress(JSON.stringify(newValue.state?.mapData || {})),
-              snapshots: (newValue.state?.snapshots || []).map(s =>
+              mapData: compress(JSON.stringify(data.state?.mapData || {})),
+              snapshots: (data.state?.snapshots || []).map(s =>
                 compress(JSON.stringify(s)),
               ),
             },
             version: 0,
           });
-          localStorage.setItem(name, str);
+          localStorage.setItem(key, str);
         },
         removeItem: name => localStorage.removeItem(name),
       },
