@@ -1,6 +1,6 @@
 import { produce } from 'immer';
 import { create } from 'zustand';
-import { createJSONStorage, persist } from 'zustand/middleware';
+import { persist, StorageValue } from 'zustand/middleware';
 import { compress, decompress } from '@/utils/compress';
 import { getMapData, MapData } from '@/utils/import-export';
 import { miniMapCanvas } from '../_components/mini-map';
@@ -61,14 +61,43 @@ export const useAutoSave = create<AutoSaveState>()(
         mapData: state.mapData,
         snapshots: state.snapshots,
       }),
-      storage: createJSONStorage(() => localStorage, {
-        replacer: (_, v) => {
-          return compress(JSON.stringify(v));
+      storage: {
+        getItem: name => {
+          const str = localStorage.getItem(name);
+          if (!str) return null;
+          const { state } = JSON.parse(str) as {
+            state: {
+              mapData: string;
+              snapshots: string[];
+            };
+          };
+          return {
+            state: {
+              mapData: JSON.parse(decompress(state.mapData)),
+              snapshots: state.snapshots.map(s => JSON.parse(decompress(s))),
+            },
+          };
         },
-        reviver: (_, v) => {
-          return JSON.parse(decompress(v as string));
+        setItem: (
+          name,
+          newValue: StorageValue<{
+            mapData?: MapData;
+            snapshots: FinalMapData[];
+          }>,
+        ) => {
+          const str = JSON.stringify({
+            state: {
+              mapData: compress(JSON.stringify(newValue.state?.mapData || {})),
+              snapshots: (newValue.state?.snapshots || []).map(s =>
+                compress(JSON.stringify(s)),
+              ),
+            },
+            version: 0,
+          });
+          localStorage.setItem(name, str);
         },
-      }),
+        removeItem: name => localStorage.removeItem(name),
+      },
     },
   ),
 );
