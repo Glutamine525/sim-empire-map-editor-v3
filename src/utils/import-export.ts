@@ -161,12 +161,14 @@ export function getMapData(): MapData {
         }
         continue;
       }
-      if (b.name! in specialBuildings) {
-        buildings[key].push(coord);
+      const buildingMd5 = md5(JSON.stringify(b));
+      const specialKey = `${CatalogType.Special}-${buildingMd5}`;
+      if (buildingMd5 in specialBuildings) {
+        buildings[specialKey].push(coord);
         continue;
       }
-      specialBuildings[b.name!] = { ...b };
-      buildings[key] = [coord];
+      specialBuildings[buildingMd5] = { ...b };
+      buildings[specialKey] = [coord];
     }
   }
   const data = { mapType, civil, noTree, buildings, roads, specialBuildings };
