@@ -143,7 +143,7 @@ const TopMenuButton = () => {
       <Tooltip
         content={
           <div className={styles['tooltip-container']}>
-            <div>自动存档</div>
+            <div>存档记录</div>
             {enableTopMenuShortcut && (
               <div className={styles['key-container']}>
                 <Kbd>{getCtrlKeyText()}</Kbd>+<Kbd>S</Kbd>

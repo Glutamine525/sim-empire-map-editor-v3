@@ -24,8 +24,9 @@ interface Setting {
   enableMiniMap: boolean;
   enableFixedBuildingIcon: boolean;
   enableSpecialBuildingIcon: boolean;
-  enableDebugCoordInEmptyCell: boolean;
   enableProtectionHighlight: boolean;
+  enableAutoSaveProgress: boolean;
+  enableDebugCoordInEmptyCell: boolean;
   screenshotScale: number;
   screenshotQuality: number;
   enableScreenshot45deg: boolean;
@@ -51,6 +52,7 @@ export const useSetting = create<SettingState>()(
       enableFixedBuildingIcon: true,
       enableSpecialBuildingIcon: true,
       enableProtectionHighlight: true,
+      enableAutoSaveProgress: true,
       enableDebugCoordInEmptyCell: false,
       screenshotScale: 2,
       screenshotQuality: 0.8,

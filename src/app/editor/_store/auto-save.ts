@@ -12,6 +12,8 @@ const LIMIT = 20;
 interface AutoSaveState {
   mapData?: MapData;
   snapshots: FinalMapData[];
+  nextAutoSaveTime: number;
+  changeNextAutoSaveTime: (nextAutoSaveTime: number) => void;
   trigger: () => boolean;
   moveSelectedToFirst: (index: number) => void;
 }
@@ -20,6 +22,8 @@ export const useAutoSave = create<AutoSaveState>()(
   persist(
     (set, get) => ({
       snapshots: [],
+      nextAutoSaveTime: 0,
+      changeNextAutoSaveTime: nextAutoSaveTime => set({ nextAutoSaveTime }),
       trigger: () => {
         const _data = getMapData();
         if (get().mapData?.md5 !== _data.md5) {

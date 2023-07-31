@@ -232,6 +232,13 @@ const SettingDrawer: FC<SettingDrawerProps> = props => {
         >
           <Switch />
         </FormItem>
+        <FormItem
+          label="自动存档进度条"
+          field="enableAutoSaveProgress"
+          triggerPropName="checked"
+        >
+          <Switch />
+        </FormItem>
         {process.env.NODE_ENV === 'development' && (
           <FormItem
             label="显示空格坐标"

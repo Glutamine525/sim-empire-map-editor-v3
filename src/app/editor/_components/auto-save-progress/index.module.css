@@ -1,0 +1,16 @@
+.container {
+  position: fixed;
+
+  display: flex;
+  justify-content: center;
+
+  height: 2px;
+
+  border-radius: 1px;
+}
+
+.progress {
+  height: 100%;
+
+  background: rgb(var(--primary-6));
+}

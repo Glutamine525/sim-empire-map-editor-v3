@@ -47,8 +47,8 @@ const Map = () => {
     ],
     shallow,
   );
-  const [mapData, trigger] = useAutoSave(
-    state => [state.mapData, state.trigger],
+  const [mapData, trigger, changeNextAutoSaveTime] = useAutoSave(
+    state => [state.mapData, state.trigger, state.changeNextAutoSaveTime],
     shallow,
   );
   const autoSaveInterval = useSetting(state => state.autoSaveInterval);
@@ -124,7 +124,9 @@ const Map = () => {
         Message.success('自动存档');
       }
     }
+    changeNextAutoSaveTime(Date.now() + autoSaveInterval * 1000);
     autoSaveTimer.current = window.setInterval(() => {
+      changeNextAutoSaveTime(Date.now() + autoSaveInterval * 1000);
       if (trigger()) {
         Message.success('自动存档');
       }

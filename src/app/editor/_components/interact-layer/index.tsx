@@ -17,6 +17,7 @@ import { CatalogType } from '../../_map-core/building/type';
 import { useCommand } from '../../_store/command';
 import { useMapConfig } from '../../_store/map-config';
 import { useSetting } from '../../_store/settings';
+import AutoSaveProgress from '../auto-save-progress';
 import BlockHighlight, { HighlightType } from '../block-highlight';
 import Building from '../building';
 import Copyright from '../copyright';
@@ -474,6 +475,7 @@ const InteractLayer = () => {
         curCol={mouseCoord.col}
       />
       {/* functional */}
+      <AutoSaveProgress />
       {requirementConfig.show && (
         <BlockHighlight
           type={HighlightType.Requirement}
