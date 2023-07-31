@@ -10,7 +10,7 @@ import {
 import { useKeyPress } from 'ahooks';
 import { shallow } from 'zustand/shallow';
 import Kbd from '@/components/kbd';
-import useColorTheme, { ThemeType } from '@/hooks/use-color-theme';
+import { ThemeType, useColorTheme } from '@/store/color-theme';
 import { getCtrlKeyText } from '@/utils/env';
 import { IS_MAC, IS_WINDOWS } from '../../_config';
 import useMapCore from '../../_hooks/use-map-core';
@@ -28,7 +28,7 @@ enum DrawerType {
 }
 
 const TopMenuButton = () => {
-  const [theme, toggleTheme] = useColorTheme();
+  const { theme, toggleTheme } = useColorTheme();
 
   const mapCore = useMapCore();
   const [triggerMapRedraw, triggerResetArea] = useMapConfig(

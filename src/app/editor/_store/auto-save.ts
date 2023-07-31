@@ -64,7 +64,9 @@ export const useAutoSave = create<AutoSaveState>()(
       storage: {
         getItem: name => {
           const str = localStorage.getItem(name);
-          if (!str) return null;
+          if (!str) {
+            return null;
+          }
           const { state, ...rest } = JSON.parse(str) as {
             state: {
               mapData: string;

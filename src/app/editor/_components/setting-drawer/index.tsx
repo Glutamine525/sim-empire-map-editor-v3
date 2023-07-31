@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { Drawer, Form, Radio, Slider, Switch } from '@arco-design/web-react';
-import useColorTheme, { ThemeType } from '@/hooks/use-color-theme';
+import { ThemeType, useColorTheme } from '@/store/color-theme';
 import { getRoadBuilding } from '@/utils/building';
 import useMapCore from '../../_hooks/use-map-core';
 import {
@@ -25,7 +25,7 @@ const SettingDrawer: FC<SettingDrawerProps> = props => {
   const { visible, close } = props;
 
   const mapCore = useMapCore();
-  const [theme] = useColorTheme();
+  const { theme } = useColorTheme();
   const { setSetting, ...setting } = useSetting();
 
   const [form] = useForm();
