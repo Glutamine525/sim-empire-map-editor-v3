@@ -13,16 +13,18 @@ interface ColorThemeState {
 }
 
 let defaultTheme = ThemeType.Light;
-const persistedData = localStorage.getItem('theme-store');
 
-if (
-  (!persistedData && window.matchMedia('(prefers-color-scheme: dark)')) ||
-  persistedData?.includes('dark')
-) {
-  defaultTheme = ThemeType.Dark;
-  window.addEventListener('load', () => {
-    document.body.setAttribute('arco-theme', 'dark');
-  });
+if (typeof window !== 'undefined') {
+  const persistedData = localStorage.getItem('theme-store');
+  if (
+    (!persistedData && window.matchMedia('(prefers-color-scheme: dark)')) ||
+    persistedData?.includes('dark')
+  ) {
+    defaultTheme = ThemeType.Dark;
+    window.addEventListener('load', () => {
+      document.body.setAttribute('arco-theme', 'dark');
+    });
+  }
 }
 
 export const useColorTheme = create<ColorThemeState>()(
