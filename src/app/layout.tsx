@@ -4,7 +4,7 @@ import './globals.css';
 const RootLayout: FC<PropsWithChildren> = ({ children }) => {
   return (
     <html>
-      <body>{children}</body>
+      <body suppressHydrationWarning={true}>{children}</body>
     </html>
   );
 };
