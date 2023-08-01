@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useDocumentVisibility } from 'ahooks';
 import { shallow } from 'zustand/shallow';
 import { UI_SETTING } from '../../_config';
 import { useAutoSave } from '../../_store/auto-save';
@@ -13,19 +14,29 @@ const AutoSaveProgress = () => {
     shallow,
   );
   const nextAutoSaveTime = useAutoSave(state => state.nextAutoSaveTime);
+  const visibility = useDocumentVisibility();
 
   const [progress, setProgress] = useState(100);
 
   const timer = useRef(0);
 
   useEffect(() => {
-    window.clearInterval(timer.current);
-    timer.current = window.setInterval(() => {
+    if (visibility === 'hidden') {
+      return;
+    }
+
+    const render = () => {
       setProgress(
         ((nextAutoSaveTime - Date.now()) / (autoSaveInterval * 1000)) * 100,
       );
-    }, 1000 / 60);
-  }, [nextAutoSaveTime, autoSaveInterval]);
+      timer.current = requestAnimationFrame(render);
+    };
+    timer.current = requestAnimationFrame(render);
+
+    return () => {
+      cancelAnimationFrame(timer.current);
+    };
+  }, [nextAutoSaveTime, autoSaveInterval, visibility]);
 
   if (!enableAutoSaveProgress) {
     return null;
@@ -38,9 +49,8 @@ const AutoSaveProgress = () => {
         top: UI_SETTING.topMenuHeight,
         left: leftMenuWidth,
         width: `calc(100% - ${leftMenuWidth}px)`,
-      }}
-    >
-      <div className={styles.progress} style={{ width: `${progress}%` }}></div>
+      }}>
+      <div className={styles.progress} style={{ width: `${progress}%` }} />
     </div>
   );
 };
