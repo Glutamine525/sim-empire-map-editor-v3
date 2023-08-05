@@ -3,12 +3,10 @@ import { useDocumentVisibility } from 'ahooks';
 import { shallow } from 'zustand/shallow';
 import { UI_SETTING } from '../../_config';
 import { useAutoSave } from '../../_store/auto-save';
-import { useMapConfig } from '../../_store/map-config';
 import { useSetting } from '../../_store/settings';
 import styles from './index.module.css';
 
 const AutoSaveProgress = () => {
-  const leftMenuWidth = useMapConfig(state => state.leftMenuWidth);
   const [autoSaveInterval, enableAutoSaveProgress] = useSetting(
     state => [state.autoSaveInterval, state.enableAutoSaveProgress],
     shallow,
@@ -45,11 +43,7 @@ const AutoSaveProgress = () => {
   return (
     <div
       className={styles.container}
-      style={{
-        top: UI_SETTING.topMenuHeight,
-        left: leftMenuWidth,
-        width: `calc(100% - ${leftMenuWidth}px)`,
-      }}>
+      style={{ top: UI_SETTING.topMenuHeight - 3 }}>
       <div className={styles.progress} style={{ width: `${progress}%` }} />
     </div>
   );
