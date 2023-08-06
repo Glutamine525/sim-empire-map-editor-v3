@@ -10,9 +10,9 @@ import { Message } from '@arco-design/web-react';
 import Content from '@arco-design/web-react/es/Layout/content';
 import PerfectScrollbar from 'perfect-scrollbar';
 import { shallow } from 'zustand/shallow';
-import BeiAn from '@/components/bei-an';
-import { importMapData } from '@/utils/import-export';
+import { BLOCK_PX } from '../../_config';
 import useMapCore from '../../_hooks/use-map-core';
+import { MapLength } from '../../_map-core/type';
 import { useAutoSave } from '../../_store/auto-save';
 import { buildingData, resetBuildingData } from '../../_store/building-data';
 import { useMapConfig } from '../../_store/map-config';
@@ -20,6 +20,8 @@ import { useSetting } from '../../_store/settings';
 import BuildingLayer from '../building-layer';
 import InteractLayer from '../interact-layer';
 import { hideLoading } from '../loading';
+import BeiAn from '@/components/bei-an';
+import { importMapData } from '@/utils/import-export';
 import styles from './index.module.css';
 
 export const mapContainer = createRef<HTMLDivElement>();
@@ -93,9 +95,9 @@ const Map = () => {
       hideLoading();
     }
 
-    window.addEventListener('beforeunload', () => {
+    const unloader = () => {
       trigger();
-    });
+    };
 
     const scroller = () => {
       if (!mapContainer.current) {
@@ -109,9 +111,36 @@ const Map = () => {
       setShowBeiAn(false);
     };
 
+    const resizer = () => {
+      if (!mapContainer.current) {
+        return;
+      }
+      const {
+        scrollTop,
+        scrollHeight,
+        clientHeight,
+        clientWidth,
+        scrollLeft,
+        scrollWidth,
+      } = mapContainer.current;
+
+      if (scrollWidth <= scrollLeft + clientWidth) {
+        mapContainer.current.scrollLeft =
+          (MapLength + 2) * BLOCK_PX - clientWidth;
+      }
+      if (scrollHeight <= scrollTop + clientHeight) {
+        mapContainer.current.scrollTop =
+          (MapLength + 2) * BLOCK_PX - clientHeight;
+      }
+    };
+
+    window.addEventListener('beforeunload', unloader);
+    window.addEventListener('resize', resizer);
     mapContainer.current?.addEventListener('scroll', scroller);
 
     return () => {
+      window.removeEventListener('beforeunload', unloader);
+      window.removeEventListener('resize', resizer);
       mapContainer.current?.removeEventListener('scroll', scroller);
       scrollbar.destroy();
     };

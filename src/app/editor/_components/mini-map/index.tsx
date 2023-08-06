@@ -7,15 +7,15 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { MapLength } from '@/app/editor/_map-core/type';
-import { isCssPropertySupported } from '@/utils/browser';
-import { isBoundary, parseBuildingKey } from '@/utils/coordinate';
 import { BLOCK_PX, UI_SETTING } from '../../_config';
 import useMapCore from '../../_hooks/use-map-core';
 import { useMapConfig } from '../../_store/map-config';
 import { useSetting } from '../../_store/settings';
 import Copyright from '../copyright';
 import { mapContainer } from '../map';
+import { MapLength } from '@/app/editor/_map-core/type';
+import { isCssPropertySupported } from '@/utils/browser';
+import { isBoundary, parseBuildingKey } from '@/utils/coordinate';
 import styles from './index.module.css';
 
 export const miniMapCanvas = createRef<HTMLCanvasElement>();
@@ -34,6 +34,8 @@ const MiniMap: FC<MiniMapProps> = props => {
   const enableMiniMap = useSetting(state => state.enableMiniMap);
 
   const isMouseDown = useRef(false);
+  const leftMenuWidthRef = useRef(leftMenuWidth);
+  leftMenuWidthRef.current = leftMenuWidth;
 
   const [focusConfig, setFocusConfig] = useState({
     w: 0,
@@ -92,12 +94,12 @@ const MiniMap: FC<MiniMapProps> = props => {
     };
   }, []);
 
-  const resizer = (leftMenuWidth: number = UI_SETTING.leftMenuWidth) => {
+  const resizer = () => {
     const { innerWidth, innerHeight } = window;
 
     setFocusConfig(state => ({
       ...state,
-      w: (innerWidth - leftMenuWidth) / BLOCK_PX,
+      w: (innerWidth - leftMenuWidthRef.current) / BLOCK_PX,
       h: (innerHeight - UI_SETTING.topMenuHeight) / BLOCK_PX,
     }));
     scroller();
@@ -128,7 +130,7 @@ const MiniMap: FC<MiniMapProps> = props => {
   }, []);
 
   useEffect(() => {
-    resizer(leftMenuWidth);
+    resizer();
   }, [leftMenuWidth]);
 
   const dragFocus = (e: MouseEvent) => {
@@ -174,8 +176,7 @@ const MiniMap: FC<MiniMapProps> = props => {
       onMouseEnter={onMouseEnter}
       onMouseLeave={() => {
         isMouseDown.current = false;
-      }}
-    >
+      }}>
       <canvas
         ref={miniMapCanvas}
         className={styles.container}
