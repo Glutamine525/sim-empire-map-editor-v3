@@ -12,11 +12,11 @@ import { IconCheck, IconClose } from '@arco-design/web-react/icon';
 import dayjs from 'dayjs';
 import Image from 'next/image';
 import { shallow } from 'zustand/shallow';
-import { encodeMapData, importMapData } from '@/utils/import-export';
 import { TIME_AGO } from '../../_config';
 import { CivilTypeLabel } from '../../_map-core/type';
 import { useAutoSave } from '../../_store/auto-save';
 import { useCommand } from '../../_store/command';
+import { encodeMapData, importMapData } from '@/utils/import-export';
 import styles from './index.module.css';
 
 interface AutoSaveDrawerProps {
@@ -66,8 +66,7 @@ const AutoSaveDrawer: FC<AutoSaveDrawerProps> = props => {
       render: (_, { createAt, timeAgo }) => (
         <Tooltip
           position="bottom"
-          content={dayjs(createAt).format('MM月DD日 HH:mm:ss')}
-        >
+          content={dayjs(createAt).format('MM月DD日 HH:mm:ss')}>
           {timeAgo}
         </Tooltip>
       ),
@@ -93,8 +92,7 @@ const AutoSaveDrawer: FC<AutoSaveDrawerProps> = props => {
                   style={{ display: 'block' }}
                 />
               )
-            }
-          >
+            }>
             <Button
               size="mini"
               type="text"
@@ -123,8 +121,7 @@ const AutoSaveDrawer: FC<AutoSaveDrawerProps> = props => {
                 resetCommand();
                 Message.success('成功载入该存档！');
                 close();
-              }}
-            >
+              }}>
               载入
             </Button>
           </Tooltip>
@@ -139,7 +136,7 @@ const AutoSaveDrawer: FC<AutoSaveDrawerProps> = props => {
       wrapClassName={styles.container}
       title={
         <div className={styles.title}>
-          <strong>自动存档</strong>
+          <strong>存档记录</strong>
           <div>
             <strong>{snapshots.length}</strong>
             <span className={styles.limit}>/20</span>
@@ -151,8 +148,7 @@ const AutoSaveDrawer: FC<AutoSaveDrawerProps> = props => {
       onCancel={() => {
         close();
       }}
-      footer={null}
-    >
+      footer={null}>
       <Table
         columns={columns}
         pagination={false}
