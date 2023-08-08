@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { LoginReq, LoginRes, LoginType } from '@/protocol/account';
+import { ErrorCode } from '../../../../protocol/error-code';
 import { redis } from '../../_infra/redis';
 import { genRes } from '../../_utils';
-import { ErrorCode, ErrorText } from '../../_utils/error-code';
 import { LOGIN_CODE_REGEXP, PHONE_REGEXP } from '../../_utils/regexp';
 
 export async function POST(req: NextRequest): Promise<NextResponse<LoginRes>> {
@@ -36,14 +36,9 @@ export async function POST(req: NextRequest): Promise<NextResponse<LoginRes>> {
     }
   }
 
-  return NextResponse.json(
-    {
-      code: ErrorCode.Success,
-      message: ErrorText[ErrorCode.Success],
-    },
-    {
-      status: 200,
-      headers: { 'Set-Cookie': `session=${phone}` },
-    },
+  return genRes(
+    ErrorCode.Success,
+    {},
+    { headers: { 'Set-Cookie': `session=${phone}` } },
   );
 }

@@ -1,4 +1,6 @@
+import { ErrorCode } from './error-code';
+
 export interface BaseRes {
-  code: number;
+  code: ErrorCode;
   message: string;
 }

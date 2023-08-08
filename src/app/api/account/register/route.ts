@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { RegisterReq, RegisterRes } from '@/protocol/account';
+import { ErrorCode } from '../../../../protocol/error-code';
 import { genRes } from '../../_utils';
-import { ErrorCode } from '../../_utils/error-code';
 import { LOGIN_CODE_REGEXP, PHONE_REGEXP } from '../../_utils/regexp';
 
 export async function POST(

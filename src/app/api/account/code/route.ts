@@ -2,10 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import SmsClient, { SendSmsRequest } from '@alicloud/dysmsapi20170525';
 import { Config } from '@alicloud/openapi-client';
 import { SmsCodeReq, SmsCodeRes } from '@/protocol/account';
+import { ErrorCode } from '../../../../protocol/error-code';
 import { redis } from '../../_infra/redis';
 import { genRes } from '../../_utils';
 import { ACCOUNT_CODE_EXPIRE } from '../../_utils/const';
-import { ErrorCode } from '../../_utils/error-code';
 import { PHONE_REGEXP } from '../../_utils/regexp';
 
 const config = new Config({
