@@ -48,7 +48,7 @@ export async function POST(
 
   if (process.env.NODE_ENV === 'development') {
     redis.setEx(`${phone}:code`, ACCOUNT_CODE_EXPIRE, code);
-    return genRes(ErrorCode.Debug);
+    return genRes(ErrorCode.Debug, { message: code });
   }
 
   const res = await sendSmsRequest(phone, code);

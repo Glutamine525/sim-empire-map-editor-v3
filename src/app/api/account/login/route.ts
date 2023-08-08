@@ -36,9 +36,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<LoginRes>> {
     }
   }
 
-  return genRes(
-    ErrorCode.Success,
-    {},
-    { headers: { 'Set-Cookie': `session=${phone}` } },
-  );
+  return genRes(ErrorCode.Success, {
+    init: { headers: { 'Set-Cookie': `session=${phone}` } },
+  });
 }

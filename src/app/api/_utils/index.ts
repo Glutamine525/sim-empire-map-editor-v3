@@ -3,15 +3,14 @@ import { ErrorCode, ErrorText } from '../../../protocol/error-code';
 
 export function genRes<T extends { code: number; message: string; data?: any }>(
   code: ErrorCode,
-  data?: T['data'],
-  init?: ResponseInit,
+  option?: { message?: string; data?: T['data']; init?: ResponseInit },
 ): NextResponse<T> {
   return NextResponse.json(
     {
       code: code,
-      message: ErrorText[code],
-      data,
+      message: option?.message || ErrorText[code],
+      data: option?.data,
     } as any,
-    init,
+    option?.init,
   );
 }
