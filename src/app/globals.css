@@ -19,3 +19,8 @@ body {
 
   font-family: 'PingFang SC', 'Microsoft YaHei';
 }
+
+.ps__rail-x,
+.ps__rail-y {
+  z-index: 1000;
+}
