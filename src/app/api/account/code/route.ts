@@ -3,8 +3,9 @@ import SmsClient, { SendSmsRequest } from '@alicloud/dysmsapi20170525';
 import { Config } from '@alicloud/openapi-client';
 import { SmsCodeReq, SmsCodeRes } from '@/protocol/account';
 import { redis } from '../../_infra/redis';
+import { genRes } from '../../_utils';
 import { ACCOUNT_CODE_EXPIRE } from '../../_utils/const';
-import { AccountErrorCode, AccountErrorText } from '../../_utils/error-code';
+import { ErrorCode } from '../../_utils/error-code';
 import { PHONE_REGEXP } from '../../_utils/regexp';
 
 const config = new Config({
@@ -33,17 +34,11 @@ export async function POST(
   const { phone } = (await req.json()) as SmsCodeReq;
 
   if (!phone) {
-    return NextResponse.json({
-      code: AccountErrorCode.ParamsError,
-      message: AccountErrorText[AccountErrorCode.ParamsError],
-    });
+    return genRes(ErrorCode.ParamsError);
   }
 
   if (typeof phone !== 'string' || !PHONE_REGEXP.test(phone)) {
-    return NextResponse.json({
-      code: AccountErrorCode.ParamsError,
-      message: AccountErrorText[AccountErrorCode.ParamsError],
-    });
+    return genRes(ErrorCode.ParamsError);
   }
 
   const code = Array(6)
@@ -53,34 +48,15 @@ export async function POST(
 
   if (process.env.NODE_ENV === 'development') {
     redis.setEx(`${phone}:code`, ACCOUNT_CODE_EXPIRE, code);
-    return NextResponse.json({
-      code: AccountErrorCode.Debug,
-      message: code,
-    });
+    return genRes(ErrorCode.Debug);
   }
 
-  try {
-    const res = await sendSmsRequest(phone, code);
-    if (res.code === 'OK') {
-      redis.setEx(`${phone}:code`, ACCOUNT_CODE_EXPIRE, code);
-      return NextResponse.json({
-        code: AccountErrorCode.Success,
-        message: AccountErrorText[AccountErrorCode.Success],
-      });
-    } else if (res.code === 'isv.BUSINESS_LIMIT_CONTROL') {
-      return NextResponse.json({
-        code: AccountErrorCode.LimitControl,
-        message: AccountErrorText[AccountErrorCode.LimitControl],
-      });
-    }
-    return NextResponse.json({
-      code: AccountErrorCode.Unknown,
-      message: AccountErrorText[AccountErrorCode.Unknown],
-    });
-  } catch {
-    return NextResponse.json({
-      code: AccountErrorCode.Unknown,
-      message: AccountErrorText[AccountErrorCode.Unknown],
-    });
+  const res = await sendSmsRequest(phone, code);
+  if (res.code === 'OK') {
+    redis.setEx(`${phone}:code`, ACCOUNT_CODE_EXPIRE, code);
+    return genRes(ErrorCode.Success);
+  } else if (res.code === 'isv.BUSINESS_LIMIT_CONTROL') {
+    return genRes(ErrorCode.CodeLimitControl);
   }
+  return genRes(ErrorCode.Unknown);
 }

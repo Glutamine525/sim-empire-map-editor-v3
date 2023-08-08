@@ -1,19 +1,29 @@
 const baseUnknownText = '未知错误，请稍后再试';
 
-export enum AccountErrorCode {
+export enum ErrorCode {
   Debug = -1,
   Success,
+
+  // general
   ParamsError = 1000,
-  LimitControl,
+
+  // account
+  CodeLimitControl = 2000,
   CodeError,
+
   Unknown = 9000,
 }
 
-export const AccountErrorText: { [key in AccountErrorCode]: string } = {
-  [AccountErrorCode.Debug]: '',
-  [AccountErrorCode.Success]: '成功',
-  [AccountErrorCode.ParamsError]: '参数错误',
-  [AccountErrorCode.LimitControl]: '请勿频繁发送验证码',
-  [AccountErrorCode.CodeError]: '验证码错误',
-  [AccountErrorCode.Unknown]: baseUnknownText,
+export const ErrorText: { [key in ErrorCode]: string } = {
+  [ErrorCode.Debug]: '',
+  [ErrorCode.Success]: '成功',
+
+  // general
+  [ErrorCode.ParamsError]: '参数错误',
+
+  // account
+  [ErrorCode.CodeLimitControl]: '请勿频繁发送验证码',
+  [ErrorCode.CodeError]: '验证码错误',
+
+  [ErrorCode.Unknown]: baseUnknownText,
 };
