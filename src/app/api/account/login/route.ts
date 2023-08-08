@@ -3,6 +3,7 @@ import { LoginReq, LoginRes, LoginType } from '@/protocol/account';
 import { ErrorCode } from '../../../../protocol/error-code';
 import { redis } from '../../_infra/redis';
 import { genRes } from '../../_utils';
+import { COOKIE_KEY_SESSION } from '../../_utils/const';
 import { LOGIN_CODE_REGEXP, PHONE_REGEXP } from '../../_utils/regexp';
 
 export async function POST(req: NextRequest): Promise<NextResponse<LoginRes>> {
@@ -37,6 +38,6 @@ export async function POST(req: NextRequest): Promise<NextResponse<LoginRes>> {
   }
 
   return genRes(ErrorCode.Success, {
-    init: { headers: { 'Set-Cookie': `session=${phone}` } },
+    init: { headers: { 'Set-Cookie': `${COOKIE_KEY_SESSION}=${phone}` } },
   });
 }

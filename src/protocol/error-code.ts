@@ -6,6 +6,7 @@ export enum ErrorCode {
 
   // general
   ParamsError = 1000,
+  LoginRequired,
 
   // account
   CodeLimitControl = 2000,
@@ -20,6 +21,7 @@ export const ErrorText: { [key in ErrorCode]: string } = {
 
   // general
   [ErrorCode.ParamsError]: '参数错误',
+  [ErrorCode.LoginRequired]: '请登录后再试',
 
   // account
   [ErrorCode.CodeLimitControl]: '请勿频繁发送验证码',

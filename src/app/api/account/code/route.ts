@@ -4,6 +4,8 @@ import { Config } from '@alicloud/openapi-client';
 import { SmsCodeReq, SmsCodeRes } from '@/protocol/account';
 import { ErrorCode } from '../../../../protocol/error-code';
 import { redis } from '../../_infra/redis';
+import auth from '../../_middleware/auth';
+import errorCatcher from '../../_middleware/error-catcher';
 import { genRes } from '../../_utils';
 import { ACCOUNT_CODE_EXPIRE } from '../../_utils/const';
 import { PHONE_REGEXP } from '../../_utils/regexp';
@@ -27,9 +29,7 @@ async function sendSmsRequest(phoneNumbers: string, code: string) {
   return res.body;
 }
 
-export async function POST(
-  req: NextRequest,
-): Promise<NextResponse<SmsCodeRes>> {
+async function handler(req: NextRequest): Promise<NextResponse<SmsCodeRes>> {
   // const phone = req.nextUrl.searchParams.get('phone');
   const { phone } = (await req.json()) as SmsCodeReq;
 
@@ -58,5 +58,8 @@ export async function POST(
   } else if (res.code === 'isv.BUSINESS_LIMIT_CONTROL') {
     return genRes(ErrorCode.CodeLimitControl);
   }
+
   return genRes(ErrorCode.Unknown);
 }
+
+export const POST = errorCatcher(auth(handler));
