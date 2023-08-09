@@ -4,8 +4,7 @@ import { Config } from '@alicloud/openapi-client';
 import { SmsCodeReq, SmsCodeRes } from '@/protocol/account';
 import { ErrorCode } from '../../../../protocol/error-code';
 import { redis } from '../../_infra/redis';
-import auth from '../../_middleware/auth';
-import errorCatcher from '../../_middleware/error-catcher';
+import { use } from '../../_middleware';
 import { genRes } from '../../_utils';
 import { ACCOUNT_CODE_EXPIRE } from '../../_utils/const';
 import { PHONE_REGEXP } from '../../_utils/regexp';
@@ -62,4 +61,4 @@ async function handler(req: NextRequest): Promise<NextResponse<SmsCodeRes>> {
   return genRes(ErrorCode.Unknown);
 }
 
-export const POST = errorCatcher(auth(handler));
+export const POST = use()(handler);
