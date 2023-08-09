@@ -1,13 +1,16 @@
 import { NextResponse } from 'next/server';
-import { ErrorCode, ErrorText } from '../../../protocol/error-code';
+import { BaseRes } from '@/protocol';
+import { ErrorCode, ErrorText } from '@/protocol/error-code';
 
-export function genRes<T extends { code: number; message: string; data?: any }>(
+type DataType<T> = T extends { data: infer U } ? U : never;
+
+export function genRes<T extends BaseRes & { data?: U }, U = DataType<T>>(
   code: ErrorCode,
-  option?: { message?: string; data?: T['data']; init?: ResponseInit },
+  option?: { message?: string; data?: U; init?: ResponseInit },
 ): NextResponse<T> {
   return NextResponse.json(
     {
-      code: code,
+      code,
       message: option?.message || ErrorText[code],
       data: option?.data,
     } as any,
