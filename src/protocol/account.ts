@@ -27,3 +27,9 @@ export interface LoginReq {
 }
 
 export interface LoginRes extends BaseRes {}
+
+export interface InfoRes extends BaseRes {
+  data: {
+    test: string;
+  };
+}

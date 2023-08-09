@@ -7,6 +7,7 @@ import { redis } from '../../_infra/redis';
 import { use } from '../../_middleware';
 import { genRes } from '../../_utils';
 import { ACCOUNT_CODE_EXPIRE } from '../../_utils/const';
+import { genRandomCode } from '../../_utils/random';
 import { PHONE_REGEXP } from '../../_utils/regexp';
 
 const config = new Config({
@@ -40,10 +41,7 @@ async function handler(req: NextRequest): Promise<NextResponse<SmsCodeRes>> {
     return genRes(ErrorCode.ParamsError);
   }
 
-  const code = Array(6)
-    .fill(0)
-    .map(() => Math.floor(Math.random() * 10))
-    .join('');
+  const code = genRandomCode(6);
 
   if (process.env.NODE_ENV === 'development') {
     redis.setEx(`${phone}:code`, ACCOUNT_CODE_EXPIRE, code);

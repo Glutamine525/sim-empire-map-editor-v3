@@ -3,8 +3,8 @@ import { LoginReq, LoginRes, LoginType } from '@/protocol/account';
 import { ErrorCode } from '../../../../protocol/error-code';
 import { redis } from '../../_infra/redis';
 import { genRes } from '../../_utils';
-import { COOKIE_KEY_SESSION } from '../../_utils/const';
 import { LOGIN_CODE_REGEXP, PHONE_REGEXP } from '../../_utils/regexp';
+import { setSession } from '../../_utils/session';
 
 export async function POST(req: NextRequest): Promise<NextResponse<LoginRes>> {
   const { type, phone, code, password } = (await req.json()) as LoginReq;
@@ -37,7 +37,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<LoginRes>> {
     }
   }
 
-  return genRes(ErrorCode.Success, {
-    init: { headers: { 'Set-Cookie': `${COOKIE_KEY_SESSION}=${phone}` } },
-  });
+  const res = genRes(ErrorCode.Success);
+  setSession(phone, res);
+  return res;
 }

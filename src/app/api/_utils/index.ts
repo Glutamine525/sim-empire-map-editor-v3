@@ -4,7 +4,7 @@ import { ErrorCode, ErrorText } from '@/protocol/error-code';
 
 type DataType<T> = T extends { data: infer U } ? U : never;
 
-export function genRes<T extends BaseRes & { data?: U }, U = DataType<T>>(
+export function genRes<T extends BaseRes & { data: U }, U = DataType<T>>(
   code: ErrorCode,
   option?: { message?: string; data?: U; init?: ResponseInit },
 ): NextResponse<T> {

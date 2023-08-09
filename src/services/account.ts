@@ -1,4 +1,5 @@
 import {
+  InfoRes,
   LoginReq,
   LoginRes,
   RegisterReq,
@@ -25,5 +26,11 @@ export async function login(params: LoginReq) {
     headers: { 'Content-Type': 'application/json' },
   });
   const handledRes = (await res.json()) as LoginRes;
+  return handledRes;
+}
+
+export async function getUserInfo() {
+  const res = await fetch('/api/account/info');
+  const handledRes = (await res.json()) as InfoRes;
   return handledRes;
 }
