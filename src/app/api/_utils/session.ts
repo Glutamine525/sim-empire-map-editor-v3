@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { COOKIE_KEY_SESSION } from './const';
+import { COOKIE_KEY_SESSION, SESSION_EXPIRE } from './const';
 import { decrypt, encrypt } from './crypto';
 import { genRandomCode } from './random';
 
@@ -20,6 +20,6 @@ export function setSession(phone: string, res: NextResponse) {
     path: '/',
     httpOnly: true,
     secure: true,
-    expires: Date.now() + 1000 * 3600 * 24 * 30,
+    expires: Date.now() + SESSION_EXPIRE,
   });
 }

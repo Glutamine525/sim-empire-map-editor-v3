@@ -3,6 +3,7 @@ import { InfoRes } from '@/protocol/account';
 import { ErrorCode } from '@/protocol/error-code';
 import { use } from '../../_middleware';
 import { genRes } from '../../_utils';
+import { SESSION_EXPIRE } from '../../_utils/const';
 import { setSession } from '../../_utils/session';
 
 async function handler(req: NextRequest): Promise<NextResponse<InfoRes>> {
@@ -10,7 +11,7 @@ async function handler(req: NextRequest): Promise<NextResponse<InfoRes>> {
   const setAt = Number(req.cookies.get('setAt')!.value);
 
   const res = genRes(ErrorCode.Success, { data: { test: '123' } });
-  if (setAt + 1000 * 3600 * 24 * 20 < Date.now()) {
+  if (setAt + (SESSION_EXPIRE * 2) / 3 < Date.now()) {
     setSession(phone, res);
   }
   return res;
